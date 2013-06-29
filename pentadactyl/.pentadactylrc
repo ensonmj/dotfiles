@@ -1,0 +1,35 @@
+"1.0rc1
+
+loadplugins '\.(js|penta)$'
+group user
+set guioptions=bCrsBT
+
+"passthrough
+au! LocationChange
+autocmd LocationChange web.qq.com -js modes.set(modes.PASS_THROUGH)
+
+"命令行模式禁用输入法
+"style -name=cmd-ime chrome://*
+"    \ #dactyl-commandline-command input,
+"    \ #dactyl-statusline-field-commandline-command input {
+"    \     ime-mode: disabled;
+"    \ }
+
+"自动翻页
+set nextpattern=\s*下一页|下一张|下一篇|下一頁|下页|后页\s*,^\bnext\b,\\bnext\\b,^>$,^(>>|»)$,^(>|»),(>|»)$,\\bmore\\b
+set previouspattern=\s*上一页|上一张|上一篇|上一頁|上页|前页\s*,^\bprev|previous\b,\\bprev|previous\\b,^<$,^(<<|«)$,^(<|«),(<|«)$
+
+"命令行下拉菜单最多显示的条目数
+set maxitems=8
+
+"快速打开
+:qmark g www.google.com
+:qmark m www.google.com/mail
+:qmark r https://www.google.com/reader
+:qmark b www.bing.com
+
+"plugins
+"dict
+set dict-dblclick
+
+" vim: set ft=pentadactyl:

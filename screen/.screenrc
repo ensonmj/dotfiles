@@ -1,0 +1,42 @@
+# Hardstatus line
+hardstatus alwayslastline
+#hardstatus string "%{= R}[ %{=b b}%-w%{=rb db}%>%n %t%{-}%+w%{-b}%< %=%{R}][%{M}%Y-%m-%d %{G}%c%{R}]"
+hardstatus string "%{= B}:%{= b}: %{= r}[ %{G}%H%{= r} ] %= %{=b b}%-w%{=rb db}%>%n %t%{-}%+w %=%{= r}[ %{G}%c %{M}%D %m-%d %{r}] %{= b}:%{B}:"
+
+# Make the xterm scroller work in screen
+terminfo xterm*|rxvt ti@:te@
+terminfo rxvt-unicode 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+terminfo xterm* 'XT:hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+
+#dynamic title
+termcapinfo xterm* 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+
+#vbell
+vbell off
+ 
+# Automatically detach on hangup
+autodetach on
+
+# Refresh the display when exiting programs
+altscreen on
+
+# Define a large scrollback buffer
+defscrollback 1000
+
+# Set messages timeout to five seconds
+msgwait 5
+msgminwait 2
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
+
+# Start message:
+startup_message off
+
+# Utf-8 handling
+defutf8 on
+
+# bindkey
+
+# default shell
+shell bash
+
+nethack on
