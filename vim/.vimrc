@@ -186,7 +186,6 @@ NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'chrisbra/SudoEdit.vim'
 
 NeoBundle 'kana/vim-wwwsearch'
@@ -893,10 +892,6 @@ let g:TagHighlightSettings['FileTypeLanguageOverrides'] =
 let g:TagHighlightSettings['FileTypeLanguageOverrides'] =
     \ {'gitcommit': 'c'}
 " }}}
-" ----------------------------------------------------
-" Indent Guide"{{{
-let g:indent_guides_guide_size=1
-"}}}
 " ----------------------------------------------------
 " nerdtree"{{{
 " toggles NERDTree on and off
