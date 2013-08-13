@@ -4,6 +4,8 @@
 #for pkgfile "command not found" hook
 source /etc/profile
 
+#disable logging duplicated or blank command: ignoredups & ignorespace
+export HISTCONTROL=ignoreboth
 export EDITOR=vi
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
