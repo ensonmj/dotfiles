@@ -1,0 +1,34 @@
+$include /etc/inputrc
+
+#Variables
+#set editing-mode vi
+#$if mode=vi
+#set keymap vi-command
+##there are for vi-command mode
+#"\C-l": clear-screen
+#
+#set keymap vi-insert
+##there are for vi-insert mode
+#"\C-l": clear-screen
+#$endif
+
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set visible-stats on
+
+#Macros
+#Ctrl-Alt-L append "| less" to the command and run it
+"\e\C-l": "\C-e | less \C-m"
+#Alt-S warps the line in "su -c ''"
+"\es": "\C-a sudo \C-e\C-m"
+#Ctrl-Alt-B send a command in the backgroud and discard all of its output
+"\e\C-b": "\C-e > /dev/null 2>&1 & \C-m"
+
+#Commands
+"\C-xv": dump-variables
+"\C-xm": dump-macros
+"\C-xf": dump-functions
+
+"\e[A": history-search-backward
+"\e[B": history-search-forward
