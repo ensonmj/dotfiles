@@ -55,6 +55,11 @@ alias man='man -P most'
 #alias tmux='tmux -2'
 alias payu="PACMAN=pacmatic nice packer -Syu"
 
+#dircolors
+if [ -f ~/.dircolors ]; then
+    eval `dircolors ~/.dircolors`
+fi
+
 #tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 export PATH="$HOME/.rbenv/bin:$PATH"

@@ -24,6 +24,11 @@ if [ -f /etc/bash_completion ]; then
   . /etc/bash_completion
 fi
 
+#dircolors
+if [ -f ~/.dircolors ]; then
+    eval `dircolors ~/.dircolors`
+fi
+
 #tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
