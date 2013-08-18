@@ -566,7 +566,7 @@ set autoread
 set autowrite
 
 " 设置没有展开的<Tab>的宽度为4个空格
-set tabstop=4
+set tabstop=8
 " 新输入的<Tab>展开为n个空格
 set expandtab
 " 4个空格代替一个输入的<Tab>
