@@ -179,6 +179,7 @@ NeoBundleLazy 'sjl/gundo.vim', { 'autoload' : {
 NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
 NeoBundle 'gregsexton/gitv'
+NeoBundle 'airblade/vim-gitgutter'
 
 "vim-endwise fix conflict with delimitMate in imap <cr>
 "when load after delimitMate
@@ -209,6 +210,7 @@ NeoBundleLazy 'kana/vim-operator-replace', {
             \ 'mappings' : [
             \ ['nx', '<Plug>(operator-replace)']]
             \ }}
+
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'kana/vim-textobj-syntax'
 NeoBundle 'kana/vim-textobj-indent'
@@ -224,6 +226,7 @@ NeoBundle 'thinca/vim-textobj-comment'
 NeoBundle 'mattn/vim-textobj-url'
 NeoBundle 'anyakichi/vim-textobj-xbrackets'
 NeoBundle 'sgur/vim-textobj-parameter'
+NeoBundle 'gilligan/textobj-gitgutter'
 
 "python
 "NeoBundle 'nvie/vim-flake8'
