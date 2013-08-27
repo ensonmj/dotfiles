@@ -290,7 +290,7 @@ NeoBundle 'SearchComplete'
 let s:iswin = has('win32') || has('win64')
 if s:iswin
     " For Windows"{{{
-    " ÉèÖÃÖÕ¶ËÌáÊ¾Ê¹ÓÃÓïÑÔ£¬½â¾öconsleÊä³öÂÒÂë
+    " è®¾ç½®ç»ˆç«¯æç¤ºä½¿ç”¨è¯­è¨€ï¼Œè§£å†³consleè¾“å‡ºä¹±ç 
     language messages zh_CN.UTF-8
     language time English
 
@@ -300,9 +300,9 @@ if s:iswin
     endif
 
     if has('gui_running')
-        " Ê¹ÓÃguifontÉèÖÃÓ¢ÎÄ×ÖÌå 
+        " ä½¿ç”¨guifontè®¾ç½®è‹±æ–‡å­—ä½“ 
         set guifont=Courier_New:h12:w7
-        " Ê¹ÓÃguifontwideÉèÖÃÖĞÎÄµÈ¿í×ÖÌå
+        " ä½¿ç”¨guifontwideè®¾ç½®ä¸­æ–‡ç­‰å®½å­—ä½“
         set guifontwide=NSimSun-18030,NSimSun
     endif
 
@@ -319,7 +319,7 @@ if s:iswin
     "}}}
 else
     " For Linux"{{{
-    " ÉèÖÃÖÕ¶ËÌáÊ¾Ê¹ÓÃÓïÑÔ£¬½â¾öconsleÊä³öÂÒÂë
+    " è®¾ç½®ç»ˆç«¯æç¤ºä½¿ç”¨è¯­è¨€ï¼Œè§£å†³consleè¾“å‡ºä¹±ç 
     language messages en_US.UTF-8
     language time en_US.UTF-8
 
@@ -340,13 +340,13 @@ else
 endif
 "}}}
 " ====================================================
-" Encoding£¨¼æÈİLinux£©"{{{
-" ×¢ÒâĞÂ½¨ÎÄ¼ş¸ú¿ÕÎÄ¼şµÄÇø±ğ
-" ĞÂ½¨ÎÄ¼ş£ºÊ¹ÓÃvim½¨Á¢µÄĞÂÎÄ¼ş£¬´ËÊ±±àÂë°´ÕÕfileencodingÀ´ÉèÖÃ
-" ¿ÕÎÄ¼ş£º  ±ÈÈçÔÚwindowsÏÂ£¬Ê¹ÓÃÓÒ¼üĞÂ½¨ÎÄ±¾ÎÄµµ£¬ÕâÑù¾Í½¨Á¢ÁËÒ»¸ö¿Õ°×ÎÄ¼ş
-"           vim´ò¿ª´Ë¿Õ°×ÎÄ¼ş£¬»áÌ½²âÎÄ¼ş±àÂë£¬ÓÉÓÚÎÄ¼şÊÇ¿Õ°×£¬ËùÓĞÌ½²â½á¹û
-"           ¿Ï¶¨ÊÇfileencodingsÖĞµÄµÚÒ»¸ö£¨´Ë´¦utf-8£©£¬ÕâÑùÔÚwindowsÏÂÓÃÆä
-"           Ëû±à¼­Æ÷´ò¿ªº¬ÓĞÖĞÎÄµÄÎÄ¼şÊ±¾Í»áÂÒÂë¡£(set
+" Encodingï¼ˆå…¼å®¹Linuxï¼‰"{{{
+" æ³¨æ„æ–°å»ºæ–‡ä»¶è·Ÿç©ºæ–‡ä»¶çš„åŒºåˆ«
+" æ–°å»ºæ–‡ä»¶ï¼šä½¿ç”¨vimå»ºç«‹çš„æ–°æ–‡ä»¶ï¼Œæ­¤æ—¶ç¼–ç æŒ‰ç…§fileencodingæ¥è®¾ç½®
+" ç©ºæ–‡ä»¶ï¼š  æ¯”å¦‚åœ¨windowsä¸‹ï¼Œä½¿ç”¨å³é”®æ–°å»ºæ–‡æœ¬æ–‡æ¡£ï¼Œè¿™æ ·å°±å»ºç«‹äº†ä¸€ä¸ªç©ºç™½æ–‡ä»¶
+"           vimæ‰“å¼€æ­¤ç©ºç™½æ–‡ä»¶ï¼Œä¼šæ¢æµ‹æ–‡ä»¶ç¼–ç ï¼Œç”±äºæ–‡ä»¶æ˜¯ç©ºç™½ï¼Œæ‰€æœ‰æ¢æµ‹ç»“æœ
+"           è‚¯å®šæ˜¯fileencodingsä¸­çš„ç¬¬ä¸€ä¸ªï¼ˆæ­¤å¤„utf-8ï¼‰ï¼Œè¿™æ ·åœ¨windowsä¸‹ç”¨å…¶
+"           ä»–ç¼–è¾‘å™¨æ‰“å¼€å«æœ‰ä¸­æ–‡çš„æ–‡ä»¶æ—¶å°±ä¼šä¹±ç ã€‚(set
 "           fenc=chinese)
 "           "}}}
 " ====================================================
@@ -364,7 +364,7 @@ set fileencodings=usc-bom,utf-8,chinese
 " A fullwidth character is displayed in vim properly.
 "set ambiwidth=double
 
-" ½â¾öquickfix ´°¿ÚÂÒÂë
+" è§£å†³quickfix çª—å£ä¹±ç 
 function! QfConvCU()
     let qflist = getqflist()
     for i in qflist
@@ -395,37 +395,37 @@ set titlelen=95
 " Title string.
 set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servername}
 
-" ÉèÖÃ´°¿Ú
+" è®¾ç½®çª—å£
 " set lines=35
 " set columns=100
 
-" ²»ÏÔÊ¾¹¤¾ßÀ¸
+" ä¸æ˜¾ç¤ºå·¥å…·æ 
 set guioptions-=T
 
-" ²»ÏÔÊ¾²Ëµ¥À¸
+" ä¸æ˜¾ç¤ºèœå•æ 
 "set guioptions-=m
-" ²»ÏÔÊ¾ËºÁÑ²Ëµ¥
+" ä¸æ˜¾ç¤ºæ’•è£‚èœå•
 set guioptions-=t
-" ½â¾ö²Ëµ¥ÂÒÂë
+" è§£å†³èœå•ä¹±ç 
 source $VIMRUNTIME/delmenu.vim
-" ¼ÓÔØÄ¬ÈÏ²Ëµ¥
+" åŠ è½½é»˜è®¤èœå•
 source $VIMRUNTIME/menu.vim
-" ÉèÖÃ²Ëµ¥ÓïÑÔ
+" è®¾ç½®èœå•è¯­è¨€
 "set langmenu=en_US
 
-" ĞÅÏ¢ÌáÊ¾¸ñÊ½ 
+" ä¿¡æ¯æç¤ºæ ¼å¼ 
 set shortmess=aToOI
 
-" ÔÚµ×²¿ÏÔÊ¾±ê³ß£¬ÏÔÊ¾ĞĞºÅÁĞºÅºÍ°Ù·Ö±È
+" åœ¨åº•éƒ¨æ˜¾ç¤ºæ ‡å°ºï¼Œæ˜¾ç¤ºè¡Œå·åˆ—å·å’Œç™¾åˆ†æ¯”
 set ruler
 
-" ÏÔÊ¾ĞĞºÅ 
+" æ˜¾ç¤ºè¡Œå· 
 set number
 
-" ¹â±êÒÆ¶¯µ½bufferµÄ¶¥²¿ºÍµ×²¿Ê±±£³Ö3¾àÀë
+" å…‰æ ‡ç§»åŠ¨åˆ°bufferçš„é¡¶éƒ¨å’Œåº•éƒ¨æ—¶ä¿æŒ3è·ç¦»
 set scrolloff=2
 
-" ÉèÖÃÏÔÊ¾tabºÍĞĞÎ²
+" è®¾ç½®æ˜¾ç¤ºtabå’Œè¡Œå°¾
 set list
 set listchars=tab:\|\ ,trail:-,extends:>,precedes:<
 "set listchars=tab:>-,trail:-,extends:>,precedes:<,eol:$
@@ -475,7 +475,7 @@ set display+=uhex
 " Use vertical diff format
 set diffopt+=vertical
 
-" ¼ÇÂ¼µÄÀúÊ·ÃüÁîÊıÄ¿
+" è®°å½•çš„å†å²å‘½ä»¤æ•°ç›®
 set history=200
 
 " Enable spell check.
@@ -507,9 +507,9 @@ set conceallevel=2
 set concealcursor=nc
 "set concealcursor=iv
 
-" ×Ô¶¯¸ßÁÁÆ¥Åä¹â±êËùÔÚËùÓĞµ¥´Ê
+" è‡ªåŠ¨é«˜äº®åŒ¹é…å…‰æ ‡æ‰€åœ¨æ‰€æœ‰å•è¯
 "autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
-" ×Ô¶¯¸ø¹â±êËùÔÚµ¥´ÊÌí¼ÓÏÂ»®Ïß
+" è‡ªåŠ¨ç»™å…‰æ ‡æ‰€åœ¨å•è¯æ·»åŠ ä¸‹åˆ’çº¿
 autocmd CursorHold * silent! exe printf('match Underlined /\<%s\>/', expand('<cword>'))
 
 " Convenient command to see the difference between the current buffer and the
@@ -520,10 +520,10 @@ if !exists(":DiffOrig")
                 \ | wincmd p | diffthis
 endif
 
-" ×´Ì¬À¸ÏÔÊ¾
+" çŠ¶æ€æ æ˜¾ç¤º
 " Always display statusline.
-set laststatus=2   " ÏÔÊ¾×´Ì¬À¸ (Ä¬ÈÏÖµÎª 1, ÎŞ·¨ÏÔÊ¾×´Ì¬À¸)
-" ×´Ì¬À¸¸ñÊ½¶¨Òå
+set laststatus=2   " æ˜¾ç¤ºçŠ¶æ€æ  (é»˜è®¤å€¼ä¸º 1, æ— æ³•æ˜¾ç¤ºçŠ¶æ€æ )
+" çŠ¶æ€æ æ ¼å¼å®šä¹‰
 set statusline=
 set statusline+=%#Visual#\ %{getcwd()} "current work directory
 set statusline+=%#DiffAdd#\ %f  "path to the file in the buffer, relative to current directory
@@ -565,15 +565,15 @@ set wrapscan
 set autoread
 set autowrite
 
-" ÉèÖÃÃ»ÓĞÕ¹¿ªµÄ<Tab>µÄ¿í¶ÈÎª4¸ö¿Õ¸ñ
+" è®¾ç½®æ²¡æœ‰å±•å¼€çš„<Tab>çš„å®½åº¦ä¸º4ä¸ªç©ºæ ¼
 set tabstop=8
-" ĞÂÊäÈëµÄ<Tab>Õ¹¿ªÎªn¸ö¿Õ¸ñ
+" æ–°è¾“å…¥çš„<Tab>å±•å¼€ä¸ºnä¸ªç©ºæ ¼
 set expandtab
-" 4¸ö¿Õ¸ñ´úÌæÒ»¸öÊäÈëµÄ<Tab>
+" 4ä¸ªç©ºæ ¼ä»£æ›¿ä¸€ä¸ªè¾“å…¥çš„<Tab>
 set softtabstop=4
 
 " Autoindent width.
-" (×Ô¶¯) Ëõ½øÃ¿Ò»²½Ê¹ÓÃµÄ¿Õ°×ÊıÄ¿¡£ÓÃÓÚ 'cindent'¡¢>>¡¢<< µÈ¡£
+" (è‡ªåŠ¨) ç¼©è¿›æ¯ä¸€æ­¥ä½¿ç”¨çš„ç©ºç™½æ•°ç›®ã€‚ç”¨äº 'cindent'ã€>>ã€<< ç­‰ã€‚
 set shiftwidth=4
 " Round indent by shiftwidth.
 set shiftround
@@ -600,7 +600,7 @@ set matchpairs+=<:>
 " When on a buffer becomes hidden when it is abandoned.
 set hidden
 
-" ÔÚ²åÈëÄ£Ê½°´»Ø³µÊ±£¬×Ô¶¯²åÈëµ±Ç°×¢ÊÍÇ°µ¼·û¡£
+" åœ¨æ’å…¥æ¨¡å¼æŒ‰å›è½¦æ—¶ï¼Œè‡ªåŠ¨æ’å…¥å½“å‰æ³¨é‡Šå‰å¯¼ç¬¦ã€‚
 set formatoptions+=r
 " Enable multibyte format.
 set formatoptions+=mM
@@ -610,7 +610,7 @@ set infercase
 
 " Enable folding.
 set foldenable
-" ÉèÖÃÕÛµş·½Ê½
+" è®¾ç½®æŠ˜å æ–¹å¼
 set foldmethod=indent
 "set foldmethod=syntax
 "set foldmethod=expr
@@ -618,12 +618,12 @@ set foldmethod=indent
 " Show folding level.
 "set foldcolumn=1
 set foldcolumn=3
-"Æô¶¯vimÊ±²»Òª×Ô¶¯ÕÛµş´úÂë
+"å¯åŠ¨vimæ—¶ä¸è¦è‡ªåŠ¨æŠ˜å ä»£ç 
 "set foldlevel=100
 set fillchars=vert:\|
 set commentstring=%s
 
-" grepÑ¡Ïî
+" grepé€‰é¡¹
 "set grepprg=grep\ -nri
 " Use vimgrep.
 "set grepprg=internal
@@ -637,13 +637,13 @@ set undofile
 set autochdir
 "autocmd BufEnter * silent! lcd %:p:h
 
-" ×Ô¶¯Ïòµ±Ç°ÎÄ¼şµÄÉÏ¼¶²éÕÒtagÎÄ¼ş£¬Ö±µ½ÕÒµ½ÎªÖ¹
+" è‡ªåŠ¨å‘å½“å‰æ–‡ä»¶çš„ä¸Šçº§æŸ¥æ‰¾tagæ–‡ä»¶ï¼Œç›´åˆ°æ‰¾åˆ°ä¸ºæ­¢
 set tags=./tags;
 
 " Set keyword help.
 "set keywordprg=:help
 
-" Ìí¼Ó°ïÖúÖ§³Ö
+" æ·»åŠ å¸®åŠ©æ”¯æŒ
 if has('win32') || has('win64')
     nmap <F1> :silent !cmd /C start iexplore "http://search.msdn.microsoft.com/search/default.aspx?query=<cword>"<CR>; 
 else
@@ -798,11 +798,11 @@ let g:loaded_netrwPlugin = 1
 " }}}
 " ----------------------------------------------------
 " Ctags"{{{
-" Usage:ctags -R --c++-kinds=+p --fields=+ialS --extra=+q "$@"(ÎÄ¼şÄ¿Â¼)
-" --c++-kinds=+p £ºÎªC++ÎÄ¼şÔö¼Óº¯ÊıÔ­ĞÍµÄ±êÇ©
-" --fields=+ialS £ºÔÚ±êÇ©ÎÄ¼şÖĞ¼ÓÈë¼Ì³ĞĞÅÏ¢(i)¡¢Àà³ÉÔ±µÄ·ÃÎÊ¿ØÖÆĞÅÏ¢(a)
-"                  Ô´ÎÄ¼ş°üº¬tag(l)[ÓÃÓÚechofunc.vim]¡¢ÒÔ¼°º¯ÊıµÄÖ¸ÎÆ(S)
-" --extra=+q     £ºÎª±êÇ©Ôö¼ÓÀàĞŞÊÎ·û¡£×¢Òâ£¬Èç¹ûÃ»ÓĞ´ËÑ¡Ïî£¬½«²»ÄÜ¶ÔÀà³ÉÔ±²¹È«
+" Usage:ctags -R --c++-kinds=+p --fields=+ialS --extra=+q "$@"(æ–‡ä»¶ç›®å½•)
+" --c++-kinds=+p ï¼šä¸ºC++æ–‡ä»¶å¢åŠ å‡½æ•°åŸå‹çš„æ ‡ç­¾
+" --fields=+ialS ï¼šåœ¨æ ‡ç­¾æ–‡ä»¶ä¸­åŠ å…¥ç»§æ‰¿ä¿¡æ¯(i)ã€ç±»æˆå‘˜çš„è®¿é—®æ§åˆ¶ä¿¡æ¯(a)
+"                  æºæ–‡ä»¶åŒ…å«tag(l)[ç”¨äºechofunc.vim]ã€ä»¥åŠå‡½æ•°çš„æŒ‡çº¹(S)
+" --extra=+q     ï¼šä¸ºæ ‡ç­¾å¢åŠ ç±»ä¿®é¥°ç¬¦ã€‚æ³¨æ„ï¼Œå¦‚æœæ²¡æœ‰æ­¤é€‰é¡¹ï¼Œå°†ä¸èƒ½å¯¹ç±»æˆå‘˜è¡¥å…¨
 " map <ctrl>+F12 to generate ctags for current folder:
 map <C-F12> :!ctags -R --c-kinds=+p --c++-kinds=+p --fields=+ialS --extra=+q . <CR><CR>
 "}}}
@@ -898,38 +898,78 @@ nnoremap U :<C-u>GundoToggle<CR>
 " ----------------------------------------------------
 " unite"{{{
 "let g:unite_enable_start_insert = 1
+let g:unite_enable_split_vertically = 0
+let g:unite_winheight = 15
+let g:unite_cursor_line_highlight = 'TabLineSel'
+let g:unite_abbr_highlight = 'TabLine'
+let g:unite_source_history_yank_enable = 1
+let g:unite_source_file_mru_time_format = ''
+let g:unite_source_file_mru_filename_format = ':~:.'
+let g:unite_source_file_mru_limit = 300
+let g:unite_source_directory_mru_time_format = ''
+let g:unite_source_directory_mru_limit = 300
+let g:unite_quick_match_table = {
+            \'a' : 1, 's' : 2, 'd' : 3, 'f' : 4, 'g' : 5, 'h' : 6, 'k' : 7, 'l' : 8, ';' : 9,
+            \'q' : 10, 'w' : 11, 'e' : 12, 'r' : 13, 't' : 14, 'y' : 15, 'u' : 16, 'i' : 17, 'o' : 18, 'p' : 19,
+            \'1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24, '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
+            \}
+if executable('ag')
+    let g:unite_source_grep_command='ag'
+    let g:unite_source_grep_default_opts='--nocolor --nogroup -a -S'
+    let g:unite_source_grep_recursive_opt=''
+    let g:unite_source_grep_search_word_highlight = 1
+elseif executable('ack')
+    let g:unite_source_grep_command='ack'
+    let g:unite_source_grep_default_opts='--no-group --no-color'
+    let g:unite_source_grep_recursive_opt=''
+    let g:unite_source_grep_search_word_highlight = 1
+endif
+
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+call unite#custom#source('file_mru,file_rec,file_rec/async,grep,locate',
+            \ 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/'], '\|'))
+
+" key mappings"{{{
 " The prefix key.
 nnoremap    [unite]   <Nop>
 xnoremap    [unite]   <Nop>
-nmap    <LocalLeader>u [unite]
-xmap    <LocalLeader>u [unite]
-imap <LocalLeader>u <C-\><C-N>[unite]
-imap <LocalLeader>c <Plug>(neocomplcache_start_unite_complete)
+nmap    <Leader>u [unite]
+xmap    <Leader>u [unite]
 
-nnoremap <expr><silent> [unite]b  <SID>unite_build()
-function! s:unite_build()
-    return ":\<C-u>Unite -buffer-name=build". tabpagenr() ." -no-quit build\<CR>"
-endfunction
-nnoremap <silent> [unite]r  :<C-u>Unite -buffer-name=register register history/yank<CR>
-nnoremap <silent> [unite]o  :<C-u>Unite outline -start-insert<CR>
-nnoremap <silent> [unite]t  :<C-u>UniteWithCursorWord -buffer-name=tag tag<CR>
-nnoremap <silent> [unite]w  :<C-u>UniteWithCursorWord -buffer-name=register
-            \ buffer file_mru bookmark file<CR>
-nnoremap <silent> [unite]h  :<C-u>Unite history/command<CR>
-nnoremap <silent> [unite]q  :<C-u>Unite qflist -no-quit<CR>
-nnoremap <silent> [unite]g  :<C-u>Unite grep -buffer-name=search -no-quit<CR>
-nnoremap <silent> <C-k>  :<C-u>Unite change jump<CR>
-nnoremap <silent> [unite]c  :<C-u>Unite change<CR>
-nnoremap <silent> [unite]f  :<C-u>Unite -buffer-name=resume resume<CR>
-nnoremap <silent> [unite]d  :<C-u>Unite -buffer-name=files -default-action=lcd directory_mru<CR>
-nnoremap <silent> [unite]ma  :<C-u>Unite mapping<CR>
-nnoremap <silent> [unite]me  :<C-u>Unite output:message<CR>
-inoremap <silent> <C-z>  <C-o>:call unite#start_complete(['register'], {'is_insert' : 1})<CR>
+" files
+nnoremap <silent> [unite]o :Unite -silent -start-insert file<CR>
+nnoremap <silent> [unite]O :Unite -silent -start-insert file_rec/async<CR>
+nnoremap <silent> [unite]m :Unite -silent file_mru<CR>
+" buffers
+nnoremap <silent> [unite]b :Unite -silent buffer<CR>
+" tabs
+nnoremap <silent> [unite]B :Unite -silent tab<CR>
+" buffer search
+nnoremap <silent> [unite]f :Unite -silent -no-split -start-insert -auto-preview
+            \ line<CR>
+nnoremap <silent> [unite]/ :UniteWithCursorWord -silent -no-split -auto-preview
+            \ line<CR>
+" yankring
+nnoremap <silent> [unite]i :Unite -silent history/yank<CR>
+" grep
+nnoremap <silent> [unite]a :Unite -silent -no-quit grep<CR>
+" help
+nnoremap <silent> [unite]h  :UniteWithInput help<CR>
+nnoremap <silent> [unite]* :UniteWithCursorWord -silent help<CR>
+" tasksl
+nnoremap <silent> [unite]; :Unite -silent -toggle
+            \ grep:%::FIXME\|TODO\|NOTE\|XXX\|COMBAK\|@todo<CR>
+" outlines (also ctags)
+nnoremap <silent> [unite]t :Unite -silent -vertical -winwidth=40
+            \ -direction=topleft -toggle outline<CR>
+" junk files
+  nnoremap <silent> [unite]d :Unite -silent junkfile/new junkfile<CR>
 
 " tags"{{{
 " The prefix key.
 nnoremap    [Tag]   <Nop>
-nmap    <LocalLeader>t [Tag]
+nmap    <Leader>t [Tag]
 " Jump.
 nnoremap <silent><expr> [Tag]t  &filetype == 'help' ?  "\<C-]>" :
             \ ":\<C-u>UniteWithCursorWord -buffer-name=tag tag\<CR>"
@@ -940,21 +980,7 @@ nnoremap <silent><expr> [Tag]p  &filetype == 'help' ?
             \ ":\<C-u>pop\<CR>" : ":\<C-u>Unite jump\<CR>"
 "}}}
 
-" Execute help.
-nnoremap <C-h>  :<C-u>UniteWithInput help<CR>
-" Execute help by cursor keyword.
-nnoremap <silent> g<C-h>  :<C-u>UniteWithCursorWord help<CR>
-
-let g:unite_enable_split_vertically = 0
-let g:unite_source_history_yank_enable = 1
-let g:unite_winheight = 20
-
-call unite#custom_alias('file', 'h', 'left')
-call unite#custom_default_action('directory', 'narrow')
-
-" migemo.
-call unite#custom_filters('line_migemo', ['matcher_migemo', 'sorter_default', 'converter_default'])
-
+" in unite source key mappings
 autocmd MyAutoCmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()"{{{
     " Overwrite settings.
@@ -992,22 +1018,574 @@ function! s:unite_my_settings()"{{{
     nnoremap <buffer><expr> S      unite#mappings#set_current_filters(
                 \ empty(unite#mappings#get_current_filters()) ? ['sorter_reverse'] : [])
 endfunction"}}}
+"}}}
 
-let g:unite_cursor_line_highlight = 'TabLineSel'
-let g:unite_abbr_highlight = 'TabLine'
-let g:unite_source_file_mru_time_format = ''
-let g:unite_source_file_mru_filename_format = ':~:.'
-let g:unite_source_file_mru_limit = 300
-let g:unite_source_directory_mru_time_format = ''
-let g:unite_source_directory_mru_limit = 300
+" unite-menu"{{{
+" menu prefix key (for all Unite menus) {{{
+nnoremap [menu] <Nop>
+nmap <Leader>um [menu]
+" }}}
 
-let g:unite_quick_match_table = {
-            \'a' : 1, 's' : 2, 'd' : 3, 'f' : 4, 'g' : 5, 'h' : 6, 'k' : 7, 'l' : 8, ';' : 9,
-            \'q' : 10, 'w' : 11, 'e' : 12, 'r' : 13, 't' : 14, 'y' : 15, 'u' : 16, 'i' : 17, 'o' : 18, 'p' : 19,
-            \'1' : 20, '2' : 21, '3' : 22, '4' : 23, '5' : 24, '6' : 25, '7' : 26, '8' : 27, '9' : 28, '0' : 29,
-            \}
+" menus menu
+nnoremap <silent>[menu]u :Unite -silent -winheight=20 menu<CR>
 
+let g:unite_source_menu_menus = {}
+" files and dirs menu {{{
+let g:unite_source_menu_menus.files = {
+    \ 'description' : ' files & dirs
+        \ âŒ˜ [space]o',
+    \}
+let g:unite_source_menu_menus.files.command_candidates = [
+    \['â–· open file âŒ˜ ,o',
+        \'Unite -start-insert file'],
+    \['â–· open more recently used files âŒ˜ ,m',
+        \'Unite file_mru'],
+    \['â–· open file with recursive search âŒ˜ ,O',
+        \'Unite -start-insert file_rec/async'],
+    \['â–· edit new file',
+        \'Unite file/new'],
+    \['â–· search directory',
+        \'Unite directory'],
+    \['â–· search recently used directories',
+        \'Unite directory_mru'],
+    \['â–· search directory with recursive search',
+        \'Unite directory_rec/async'],
+    \['â–· make new directory',
+        \'Unite directory/new'],
+    \['â–· change working directory',
+        \'Unite -default-action=lcd directory'],
+    \['â–· know current working directory',
+        \'Unite output:pwd'],
+    \['â–· junk files âŒ˜ ,d',
+        \'Unite junkfile/new junkfile'],
+    \['â–· save as root âŒ˜ :w!!',
+        \'exe "write !sudo tee % >/dev/null"'],
+    \['â–· quick save âŒ˜ ,w',
+        \'normal ,w'],
+    \['â–· open ranger âŒ˜ ,x',
+        \'call RangerChooser()'],
+    \['â–· open vimfiler âŒ˜ ,X',
+        \'VimFiler'],
+    \]
+nnoremap <silent>[menu]o :Unite -silent -winheight=17 -start-insert
+            \ menu:files<CR>
+" }}}
 
+" file searching menu {{{
+let g:unite_source_menu_menus.grep = {
+    \ 'description' : ' search files
+        \ âŒ˜ [space]a',
+    \}
+let g:unite_source_menu_menus.grep.command_candidates = [
+    \['â–· grep (ag â†’ ack â†’ grep) âŒ˜ ,a',
+        \'Unite -no-quit grep'],
+    \['â–· find',
+        \'Unite find'],
+    \['â–· locate',
+        \'Unite -start-insert locate'],
+    \['â–· vimgrep (very slow)',
+        \'Unite vimgrep'],
+    \]
+nnoremap <silent>[menu]a :Unite -silent menu:grep<CR>
+" }}}
+
+" buffers, tabs & windows menu {{{
+let g:unite_source_menu_menus.navigation = {
+    \ 'description' : ' navigate by buffers, tabs & windows
+        \ âŒ˜ [space]b',
+    \}
+let g:unite_source_menu_menus.navigation.command_candidates = [
+    \['â–· buffers âŒ˜ ,b',
+        \'Unite buffer'],
+    \['â–· tabs âŒ˜ ,B',
+        \'Unite tab'],
+    \['â–· windows',
+        \'Unite window'],
+    \['â–· location list',
+        \'Unite location_list'],
+    \['â–· quickfix',
+        \'Unite quickfix'],
+    \['â–· resize windows âŒ˜ C-C C-W',
+        \'WinResizerStartResize'],
+    \['â–· new vertical window âŒ˜ ,v',
+        \'vsplit'],
+    \['â–· new horizontal window âŒ˜ ,h',
+        \'split'],
+    \['â–· close current window âŒ˜ ,k',
+        \'close'],
+    \['â–· toggle quickfix window âŒ˜ ,q',
+        \'normal ,q'],
+    \['â–· zoom âŒ˜ ,z',
+        \'ZoomWinTabToggle'],
+    \['â–· delete buffer âŒ˜ ,K',
+        \'bd'],
+    \]
+nnoremap <silent>[menu]b :Unite -silent menu:navigation<CR>
+" }}}
+
+" buffer internal searching menu {{{
+let g:unite_source_menu_menus.searching = {
+    \ 'description' : ' searchs inside the current buffer
+        \ âŒ˜ [space]f',
+    \}
+let g:unite_source_menu_menus.searching.command_candidates = [
+    \['â–· search line âŒ˜ ,f',
+        \'Unite -auto-preview -start-insert line'],
+    \['â–· search word under the cursor âŒ˜ [space]8',
+        \'UniteWithCursorWord -no-split -auto-preview line'],
+    \['â–· search outlines & tags (ctags) âŒ˜ ,t',
+        \'Unite -vertical -winwidth=40 -direction=topleft -toggle outline'],
+    \['â–· search marks',
+        \'Unite -auto-preview mark'],
+    \['â–· search folds',
+        \'Unite -vertical -winwidth=30 -auto-highlight fold'],
+    \['â–· search changes',
+        \'Unite change'],
+    \['â–· search jumps',
+        \'Unite jump'],
+    \['â–· search undos',
+        \'Unite undo'],
+    \['â–· search tasks âŒ˜ ,;',
+        \'Unite -toggle grep:%::FIXME|TODO|NOTE|XXX|COMBAK|@todo'],
+    \]
+nnoremap <silent>[menu]f :Unite -silent menu:searching<CR>
+" }}}
+
+" yanks, registers & history menu {{{
+let g:unite_source_menu_menus.registers = {
+    \ 'description' : ' yanks, registers & history
+        \ âŒ˜ [space]i',
+    \}
+let g:unite_source_menu_menus.registers.command_candidates = [
+    \['â–· yanks âŒ˜ ,i',
+        \'Unite history/yank'],
+    \['â–· commands (history) âŒ˜ q:',
+        \'Unite history/command'],
+    \['â–· searches (history) âŒ˜ q/',
+        \'Unite history/search'],
+    \['â–· registers',
+        \'Unite register'],
+    \['â–· messages',
+        \'Unite output:messages'],
+    \['â–· undo tree (gundo) âŒ˜ ,u',
+        \'GundoToggle'],
+    \]
+nnoremap <silent>[menu]i :Unite -silent menu:registers<CR>
+" }}}
+
+" spelling menu {{{
+let g:unite_source_menu_menus.spelling = {
+    \ 'description' : ' spell checking
+        \ âŒ˜ [space]s',
+    \}
+let g:unite_source_menu_menus.spelling.command_candidates = [
+    \['â–· spell checking in Spanish âŒ˜ ,ss',
+        \'setlocal spell spelllang=es'],
+    \['â–· spell checking in English âŒ˜ ,se',
+        \'setlocal spell spelllang=en'],
+    \['â–· turn off spell checking âŒ˜ ,so',
+        \'setlocal nospell'],
+    \['â–· jumps to next bad spell word and show suggestions âŒ˜ ,sc',
+        \'normal ,sc'],
+    \['â–· jumps to next bad spell word âŒ˜ ,sn',
+        \'normal ,sn'],
+    \['â–· suggestions âŒ˜ ,sp',
+        \'normal ,sp'],
+    \['â–· add word to dictionary âŒ˜ ,sa',
+        \'normal ,sa'],
+    \]
+nnoremap <silent>[menu]s :Unite -silent menu:spelling<CR>
+" }}}
+
+" text edition menu {{{
+let g:unite_source_menu_menus.text = {
+    \ 'description' : ' text edition
+        \ âŒ˜ [space]e',
+    \}
+let g:unite_source_menu_menus.text.command_candidates = [
+    \['â–· toggle search results highlight âŒ˜ ,eq',
+        \'set invhlsearch'],
+    \['â–· toggle line numbers âŒ˜ ,l',
+        \'call ToggleRelativeAbsoluteNumber()'],
+    \['â–· toggle wrapping âŒ˜ ,ew',
+        \'call ToggleWrap()'],
+    \['â–· show hidden chars âŒ˜ ,eh',
+        \'set list!'],
+    \['â–· toggle fold âŒ˜ /',
+        \'normal za'],
+    \['â–· open all folds âŒ˜ zR',
+        \'normal zR'],
+    \['â–· close all folds âŒ˜ zM',
+        \'normal zM'],
+    \['â–· copy to the clipboard âŒ˜ ,y',
+        \'normal ,y'],
+    \['â–· paste from the clipboard âŒ˜ ,p',
+        \'normal ,p'],
+    \['â–· toggle paste mode âŒ˜ ,P',
+        \'normal ,P'],
+    \['â–· remove trailing whitespaces âŒ˜ ,et',
+        \'normal ,et'],
+    \['â–· text statistics âŒ˜ ,es',
+        \'Unite output:normal\ ,es -no-cursor-line'],
+    \['â–· show word frequency âŒ˜ ,ef',
+        \'Unite output:WordFrequency'],
+    \['â–· show available digraphs',
+        \'digraphs'],
+    \['â–· insert lorem ipsum text',
+        \'exe "Loremipsum" input("numero de palabras: ")'],
+    \['â–· show current char info âŒ˜ ga',
+        \'normal ga'],
+    \]
+nnoremap <silent>[menu]e :Unite -silent -winheight=20 menu:text <CR>
+" }}}
+
+" neobundle menu {{{
+let g:unite_source_menu_menus.neobundle = {
+    \ 'description' : ' plugins administration with neobundle
+        \ âŒ˜ [space]n',
+    \}
+let g:unite_source_menu_menus.neobundle.command_candidates = [
+    \['â–· neobundle',
+        \'Unite neobundle'],
+    \['â–· neobundle log',
+        \'Unite neobundle/log'],
+    \['â–· neobundle lazy',
+        \'Unite neobundle/lazy'],
+    \['â–· neobundle update',
+        \'Unite neobundle/update'],
+    \['â–· neobundle search',
+        \'Unite neobundle/search'],
+    \['â–· neobundle install',
+        \'Unite neobundle/install'],
+    \['â–· neobundle check',
+        \'Unite -no-empty output:NeoBundleCheck'],
+    \['â–· neobundle docs',
+        \'Unite output:NeoBundleDocs'],
+    \['â–· neobundle clean',
+        \'NeoBundleClean'],
+    \['â–· neobundle list',
+        \'Unite output:NeoBundleList'],
+    \['â–· neobundle direct edit',
+        \'NeoBundleDirectEdit'],
+    \]
+nnoremap <silent>[menu]n :Unite -silent -start-insert menu:neobundle<CR>
+" }}}
+
+" git menu {{{
+let g:unite_source_menu_menus.git = {
+    \ 'description' : ' admin git repositories
+        \ âŒ˜ [space]g',
+    \}
+let g:unite_source_menu_menus.git.command_candidates = [
+    \['â–· tig âŒ˜ ,gt',
+        \'normal ,gt'],
+    \['â–· git viewer (gitv) âŒ˜ ,gv',
+        \'normal ,gv'],
+    \['â–· git viewer - buffer (gitv) âŒ˜ ,gV',
+        \'normal ,gV'],
+    \['â–· git status (fugitive) âŒ˜ ,gs',
+        \'Gstatus'],
+    \['â–· git diff (fugitive) âŒ˜ ,gd',
+        \'Gdiff'],
+    \['â–· git commit (fugitive) âŒ˜ ,gc',
+        \'Gcommit'],
+    \['â–· git log (fugitive) âŒ˜ ,gl',
+        \'exe "silent Glog | Unite -no-quit quickfix"'],
+    \['â–· git log - all (fugitive) âŒ˜ ,gL',
+        \'exe "silent Glog -all | Unite -no-quit quickfix"'],
+    \['â–· git blame (fugitive) âŒ˜ ,gb',
+        \'Gblame'],
+    \['â–· git add/stage (fugitive) âŒ˜ ,gw',
+        \'Gwrite'],
+    \['â–· git checkout (fugitive) âŒ˜ ,go',
+        \'Gread'],
+    \['â–· git rm (fugitive) âŒ˜ ,gR',
+        \'Gremove'],
+    \['â–· git mv (fugitive) âŒ˜ ,gm',
+        \'exe "Gmove " input("destino: ")'],
+    \['â–· git push (fugitive, buffer output) âŒ˜ ,gp',
+        \'Git! push'],
+    \['â–· git pull (fugitive, buffer output) âŒ˜ ,gP',
+        \'Git! pull'],
+    \['â–· git command (fugitive, buffer output) âŒ˜ ,gi',
+        \'exe "Git! " input("comando git: ")'],
+    \['â–· git edit (fugitive) âŒ˜ ,gE',
+        \'exe "command Gedit " input(":Gedit ")'],
+    \['â–· git grep (fugitive) âŒ˜ ,gg',
+        \'exe "silent Ggrep -i ".input("Pattern: ") | Unite -no-quit quickfix'],
+    \['â–· git grep - messages (fugitive) âŒ˜ ,ggm',
+        \'exe "silent Glog --grep=".input("Pattern: ")." | Unite -no-quit quickfix"'],
+    \['â–· git grep - text (fugitive) âŒ˜ ,ggt',
+        \'exe "silent Glog -S".input("Pattern: ")." | Unite -no-quit quickfix"'],
+    \['â–· git init âŒ˜ ,gn',
+        \'Unite output:echo\ system("git\ init")'],
+    \['â–· git cd (fugitive)',
+        \'Gcd'],
+    \['â–· git lcd (fugitive)',
+        \'Glcd'],
+    \['â–· git browse (fugitive) âŒ˜ ,gB',
+        \'Gbrowse'],
+    \]
+nnoremap <silent>[menu]g :Unite -silent -winheight=26 -start-insert menu:git<CR>
+" }}}
+
+" code menu {{{
+let g:unite_source_menu_menus.code = {
+    \ 'description' : ' code tools
+        \ âŒ˜ [space]p',
+    \}
+let g:unite_source_menu_menus.code.command_candidates = [
+    \['â–· run python code (pymode) âŒ˜ ,r',
+        \'Pyrun'],
+    \['â–· show docs for the current word (pymode) âŒ˜ K',
+        \'normal K'],
+    \['â–· insert a breakpoint (pymode) âŒ˜ ,B',
+        \'normal ,B'],
+    \['â–· togle pylint revison (pymode)',
+        \'PyLintToggle'],
+    \['â–· run with python2 in tmux panel (vimux) âŒ˜ ,rr',
+        \'normal ,rr'],
+    \['â–· run with python3 in tmux panel (vimux) âŒ˜ ,r3',
+        \'normal ,r3'],
+    \['â–· run with python2 & time in tmux panel (vimux) âŒ˜ ,rt',
+        \'normal ,rt'],
+    \['â–· run with pypy & time in tmux panel (vimux) âŒ˜ ,rp',
+        \'normal ,rp'],
+    \['â–· command prompt to run in a tmux panel (vimux) âŒ˜ ,rc',
+        \'VimuxPromptCommand'],
+    \['â–· repeat last command (vimux) âŒ˜ ,rl',
+        \'VimuxRunLastCommand'],
+    \['â–· stop command execution in tmux panel (vimux) âŒ˜ ,rs',
+        \'VimuxInterruptRunner'],
+    \['â–· inspect tmux panel (vimux) âŒ˜ ,ri',
+        \'VimuxInspectRunner'],
+    \['â–· close tmux panel (vimux) âŒ˜ ,rq',
+        \'VimuxCloseRunner'],
+    \['â–· rope autocompletion (rope) âŒ˜ C-[espacio]',
+        \'RopeCodeAssist'],
+    \['â–· go to definition (rope) âŒ˜ C-C g',
+        \'RopeGotoDefinition'],
+    \['â–· reorganize imports (rope) âŒ˜ C-C r o',
+        \'RopeOrganizeImports'],
+    \['â–· refactorize - rename (rope) âŒ˜ C-C r r',
+        \'RopeRename'],
+    \['â–· refactorize - extract variable (rope) âŒ˜ C-C r l',
+        \'RopeExtractVariable'],
+    \['â–· refactorize - extract method (rope) âŒ˜ C-C r m',
+        \'RopeExtractMethod'],
+    \['â–· refactorize - inline (rope) âŒ˜ C-C r i',
+        \'RopeInline'],
+    \['â–· refactorize - move (rope) âŒ˜ C-C r v',
+        \'RopeMove'],
+    \['â–· refactorize - restructure (rope) âŒ˜ C-C r x',
+        \'RopeRestructure'],
+    \['â–· refactorize - use function (rope) âŒ˜ C-C r u',
+        \'RopeUseFunction'],
+    \['â–· refactorize - introduce factory (rope) âŒ˜ C-C r f',
+        \'RopeIntroduceFactory'],
+    \['â–· refactorize - change signature (rope) âŒ˜ C-C r s',
+        \'RopeChangeSignature'],
+    \['â–· refactorize - rename current module (rope) âŒ˜ C-C r 1 r',
+        \'RopeRenameCurrentModule'],
+    \['â–· refactorize - move current module (rope) âŒ˜ C-C r 1 m',
+        \'RopeMoveCurrentModule'],
+    \['â–· refactorize - module to package (rope) âŒ˜ C-C r 1 p',
+        \'RopeModuleToPackage'],
+    \['â–· show docs for current word (rope) âŒ˜ C-C r a d',
+        \'RopeShowDoc'],
+    \['â–· syntastic check (syntastic)',
+        \'SyntasticCheck'],
+    \['â–· syntastic errors (syntastic)',
+        \'Errors'],
+    \['â–· list virtualenvs (virtualenv)',
+        \'Unite output:VirtualEnvList'],
+    \['â–· activate virtualenv (virtualenv)',
+        \'VirtualEnvActivate'],
+    \['â–· deactivate virtualenv (virtualenv)',
+        \'VirtualEnvDeactivate'],
+    \['â–· run coverage2 (coveragepy)',
+        \'call system("coverage2 run ".bufname("%")) | Coveragepy report'],
+    \['â–· run coverage3 (coveragepy)',
+        \'call system("coverage3 run ".bufname("%")) | Coveragepy report'],
+    \['â–· toggle coverage report (coveragepy)',
+        \'Coveragepy session'],
+    \['â–· toggle coverage marks (coveragepy)',
+        \'Coveragepy show'],
+    \['â–· count lines of code',
+        \'Unite -default-action= output:call\\ LinesOfCode()'],
+    \['â–· toggle indent lines âŒ˜ ,L',
+        \'IndentLinesToggle'],
+    \]
+nnoremap <silent>[menu]p :Unite -silent -winheight=42 menu:code<CR>
+" }}}
+
+" markdown menu {{{
+let g:unite_source_menu_menus.markdown = {
+    \ 'description' : ' preview markdown extra docs
+        \ âŒ˜ [space]k',
+    \}
+let g:unite_source_menu_menus.markdown.command_candidates = [
+    \['â–· preview',
+        \'Me'],
+    \['â–· refresh',
+        \'Mer'],
+    \]
+nnoremap <silent>[menu]k :Unite -silent menu:markdown<CR>
+" }}}
+
+" sessions menu {{{
+let g:unite_source_menu_menus.sessions = {
+    \ 'description' : ' sessions
+        \ âŒ˜ [space]h',
+    \}
+let g:unite_source_menu_menus.sessions.command_candidates = [
+    \['â–· load session',
+        \'Unite session'],
+    \['â–· make session (default)',
+        \'UniteSessionSave'],
+    \['â–· make session (custom)',
+        \'exe "UniteSessionSave " input("name: ")'],
+    \]
+nnoremap <silent>[menu]h :Unite -silent menu:sessions<CR>
+" }}}
+
+" bookmarks menu {{{
+let g:unite_source_menu_menus.bookmarks = {
+    \ 'description' : ' bookmarks
+        \ âŒ˜ [space]m',
+    \}
+let g:unite_source_menu_menus.bookmarks.command_candidates = [
+    \['â–· open bookmarks',
+        \'Unite bookmark:*'],
+    \['â–· add bookmark',
+        \'UniteBookmarkAdd'],
+    \]
+nnoremap <silent>[menu]m :Unite -silent menu:bookmarks<CR>
+" }}}
+
+" colorv menu {{{
+function! GetColorFormat()
+    let formats = {'r' : 'RGB',
+                  \'n' : 'NAME',
+                  \'s' : 'HEX',
+                  \'ar': 'RGBA',
+                  \'pr': 'RGBP',
+                  \'pa': 'RGBAP',
+                  \'m' : 'CMYK',
+                  \'l' : 'HSL',
+                  \'la' : 'HSLA',
+                  \'h' : 'HSV',
+                  \}
+    let formats_menu = ["\n"]
+    for [k, v] in items(formats)
+        call add(formats_menu, " ".k."\t".v."\n")
+    endfor
+    let fsel = get(formats, input('Choose a format: '.join(formats_menu).'? '))
+    return fsel
+endfunction
+
+function! GetColorMethod()
+    let methods = {
+                   \'h' : 'Hue',
+                   \'s' : 'Saturation',
+                   \'v' : 'Value',
+                   \'m' : 'Monochromatic',
+                   \'a' : 'Analogous',
+                   \'3' : 'Triadic',
+                   \'4' : 'Tetradic',
+                   \'n' : 'Neutral',
+                   \'c' : 'Clash',
+                   \'q' : 'Square',
+                   \'5' : 'Five-Tone',
+                   \'6' : 'Six-Tone',
+                   \'2' : 'Complementary',
+                   \'p' : 'Split-Complementary',
+                   \'l' : 'Luma',
+                   \'g' : 'Turn-To',
+                   \}
+    let methods_menu = ["\n"]
+    for [k, v] in items(methods)
+        call add(methods_menu, " ".k."\t".v."\n")
+    endfor
+    let msel = get(methods, input('Choose a method: '.join(methods_menu).'? '))
+    return msel
+endfunction
+
+let g:unite_source_menu_menus.colorv = {
+    \ 'description' : ' color management
+        \ âŒ˜ [space]c',
+    \}
+let g:unite_source_menu_menus.colorv.command_candidates = [
+    \['â–· open colorv âŒ˜ ,cv',
+        \'ColorV'],
+    \['â–· open colorv with the color under the cursor âŒ˜ ,cw',
+        \'ColorVView'],
+    \['â–· preview colors âŒ˜ ,cpp',
+        \'ColorVPreview'],
+    \['â–· color picker âŒ˜ ,cd',
+        \'ColorVPicker'],
+    \['â–· edit the color under the cursor âŒ˜ ,ce',
+        \'ColorVEdit'],
+    \['â–· edit the color under the cursor (and all the concurrences) âŒ˜ ,cE',
+        \'ColorVEditAll'],
+    \['â–· insert a color âŒ˜ ,cii',
+        \'exe "ColorVInsert " .GetColorFormat()'],
+    \['â–· color list relative to the current âŒ˜ ,cgh',
+        \'exe "ColorVList " .GetColorMethod() "
+\ ".input("number of colors? (optional): ")
+        \ " ".input("number of steps? (optional): ")'],
+    \['â–· show colors list (Web W3C colors) âŒ˜ ,cn',
+        \'ColorVName'],
+    \['â–· choose color scheme (ColourLovers, Kuler) âŒ˜ ,css',
+        \'ColorVScheme'],
+    \['â–· show favorite color schemes âŒ˜ ,csf',
+        \'ColorVSchemeFav'],
+    \['â–· new color scheme âŒ˜ ,csn',
+        \'ColorVSchemeNew'],
+    \['â–· create hue gradation between two colors',
+        \'exe "ColorVTurn2 " " ".input("Color 1 (hex): ")
+        \" ".input("Color 2 (hex): ")'],
+    \]
+nnoremap <silent>[menu]c :Unite -silent menu:colorv<CR>
+" }}}
+
+" vim menu {{{
+let g:unite_source_menu_menus.vim = {
+    \ 'description' : ' vim
+        \ âŒ˜ [space]v',
+    \}
+let g:unite_source_menu_menus.vim.command_candidates = [
+    \['â–· choose colorscheme',
+        \'Unite colorscheme -auto-preview'],
+    \['â–· mappings',
+        \'Unite mapping -start-insert'],
+    \['â–· edit configuration file (vimrc)',
+        \'edit $MYVIMRC'],
+    \['â–· choose filetype',
+        \'Unite -start-insert filetype'],
+    \['â–· vim help',
+        \'Unite -start-insert help'],
+    \['â–· vim commands',
+        \'Unite -start-insert command'],
+    \['â–· vim functions',
+        \'Unite -start-insert function'],
+    \['â–· vim runtimepath',
+        \'Unite -start-insert runtimepath'],
+    \['â–· vim command output',
+        \'Unite output'],
+    \['â–· unite sources',
+        \'Unite source'],
+    \['â–· kill process',
+        \'Unite -default-action=sigkill -start-insert process'],
+    \['â–· launch executable (dmenu like)',
+        \'Unite -start-insert launcher'],
+    \['â–· clear powerline cache',
+        \'PowerlineClearCache'],
+    \]
+nnoremap <silent>[menu]v :Unite menu:vim -silent -start-insert<CR>
+" }}}
+
+" }}}
 " unite-alias.{{{
 let g:unite_source_alias_aliases = {}
 let g:unite_source_alias_aliases.test = {
@@ -1027,23 +1605,6 @@ function! sow_moveto_entry.func(candidates)
 endfunction
 call unite#custom_action('source/sow_moveentry_entry/*', 'sow_moveto_entry', sow_moveto_entry)
 call unite#custom_default_action('source/sow_moveentry_entry/*', 'sow_moveto_entry')
-"}}}
-" unite-menu"{{{
-let g:unite_source_menu_menus = {}
-let g:unite_source_menu_menus.test = {
-            \     'description' : 'Test menu',
-            \ }
-let g:unite_source_menu_menus.test.candidates = {
-            \       'ghci'      : 'VimShellInteractive ghci',
-            \       'python'    : 'VimShellInteractive python',
-            \       'Unite Beautiful Attack' : 'Unite -auto-preview colorscheme',
-            \     }
-function g:unite_source_menu_menus.test.map(key, value)
-    return {
-                \       'word' : a:key, 'kind' : 'command',
-                \       'action__command' : a:value,
-                \     }
-endfunction
 "}}}
 " unite-session."{{{
 " Save session automatically.
@@ -1490,14 +2051,14 @@ let g:slime_target = "tmux"
 "}}}
 " ----------------------------------------------------
 " showmarks.vim"{{{
-" ×Ô¶¯Éú³É°ïÖúÎÄµµ,ĞèÒªÊÖ¶¯½¨Á¢docÎÄ¼ş¼Ğ
+" è‡ªåŠ¨ç”Ÿæˆå¸®åŠ©æ–‡æ¡£,éœ€è¦æ‰‹åŠ¨å»ºç«‹docæ–‡ä»¶å¤¹
 let g:showmarks_enable=0
 "}}}
 " ---------------------------------------------------- 
 " Cscope"{{{
-" ĞèÒªÌí¼Ó»·¾³±äÁ¿
+" éœ€è¦æ·»åŠ ç¯å¢ƒå˜é‡
 "if has("cscope")
-"  set cscopetag   " Ê¹Ö§³ÖÓÃ Ctrl+]  ºÍ Ctrl+t ¿ì½İ¼üÔÚ´úÂë¼äÌøÀ´ÌøÈ¥
+"  set cscopetag   " ä½¿æ”¯æŒç”¨ Ctrl+]  å’Œ Ctrl+t å¿«æ·é”®åœ¨ä»£ç é—´è·³æ¥è·³å»
 " check cscope for definition of a symbol before checking ctags: set to 1
 " if you want the reverse search order
 "  set cscopetagorder=1
