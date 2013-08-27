@@ -4,6 +4,9 @@ loadplugins '\.(js|penta)$'
 group user
 set guioptions=bCrsBT
 
+" Colorscheme
+colorscheme molokai
+
 "passthrough
 au! LocationChange
 autocmd LocationChange web.qq.com -js modes.set(modes.PASS_THROUGH)
