@@ -187,6 +187,7 @@ NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'chrisbra/SudoEdit.vim'
+NeoBundle 'duff/vim-bufonly'
 
 NeoBundle 'kana/vim-wwwsearch'
 NeoBundle 'kana/vim-scratch'
