@@ -245,7 +245,7 @@ NeoBundle 'ujihisa/neco-rubymf'
 
 "markup
 NeoBundle 'othree/html5.vim'
-NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'mattn/emmet-vim'
 NeoBundle 'sukima/xmledit'
 NeoBundle 'ap/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
