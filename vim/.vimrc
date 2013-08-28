@@ -616,8 +616,8 @@ set infercase
 " Enable folding.
 set foldenable
 " 设置折叠方式
-set foldmethod=indent
-"set foldmethod=syntax
+"set foldmethod=indent
+set foldmethod=syntax
 "set foldmethod=expr
 "set foldmethod=marker
 " Show folding level.
