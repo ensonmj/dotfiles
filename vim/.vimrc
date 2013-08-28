@@ -1716,6 +1716,8 @@ let g:delimitMate_expand_cr = 1
 " }}}
 " ----------------------------------------------------
 " Syntastic{{{
+let g:syntastic_c_compiler="tile-gcc"
+let g:syntastic_c_include_dirs = ["/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include", "/opt/tilera/netlib-1.1.0.150605/netlib/include", "/opt/tilera/netlib-1.1.0.150605/app/trafgen_netlib/build/include"]
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_mode_map = { 'mode': 'active',
@@ -2048,6 +2050,9 @@ if has("win32")
     set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ Visual\\\ Studio\\\ 10.0/VC/atlmfc/include
     set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ SDKs/Windows/v7.0A/Include
     "}}}}
+else
+    set path+=/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include
+    set path+=/opt/tilera/netlib-1.1.0.150605/netlib/include
 endif
 "}}}
 " ----------------------------------------------------
