@@ -2098,6 +2098,17 @@ endif
 " ====================================================
 " Support and Misc
 " ====================================================
+" Use Ranger as a file explorer {{{
+fun! RangerChooser()
+    exec "silent !ranger --choosefile=/tmp/chosenfile " . expand("%:p:h")
+    if filereadable('/tmp/chosenfile')
+        exec 'edit ' . system('cat /tmp/chosenfile')
+        call system('rm /tmp/chosenfile')
+    endif
+    redraw!
+endfun
+map <Leader>x :call RangerChooser()<CR>
+" }}}
 " {{{
 function! s:smart_close()
     if winnr('$') != 1
