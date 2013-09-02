@@ -136,16 +136,25 @@ NeoBundleLazy 'Shougo/unite-build', {
             \ 'autoload' : { 'unite_sources' : 'build' }}
 NeoBundleLazy 'Shougo/unite-outline', {
             \ 'autoload' : { 'unite_sources' : 'outline' }}
+NeoBundleLazy 'Shougo/unite-session', {
+            \ 'autoload' : { 'unite_sources' : 'session',
+            \ 'commands' : ['UniteSessionSave', 'UniteSessionLoad']}}
 NeoBundleLazy 'Shougo/unite-help', {
             \ 'autoload' : { 'unite_sources' : 'help' }}
-NeoBundleLazy 'tsukkee/unite-tag', { 
-            \ 'autoload' : { 'unite_sources' : 'tag' }}
-NeoBundleLazy 'osyo-manga/unite-quickfix', {
-            \ 'autoload' : { 'unite_sources' : 'quickfix' }}
 NeoBundleLazy 'osyo-manga/unite-filetype', {
             \ 'autoload' : { 'unite_sources' : 'filetype' }}
+NeoBundleLazy 'osyo-manga/unite-quickfix', {
+            \ 'autoload' : { 'unite_sources': ['quickfix', 'location_list']}}
+NeoBundleLazy 'osyo-manga/unite-fold', {
+            \ 'autoload' : { 'unite_sources' : 'fold'}}
 NeoBundleLazy 'ujihisa/unite-locate', {
-            \ 'autoload' : {'unite_sources' : 'locate' }}
+            \ 'autoload' : { 'unite_sources' : 'locate' }}
+NeoBundleLazy 'ujihisa/unite-colorscheme', {
+            \ 'autoload' : { 'unite_sources' : 'colorscheme'}}
+NeoBundleLazy 'tacroe/unite-mark', {
+            \ 'autoload' : { 'unite_sources' : 'mark'}}
+NeoBundleLazy 'tsukkee/unite-tag', {
+            \ 'autoload' : { 'unite_sources' : 'tag' }}
 NeoBundleLazy 'thinca/vim-unite-history', {
             \ 'autoload' : {
             \ 'unite_sources' : ['history/command', 'history/search']
@@ -156,9 +165,7 @@ NeoBundle 'sgur/unite-git_grep'
 NeoBundle 'basyura/unite-rails'
 NeoBundle 'soh335/unite-qflist'
 NeoBundle 'tacroe/unite-alias'
-NeoBundle 'tacroe/unite-mark'
 NeoBundle 'basyura/unite-rails'
-NeoBundle 'tungd/unite-session'
 
 if has('win32') || has('win64')
     NeoBundle 'xolox/vim-shell'
