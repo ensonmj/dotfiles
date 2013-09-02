@@ -64,7 +64,11 @@ NeoBundleFetch 'Shougo/neobundle.vim', '', 'default'
 " My Bundles here:
 " 1)original repos on github
 "NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'joedicastro/vim-molokai256'
 NeoBundle 'toupeira/vim-desertink'
+" Make terminal themes from GUI themes
+NeoBundleLazy 'godlygeek/csapprox', { 'autoload' :
+        \ { 'commands' : ['CSApprox', 'CSApproxSnapshot']}}
 
 "After install, turn shell ~/.vim/vimproc, (n,g)make -f your_machines_makefile
 NeoBundle 'Shougo/vimproc', '', 'default'
