@@ -1689,25 +1689,6 @@ omap q  <Plug>(smarttill-t)
 omap Q  <Plug>(smarttill-T)
 "}}}
 " ----------------------------------------------------
-" surround.vim"{{{
-let g:surround_no_mappings = 1
-autocmd MyAutoCmd FileType * call s:define_surround_keymappings()
-
-function! s:define_surround_keymappings()
-    if !&l:modifiable
-        silent! nunmap <buffer> ds
-        silent! nunmap <buffer> cs
-        silent! nunmap <buffer> ys
-        silent! nunmap <buffer> yS
-    else
-        nmap <buffer> ds <Plug>Dsurround
-        nmap <buffer> cs <Plug>Csurround
-        nmap <buffer> ys <Plug>Ysurround
-        nmap <buffer> yS <Plug>YSurround
-    endif
-endfunction
-"}}}" ----------------------------------------------------
-" ----------------------------------------------------
 " delimitMate{{{
 "let g:delimitMate_matchpairs = "(:),[:],{:}"
 "let g:delimitMate_quotes = "\" ' `"
