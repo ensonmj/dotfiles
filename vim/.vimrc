@@ -165,9 +165,7 @@ NeoBundleLazy 'Shougo/junkfile.vim', {
 
 " VCS {{{
 " browse the vim undo tree
-NeoBundleLazy 'sjl/gundo.vim', { 'autoload' : {
-            \ 'commands' : 'GundoToggle'
-            \ }}
+NeoBundleLazy 'mbbill/undotree', {'autoload':{'commands':'UndotreeToggle'}}
 NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
 " Show git repository changes in the current file
@@ -316,6 +314,8 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'xuhdev/SingleCompile'
 " A better looking status line
 NeoBundle 'bling/vim-airline'
+NeoBundle 'bling/vim-bufferline'
+"NeoBundle 'itchyny/lightline.vim'
 " marks admin
 NeoBundle 'kshenoy/vim-signature'
 NeoBundle 'Lokaltog/vim-easymotion'
@@ -582,15 +582,6 @@ endif
 " 状态栏显示
 " Always display statusline.
 set laststatus=2   " 显示状态栏 (默认值为 1, 无法显示状态栏)
-" 状态栏格式定义
-set statusline=
-set statusline+=%#Visual#\ %{getcwd()} "current work directory
-set statusline+=%#DiffAdd#\ %f  "path to the file in the buffer, relative to current directory
-set statusline+=\%h%m%r%w" "flag
-"                      filetype               encoding     file format
-set statusline+=\[%{strlen(&ft)?&ft:'none'},%{&encoding},%{&fileformat}]
-set statusline+=%#Error#\%{fugitive#statusline()}%#Pmenu#
-set statusline+=%=%#DiffChange#\ %l/%L[%p%%],%v
 
 " Set maximam command line window.
 set cmdwinheight=5
@@ -615,6 +606,32 @@ set hlsearch
 
 " Searches wrap around the end of the file.
 set wrapscan
+" ----------------------------------------------------
+"path"{{{
+if has("win32")
+    "for work"{{{{
+    set path+=C:/Program\\\ Files/Microsoft\\\ Visual\\\ Studio\\\ 8/VC/include
+    set path+=C:/Program\\\ Files/Microsoft\\\ Visual\\\ Studio\\\ 8/VC/atlmfc/include
+    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ SDKs/Windows/v6.0/Include
+    "}}}}
+    "for mingw"{{{{
+    set path+=C:/MinGW/include
+    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include
+    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include-fixed
+    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++
+    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++/backward
+    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++/mingw32
+    "}}}}
+    "for home"{{{{
+    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ Visual\\\ Studio\\\ 10.0/VC/include
+    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ Visual\\\ Studio\\\ 10.0/VC/atlmfc/include
+    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ SDKs/Windows/v7.0A/Include
+    "}}}}
+else
+    set path+=/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include
+    set path+=/opt/tilera/netlib-1.1.0.150605/netlib/include
+endif
+"}}}
 "}}}
 " ====================================================
 " Edit
@@ -951,8 +968,8 @@ nmap <Leader>gd :Gdiff<CR>
 nmap <Leader>gp :Git push<CR>
 " }}}
 " ----------------------------------------------------
-" Gundo"{{{
-nnoremap U :<C-u>GundoToggle<CR>
+" Undotree {{{
+nnoremap U :<C-u>UndotreeToggle<CR>
 " }}}
 " ----------------------------------------------------
 " unite"{{{
@@ -1908,189 +1925,6 @@ nnoremap <silent> [Window]f :<C-u>Unite neosnippet/user neosnippet/runtime<CR>
 
 "}}}
 " ----------------------------------------------------
-"" neocomplcache"{{{
-"" Use neocomplcache.
-"let g:neocomplcache_enable_at_startup = 0
-
-"let bundle = neobundle#get('neocomplcache')
-"function! bundle.hooks.on_source(bundle)
-"" Use smartcase.
-"let g:neocomplcache_enable_smart_case = 0
-"" Use camel case completion.
-"let g:neocomplcache_enable_camel_case_completion = 0
-"" Use underbar completion.
-"let g:neocomplcache_enable_underbar_completion = 0
-"" Use fuzzy completion.
-"let g:neocomplcache_enable_fuzzy_completion = 0
-
-"" Set minimum syntax keyword length.
-"let g:neocomplcache_min_syntax_length = 3
-"" Set auto completion length.
-"let g:neocomplcache_auto_completion_start_length = 2
-"" Set manual completion length.
-"let g:neocomplcache_manual_completion_start_length = 0
-"" Set minimum keyword length.
-"let g:neocomplcache_min_keyword_length = 3
-"" let g:neocomplcache_enable_cursor_hold_i = v:version > 703 ||
-"" \ v:version == 703 && has('patch289')
-"let g:neocomplcache_enable_cursor_hold_i = 0
-"let g:neocomplcache_cursor_hold_i_time = 300
-"let g:neocomplcache_enable_insert_char_pre = 0
-"let g:neocomplcache_enable_prefetch = 0
-"let g:neocomplcache_skip_auto_completion_time = '0.6'
-
-"" For auto select.
-"let g:neocomplcache_enable_auto_select = 0
-
-"let g:neocomplcache_enable_auto_delimiter = 1
-"let g:neocomplcache_disable_auto_select_buffer_name_pattern =
-"\ '\[Command Line\]'
-""let g:neocomplcache_disable_auto_complete = 0
-"let g:neocomplcache_max_list = 100
-"let g:neocomplcache_force_overwrite_completefunc = 1
-"if !exists('g:neocomplcache_omni_patterns')
-"let g:neocomplcache_omni_patterns = {}
-"endif
-"if !exists('g:neocomplcache_omni_functions')
-"let g:neocomplcache_omni_functions = {}
-"endif
-"if !exists('g:neocomplcache_force_omni_patterns')
-"let g:neocomplcache_force_omni_patterns = {}
-"endif
-"let g:neocomplcache_enable_auto_close_preview = 1
-"" let g:neocomplcache_force_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-"let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-
-"" For clang_complete.
-"let g:neocomplcache_force_overwrite_completefunc = 1
-"let g:neocomplcache_force_omni_patterns.c =
-"\ '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplcache_force_omni_patterns.cpp =
-"\ '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-"let g:clang_complete_auto = 0
-"let g:clang_auto_select = 0
-"let g:clang_use_library = 1
-
-"" Define keyword pattern.
-"if !exists('g:neocomplcache_keyword_patterns')
-"let g:neocomplcache_keyword_patterns = {}
-"endif
-"" let g:neocomplcache_keyword_patterns.default = '\h\w*'
-"let g:neocomplcache_keyword_patterns['default'] = '[0-9a-zA-Z:#_]\+'
-"let g:neocomplcache_keyword_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-"let g:neocomplcache_vim_completefuncs = {
-"\ 'Ref' : 'ref#complete',
-"\ 'Unite' : 'unite#complete_source',
-"\ 'VimShellExecute' :
-"\ 'vimshell#vimshell_execute_complete',
-"\ 'VimShellInteractive' :
-"\ 'vimshell#vimshell_execute_complete',
-"\ 'VimShellTerminal' :
-"\ 'vimshell#vimshell_execute_complete',
-"\ 'VimShell' : 'vimshell#complete',
-"\ 'VimFiler' : 'vimfiler#complete',
-"\ 'Vinarise' : 'vinarise#complete',
-"\}
-"imap <expr> ` pumvisible() ?
-"\ "\<Plug>(neocomplcache_start_unite_quick_match)" : '`'
-"endfunction
-
-"function! CompleteFiles(findstart, base)
-"if a:findstart
-"" Get cursor word.
-"let cur_text = strpart(getline('.'), 0, col('.') - 1)
-
-"return match(cur_text, '\f*$')
-"endif
-
-"let words = split(expand(a:base . '*'), '\n')
-"let list = []
-"let cnt = 0
-"for word in words
-"call add(list, {
-"\ 'word' : word,
-"\ 'abbr' : printf('%3d: %s', cnt, word),
-"\ 'menu' : 'file_complete'
-"\ })
-"let cnt += 1
-"endfor
-
-"return { 'words' : list, 'refresh' : 'always' }
-"endfunction
-
-"unlet bundle
-"" }}}
-""neocomplcache-clang_complete"{{{
-"" use neocomplcache & clang_complete
-"" add neocomplcache option
-""let g:neocomplcache_force_overwrite_completefunc=1
-"" add clang_complete option
-""let g:clang_complete_auto=1
-""}}}
-"" clang_complete"{{{
-"" Clang version > 2.8 for c++...
-"" After * . , -> and :: => automatically
-"" * <C-X><C-U> => "force" the completion.
-"" clang * can detect errors inside your code, and highlight them
-"" * can open the quickfix window automatically.
-"" When using special flags for a project (especially -I and -D ones),
-"" put the flags inside the file .clang_complete at the root of your project.
-""
-"" some details:
-"" '+' - constructor
-"" '~' - destructor
-"" 'e' - enumerator constant
-"" 'a' - parameter ('a' from "argument") of a function, method or template
-"" 'u' - unknown or buildin type (int, float, ...)
-"" 'n' - namespace or its alias
-"" 'p' - template ('p' from "pattern")
-
-"let g:clang_complete_auto = 1
-"let g:clang_complete_copen = 1
-"let g:clang_hl_errors = 1
-"let g:clang_periodic_quickfix = 1
-""let g:clang_snippets = 1
-""let g:clang_conceal_snippets = 1
-"if has("win32")
-""let g:clang_exec = expand('$VIM').'/clang.exe'
-"let g:clang_user_options = '2>NULL || exit 0'
-"let g:clang_library_path = expand('$VIM')
-"elseif has("unix")
-"let g:clang_user_options = '2>/dev/null || exit 0'
-"let g:clang_library_path = '/usr/lib/llvm'
-"endif
-""let g:clang_complete_macros = 1
-"let g:clang_debug = 1
-""}}}
-"path"{{{
-if has("win32")
-    "for work"{{{{
-    set path+=D:/Work/vista_sdk/Include
-    set path+=D:/Work/WpdPack/Include
-    set path+=C:/Program\\\ Files/Microsoft\\\ Visual\\\ Studio\\\ 8/VC/include
-    set path+=C:/Program\\\ Files/Microsoft\\\ Visual\\\ Studio\\\ 8/VC/atlmfc/include
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ SDKs/Windows/v6.0/Include
-    "}}}}
-    "for mingw"{{{{
-    set path+=C:/MinGW/include
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include-fixed
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++/backward
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++/mingw32
-    "}}}}
-    "for home"{{{{
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ Visual\\\ Studio\\\ 10.0/VC/include
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ Visual\\\ Studio\\\ 10.0/VC/atlmfc/include
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ SDKs/Windows/v7.0A/Include
-    "}}}}
-else
-    set path+=/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include
-    set path+=/opt/tilera/netlib-1.1.0.150605/netlib/include
-endif
-"}}}
-" ----------------------------------------------------
 " vim-slime"{{{
 let g:slime_target = "tmux"
 "}}}
@@ -2130,6 +1964,20 @@ if has("cscope")
 endif
 "}}}
 " ----------------------------------------------------
+" vim-airline {{{
+" 状态栏格式定义
+let g:airline_left_sep = "|"
+let g:airline_left_alt_sep = "|"
+let g:airline_right_sep = "|"
+let g:airline_right_alt_sep = "|"
+" }}}
+" ----------------------------------------------------
+" vim-bufferline {{{
+let g:bufferline_echo = 0
+autocmd VimEnter *
+            \ let &statusline='%{bufferline#refresh_status()}'
+            \ .bufferline#get_status_string()
+" }}}
 " ====================================================
 " Support and Misc
 " ====================================================
