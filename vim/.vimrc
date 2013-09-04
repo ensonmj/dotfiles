@@ -446,6 +446,7 @@ endfunction
 "{{{
 " colorscheme
 colorscheme desertink
+"set background=dark
 
 " Show title.
 set title
@@ -871,6 +872,11 @@ nmap <down>  :3wincmd -<cr>
 let g:loaded_getscriptPlugin = 1
 " Disable netrw.vim
 let g:loaded_netrwPlugin = 1
+" }}}
+" ----------------------------------------------------
+" vim-color-solarized {{{
+let g:solarized_termcolors = 256
+let g:solarized_underline = 0
 " }}}
 " ----------------------------------------------------
 " Ctags"{{{
