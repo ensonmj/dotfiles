@@ -6,13 +6,15 @@ source /etc/profile
 
 #disable logging duplicated or blank command: ignoredups & ignorespace
 export HISTCONTROL=ignoreboth
-export EDITOR=vi
+export EDITOR=vim
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 [ -n "$TMUX" ] && export TERM=screen-256color
 
 #support pandoc
-export PATH=".:$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin:/home/ensonmj/.cabal/bin"
+if [ -d ~/.cabal ]; then
+    export PATH=".:$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin:~/.cabal/bin"
+fi
 
 #alias
 alias ls='ls -F --color=auto'
