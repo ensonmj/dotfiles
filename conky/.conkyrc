@@ -178,7 +178,7 @@ $stippled_hr
 ${color #7fff00}${font WenQuanYi Micro Hei:style=Normal:size=11}${alignc}${time %D  %a  %H:%M}
 $font$color$stippled_hr
 ${color slate grey}Uptime:$color $uptime ${alignr 5}${color slate grey}Load:$color $loadavg
-${color slate grey}CPU:$color $cpu% / ${freq_g}GHz 
+${color slate grey}CPU:$color $cpu% / ${freq_g}GHz ${alignr 5}${color slate grey}Temp:$color ${hwmon temp 1}°C
 ${cpugraph 0000ff 00ff00 -t -l}
 ${color slate grey}RAM:$color $mem / $memmax - $memperc%
 ${membar}
@@ -202,8 +202,8 @@ ${color lightgrey} ${top_mem name 4}${alignr 55}${top_mem pid 4}${offset 18}${to
 ${color lightgrey} ${top_mem name 5}${alignr 55}${top_mem pid 5}${offset 18}${top_mem cpu 5}${offset 22}${top_mem mem 5}
 $stippled_hr
 ${color slate grey}Networking:
-${color slate grey}Down:${color #8844ee} ${downspeed wlan0}/s ${alignr 70}${color slate grey}Up:${color #22ccff} ${upspeed wlan0}/s
-${color #8844ee}${downspeedgraph wlan0 32,138 ff0000 0000ff} ${color #22ccff}$alignr${upspeedgraph wlan0 32,138 0000ff ff0000 -t -l}
+${color slate grey}Down:${color #8844ee} ${downspeed eth0}/s ${alignr 70}${color slate grey}Up:${color #22ccff} ${upspeed eth0}/s
+${color #8844ee}${downspeedgraph eth0 32,138 ff0000 0000ff} ${color #22ccff}$alignr${upspeedgraph eth0 32,138 0000ff ff0000 -t -l}
 ${color #ddaa00}Port(s)${alignr}Connections
 ${color slate grey}Outbound: $color${tcp_portmon 32768 61000 count} ${color slate grey}${alignc}Inbound: $color${tcp_portmon 1 32767 count}  ${color slate grey}${alignr}Total: $color${tcp_portmon 1 65535 count}
 ${color #ddaa00}Outbound Connection ${alignr} Remote Service/Port$color
