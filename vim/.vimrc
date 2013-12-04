@@ -322,6 +322,11 @@ NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'kshenoy/vim-signature'
 " easily window resizing
 NeoBundle 'jimsei/winresizer'
+NeoBundle 'Valloric/YouCompleteMe', {
+            \ 'build' : {
+            \   'unix' : './install.sh --clang-completer --system-libclang'
+            \ },
+            \}
 "}}}
 "}}}
 " 2) vim-scripts repos {{{
@@ -1773,8 +1778,8 @@ let g:delimitMate_expand_cr = 1
 " }}}
 " ----------------------------------------------------
 " Syntastic{{{
-let g:syntastic_c_compiler="tile-gcc"
-let g:syntastic_c_include_dirs = ["/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include", "/opt/tilera/netlib-1.1.0.150605/netlib/include", "/opt/tilera/netlib-1.1.0.150605/app/trafgen_netlib/build/include"]
+"let g:syntastic_c_compiler="tile-gcc"
+"let g:syntastic_c_include_dirs = ["/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include", "/opt/tilera/netlib-1.1.0.150605/netlib/include", "/opt/tilera/netlib-1.1.0.150605/app/trafgen_netlib/build/include"]
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_mode_map = { 'mode': 'active',
@@ -1793,8 +1798,19 @@ function! bundle.hooks.on_source(bundle)
     let g:echodoc_enable_at_startup = 1
 endfunction
 unlet bundle
-"}}}"
-"" ----------------------------------------------------
+"}}}
+" ----------------------------------------------------
+" YouCompleteMe"{{{
+nnoremap <Leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+" nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+
+"let g:ycm_server_use_vim_stdout = 1
+"let g:ycm_server_log_level = 'debug'
+"let g:ycm_key_invoke_completion = <C-Tab>
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+" }}}
+" ----------------------------------------------------
 " neocomplete{{{
 " Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
