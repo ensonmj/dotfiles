@@ -1881,7 +1881,7 @@ function! bundle.hooks.on_source(bundle)
     " <C-e>: close popup.
     inoremap <expr><C-e> pumvisible() ? neocomplete#cancel_popup() : "\<End>"
     " <C-k>: unite completion.
-    imap <C-k> <Plug>(neocomplete_start_unite_complete)
+    "imap <C-k> <Plug>(neocomplete_start_unite_complete)
     " <C-h>, <BS>: close popup and delete backword char.
     inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
     inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
@@ -1911,11 +1911,6 @@ function! bundle.hooks.on_source(bundle)
     " <S-TAB>: completion back.
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-    " For cursor moving in insert mode(Not recommended)
-    inoremap <expr><Left> neocomplete#close_popup() . "\<Left>"
-    inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-    inoremap <expr><Up> neocomplete#close_popup() . "\<Up>"
-    inoremap <expr><Down> neocomplete#close_popup() . "\<Down>"
     "}}}
 endfunction
 unlet bundle
@@ -1924,20 +1919,31 @@ unlet bundle
 " neosnippet.vim"{{{
 let bundle = neobundle#get('neosnippet')
 function! bundle.hooks.on_source(bundle)
-    "imap <silent>L <Plug>(neosnippet_jump_or_expand)
-    "smap <silent>L <Plug>(neosnippet_jump_or_expand)
+    imap <C-k> <Plug>(neosnippet_jump_or_expand)
+    smap <C-k> <Plug>(neosnippet_jump_or_expand)
+    xmap <C-k> <Plug>(neosnippet_expand_target)
     "xmap <silent>L <Plug>(neosnippet_start_unite_snippet_target)
     "imap <silent>K <Plug>(neosnippet_expand_or_jump)
     "smap <silent>K <Plug>(neosnippet_expand_or_jump)
     "imap <silent>G <Plug>(neosnippet_expand)
     "imap <silent>S <Plug>(neosnippet_start_unite_snippet)
     "xmap <silent>o <Plug>(neosnippet_register_oneshot_snippet)
-    "xmap <silent>U <Plug>(neosnippet_expand_target)
 
-    let g:neosnippet#enable_snipmate_compatibility = 1
+    " SuperTab like snippets behavior.
+    "imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+                "\ "\<Plug>(neosnippet_expand_or_jump)"
+                "\: pumvisible() ? "\<C-n>" : "\<TAB>"
+    "smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+                "\ "\<Plug>(neosnippet_expand_or_jump)"
+                "\: "\<TAB>"
+
+    "let g:neosnippet#enable_snipmate_compatibility = 1
 
     " let g:snippets_dir = '~/.vim/snippets/,~/.vim/bundle/snipmate/snippets/'
-    let g:neosnippet#snippets_directory = '~/.vim/snippets'
+    "let g:neosnippet#snippets_directory = '~/.vim/snippets'
+    if has('conceal')
+        set conceallevel=2
+    endif
 endfunction
 
 unlet bundle
