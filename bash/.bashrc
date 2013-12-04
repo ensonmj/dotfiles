@@ -9,6 +9,15 @@ export HISTCONTROL=ignoreboth
 export EDITOR=vim
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+unset SSH_ASKPASS
+
+if [ -z "$TMUX" ]; then
+    #run this outside of tmux!
+    for name in `tmux ls -F '#{session_name}'`; do
+        tmux setenv -g -t $name DISPLAY $DISPLAY #set display for all sessions
+    done
+fi
+
 [ -n "$TMUX" ] && export TERM=screen-256color
 
 #support pandoc
