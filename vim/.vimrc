@@ -305,7 +305,6 @@ if has('win32') || has('win64')
 endif
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
-"NeoBundle 'abudden/TagHighlight'
 
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdcommenter'
@@ -340,6 +339,7 @@ NeoBundle 'SearchComplete'
 "}}}
 " 3) non github repos {{{
 "NeoBundle 'git://git.wincent.com/command-t.git'
+NeoBundle 'https://bitbucket.org/abudden/taghighlight', {'type' : 'hg'}
 "}}}
 "}}}
 " ====================================================
