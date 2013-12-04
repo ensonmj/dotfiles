@@ -315,9 +315,11 @@ NeoBundle 'xuhdev/SingleCompile'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'bling/vim-bufferline'
 "NeoBundle 'itchyny/lightline.vim'
+" shortcut
+NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'Lokaltog/vim-easymotion'
 " marks admin
 NeoBundle 'kshenoy/vim-signature'
-NeoBundle 'Lokaltog/vim-easymotion'
 " easily window resizing
 NeoBundle 'jimsei/winresizer'
 "}}}
