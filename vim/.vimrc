@@ -908,13 +908,13 @@ let g:easytags_include_members = 1
 " You can also define your own style if you want:
 "highlight cMember gui=italic
 let g:easytags_dynamic_files = 1
-let g:easytags_by_filetype = "~/.neocon/tags_cache/"
+let g:easytags_by_filetype = "~/.neocomplete/tags_cache/"
 
 " Faster syntax highlighting using Python
 let g:easytags_python_enabled = 1
-let g:easytags_on_cursorhold = 0
 let g:easytags_updatetime_autodisable = 1
 " highlight is so slow that I close this feature
+let g:easytags_on_cursorhold = 0
 let g:easytags_auto_highlight = 0
 map <C-F11> :UpdateTags -R --fields=+ialS --c-kinds=+p --c++-kinds=+p --extra=+q . <CR><CR>
 "}}}
@@ -958,13 +958,10 @@ endif
 "}}}
 " ----------------------------------------------------
 " DoxygenToolkit"{{{
-let g:DoxygenToolkit_briefTag_pre="@Synopsis  "
-let g:DoxygenToolkit_paramTag_pre="@Param "
-let g:DoxygenToolkit_returnTag="@Returns   "
-let g:DoxygenToolkit_blockHeader="---------------------------------------------"
-let g:DoxygenToolkit_blockFooter="---------------------------------------------"
-let g:DoxygenToolkit_authorName="majiana"
-let g:DoxygenToolkit_licenseTag="My own license"   "<-- !!! Does not end with "\<enter>"
+"let g:DoxygenToolkit_commentType="C++"
+let g:DoxygenToolkit_authorName="Ma Jian <majiana@sugon.com>"
+let g:DoxygenToolkit_licenseTag="My own license"
+"let g:DoxygenToolkit_briefTag_funcName="yes"
 "}}}
 " ----------------------------------------------------
 " fugitive"{{{
@@ -1935,6 +1932,7 @@ nnoremap <silent> [Window]f :<C-u>Unite neosnippet/user neosnippet/runtime<CR>
 " ----------------------------------------------------
 " vim-slime"{{{
 let g:slime_target = "tmux"
+let g:slime_paste_file = tempname()
 "}}}
 " ----------------------------------------------------
 " showmarks.vim"{{{
@@ -1950,12 +1948,16 @@ if has("cscope")
 " if you want the reverse search order
   set cscopetagorder=1
 
-" add any cscope database in current directory
-  if filereadable("/opt/tilera/cscope.out")
-    cs add /opt/tilera/cscope.out
-" else add the database pointed to by environment variable
-  elseif $CSCOPE_DB != ""
-    cs add $CSCOPE_DB
+  if has("vim_starting")
+      let s:cs_db = expand("$HOME/cscope.out")
+      " add any cscope database in current directory
+      if filereadable(s:cs_db)
+          cs add s:cs_db
+          " else add the database pointed to by environment variable
+      elseif $CSCOPE_DB != ""
+          cs add $CSCOPE_DB
+      endif
+      unlet s:cs_db
   endif
 
 " show msg when any other cscope db added
@@ -1981,10 +1983,10 @@ let g:airline_right_alt_sep = "|"
 " }}}
 " ----------------------------------------------------
 " vim-bufferline {{{
-let g:bufferline_echo = 0
-autocmd VimEnter *
-            \ let &statusline='%{bufferline#refresh_status()}'
-            \ .bufferline#get_status_string()
+"let g:bufferline_echo = 0
+"autocmd VimEnter *
+            "\ let &statusline='%{bufferline#refresh_status()}'
+            "\ .bufferline#get_status_string()
 " }}}
 " ====================================================
 " Support and Misc
