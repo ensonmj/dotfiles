@@ -1766,7 +1766,7 @@ omap Q  <Plug>(smarttill-T)
 "}}}
 " ----------------------------------------------------
 " delimitMate{{{
-"let g:delimitMate_matchpairs = "(:),[:],{:}"
+let g:delimitMate_matchpairs = "(:),[:],{:}"
 "let g:delimitMate_quotes = "\" ' `"
 let g:delimitMate_expand_cr = 1
 "let g:delimitMate_expand_space = 0
