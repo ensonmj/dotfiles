@@ -1149,7 +1149,7 @@ let g:unite_source_menu_menus.files.command_candidates = [
     \['▷ quick save ⌘ ,w',
         \'normal ,w'],
     \['▷ open ranger ⌘ ,x',
-        \'call RangerChooser()'],
+        \'call <SID>ranger_chooser()'],
     \['▷ open vimfiler ⌘ ,X',
         \'VimFiler'],
     \]
@@ -1801,19 +1801,25 @@ unlet bundle
 "}}}
 " ----------------------------------------------------
 " YouCompleteMe"{{{
-nnoremap <Leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-" nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
-
+let bundle = neobundle#get('YouCompleteMe')
+func! bundle.hooks.on_source(bundle)
 "let g:ycm_server_use_vim_stdout = 1
 "let g:ycm_server_log_level = 'debug'
-"let g:ycm_key_invoke_completion = <C-Tab>
+let g:ycm_key_invoke_completion = '<Tab>'
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf = 0
+
+nnoremap <Leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-n>" :
+            "\ <SID>check_back_space() ? "\<TAB>" :
+            "\ "\<C-x>\<C-o>"
+endfunc!
+unlet bundle
 " }}}
 " ----------------------------------------------------
 " neocomplete{{{
 " Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_at_startup = 0
 
 let bundle = neobundle#get('neocomplete.vim')
 function! bundle.hooks.on_source(bundle)
@@ -1904,10 +1910,6 @@ function! bundle.hooks.on_source(bundle)
     inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
                 \ <SID>check_back_space() ? "\<TAB>" :
                 \ neocomplete#start_manual_complete()
-    function! s:check_back_space() "{{{
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1] =~ '\s'
-    endfunction"}}}
     " <S-TAB>: completion back.
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
@@ -2013,23 +2015,29 @@ let g:airline_right_alt_sep = "|"
 " ====================================================
 " Support and Misc
 " ====================================================
+" check whether characters before current column are all space "{{{
+func! s:check_back_space()
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] =~ '\s'
+endfunc
+"}}}
 " Use Ranger as a file explorer {{{
-fun! RangerChooser()
+func! s:ranger_chooser()
     exec "silent !ranger --choosefile=/tmp/chosenfile " . expand("%:p:h")
     if filereadable('/tmp/chosenfile')
         exec 'edit ' . system('cat /tmp/chosenfile')
         call system('rm /tmp/chosenfile')
     endif
     redraw!
-endfun
-map <Leader>x :call RangerChooser()<CR>
+endfunc
+map <Leader>x :call <SID>ranger_chooser()<CR>
 " }}}
 " {{{
-function! s:smart_close()
+func! s:smart_close()
     if winnr('$') != 1
         close
     endif
-endfunction
+endfunc
 
 if !has('vim_starting')
     " Call on_source hook when reloading .vimrc.
