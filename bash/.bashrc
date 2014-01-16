@@ -88,3 +88,39 @@ make()
   /usr/bin/make "$@" 2>&1 | sed -e "/[Ee]rror[: ]/ s%$pathpat%$ccred&$ccend%g" -e "/[Ww]arning[: ]/ s%$pathpat%$ccyellow&$ccend%g"
   return ${PIPESTATUS[0]}
 }
+
+# valgrind
+function vgrun
+{
+  local COMMAND="$1"
+  local NAME="$2"
+  [[ -n "$COMMAND" ]] || { echo "Syntax: vgrun <command> <name>"; return; }
+  [[ -n "$NAME" ]] || { echo "Syntax vgrun <command> <name>"; return; }
+  valgrind \
+        --leak-check=full --error-limit=no --track-origins=yes \
+        --undef-value-errors=yes --log-file=valgrind-${NAME}.log \
+        --read-var-info=yes \
+        $COMMAND | tee valgrind-${NAME}-output.log 2>&1
+}
+
+function vgtrace
+{
+  local COMMAND="$1"
+  local NAME="$2"
+  [[ -n "$COMMAND" ]] || { echo "Syntax: vgtrace <command> <name>"; return; }
+  [[ -n "$NAME" ]] || { echo "Syntax vgtrace <command> <name>"; return; }
+  valgrind \
+        --leak-check=full --error-limit=no --track-origins=yes \
+        --undef-value-errors=yes --log-file=valgrind-${NAME}.log \
+        --read-var-info=yes --trace-children=yes \
+        $COMMAND | tee valgrind-${NAME}-output.log 2>&1
+}
+
+function vgdbg
+{
+  [[ -n "$*" ]] || { echo "Syntax: vgrun <command>"; return; }
+  valgrind \
+        --leak-check=full --error-limit=no --track-origins=yes \
+        --undef-value-errors=yes --read-var-info=yes --db-attach=yes \
+        "$@"
+}
