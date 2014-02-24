@@ -7,7 +7,8 @@ source /etc/profile
 #disable logging duplicated or blank command: ignoredups & ignorespace
 export HISTCONTROL=ignoreboth
 export EDITOR=vim
-export LC_ALL=en_US.UTF-8
+#performance acceleration for sort etc.
+export LC_ALL=C
 export LANG=en_US.UTF-8
 unset SSH_ASKPASS
 
