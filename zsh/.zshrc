@@ -42,18 +42,31 @@ setopt correct
 #for pkgfile "command not found" hook
 source /etc/profile
 
+# Environment {{{
 export EDITOR=vi
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 [ -n "$TMUX" ] && export TERM=screen-256color
 
-#support pandoc
-export PATH=".:$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin:/home/ensonmj/.cabal/bin"
+# golang
+if [ -n $(command -v go) -a -d $HOME/Go ]; then
+    export GOPATH=$HOME/Go
+    export PATH=$PATH:$GOPATH/bin
+fi
 
-#alias
+# pandoc
+export PATH=$PATH:$HOME/.cabal/bin
+
+# rbenv
+export PATH=$HOME/.rbenv/bin:$PATH
+eval "$(rbenv init -)"
+# }}}
+
+# Alias {{{
 alias man='man -P most'
 #alias tmux='tmux -2'
 alias payu="PACMAN=pacmatic nice packer -Syu"
+#}}}
 
 #dircolors
 if [ -f ~/.dircolors ]; then
@@ -62,5 +75,5 @@ fi
 
 #tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+
+# vim: foldmethod=marker
