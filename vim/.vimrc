@@ -252,6 +252,8 @@ NeoBundle 'mattn/vim-textobj-url'
 NeoBundle 'anyakichi/vim-textobj-xbrackets'
 NeoBundle 'sgur/vim-textobj-parameter'
 NeoBundle 'gilligan/textobj-gitgutter'
+" Smart selection of the closest text object
+NeoBundle 'Shougo/wildfire.vim'
 "}}}
 
 " Text manipulation {{{
@@ -327,16 +329,19 @@ NeoBundle 'Valloric/YouCompleteMe', {
             \   'unix' : './install.sh --clang-completer --system-libclang'
             \ },
             \}
+" Auto detect CJK and Unicode file encodings
+NeoBundle 'mbbill/fencview'
+" Display c/c++ function declaration in vim command/status line
+NeoBundle 'mbbill/echofunc'
+
 "}}}
 "}}}
 " 2) vim-scripts repos {{{
 " https://githubcom/vim-scripts/xxx.git
 NeoBundle 'vimcdoc'
 NeoBundle 'matchit.zip'
-NeoBundle 'FencView.vim'
 "NeoBundle 'Mark--Karkat'
 NeoBundle 'a.vim'
-"NeoBundle 'echofunc.vim'
 NeoBundle 'Txtfmt-The-Vim-Highlighter'
 NeoBundle 'DoxygenToolkit.vim'
 NeoBundle 'Source-Explorer-srcexpl.vim'
