@@ -10,6 +10,7 @@ export EDITOR=vim
 #performance acceleration for sort etc.
 export LC_ALL=C
 export LANG=en_US.UTF-8
+export LESSCHARSET=utf-8
 unset SSH_ASKPASS
 
 if [ -z "$TMUX" ]; then
