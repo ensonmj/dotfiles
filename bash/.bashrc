@@ -30,6 +30,7 @@ fi
 alias ls='ls -F --color=auto'
 alias ll='ls -l'
 alias man='man -P most'
+alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 
 #completion
 if [ -f /etc/bash_completion ]; then
