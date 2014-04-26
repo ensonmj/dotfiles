@@ -4,6 +4,7 @@
 #for pkgfile "command not found" hook
 source /etc/profile
 
+# Environment {{{
 #disable logging duplicated or blank command: ignoredups & ignorespace
 export HISTCONTROL=ignoreboth
 export EDITOR=vim
@@ -26,18 +27,15 @@ fi
 if [ -d ~/.cabal ]; then
     export PATH=".:$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin:~/.cabal/bin"
 fi
+# }}}
 
-#alias
+# Alias {{{
 alias ls='ls -F --color=auto --show-control-chars'
 alias la='ls -a'
 alias ll='ls -l'
 alias man='man -P most'
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
-
-#completion
-if [ -f /etc/bash_completion ]; then
-  . /etc/bash_completion
-fi
+# }}}
 
 #dircolors
 if [ -f ~/.dircolors ]; then
@@ -66,17 +64,7 @@ if [ -d $HOME/.nvm ]; then
     export NODE_PATH="$LP"
 fi
 
-PS1="\n[\[\e[36;1m\]\u\[\e[0m\]@\[\e[32;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]]\n\$ "
-if [ -f /etc/bash_completion.d/git ]; then
-    source /etc/bash_completion.d/git
-    GIT_PS1_SHOWDIRTYSTATE='yes'
-    GIT_PS1_SHOWSTASHSTATE='yes'
-    GIT_PS1_SHOWUNTRACKEDFILES='yes'
-    GIT_PS1_SHOWUPSTREAM="auto"
-    PS1='\n[\[\e[36;1m\]\u\[\e[0m\]@\[\e[32;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]\[\e[34;1m\]$(__git_ps1 "(%s)")\[\e[0m\]]\n\$'
-fi
-
-# self defined functions
+# self defined functions {{{
 svndiff()
 {
     svn diff "$@" | dos2unix | vim - -R "+colorscheme koehler"
@@ -93,7 +81,7 @@ make()
   return ${PIPESTATUS[0]}
 }
 
-# valgrind
+# valgrind {{{
 function vgrun
 {
   local COMMAND="$1"
@@ -128,3 +116,30 @@ function vgdbg
         --undef-value-errors=yes --read-var-info=yes --db-attach=yes \
         "$@"
 }
+# }}}
+
+# git {{{
+function git_since_last_commit
+{
+    now=`date +%s`;
+    last_commit=$(git log --pretty=format:%at -1 2> /dev/null) || return;
+    seconds_since_last_commit=$((now-last_commit));
+    minutes_since_last_commit=$((seconds_since_last_commit/60));
+    hours_since_last_commit=$((minutes_since_last_commit/60));
+    minutes_since_last_commit=$((minutes_since_last_commit%60));
+    echo "\e[31;1m|\e[34;1m ${hours_since_last_commit}h${minutes_since_last_commit}m";
+}
+#}}}
+#}}}
+
+PS1="\n[\[\e[36;1m\]\u\[\e[0m\]@\[\e[32;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]]\n\$ "
+if [ -f /usr/share/git/completion/git-prompt.sh ]; then
+    source /usr/share/git/completion/git-prompt.sh
+    GIT_PS1_SHOWDIRTYSTATE='yes'
+    GIT_PS1_SHOWSTASHSTATE='yes'
+    GIT_PS1_SHOWUNTRACKEDFILES='yes'
+    GIT_PS1_SHOWUPSTREAM="auto"
+    PS1='\n[\[\e[36;1m\]\u\[\e[0m\]@\[\e[32;1m\]\h\[\e[0m\]: \[\e[31;1m\]\w\[\e[34;1m\] $(__git_ps1 "(%s $(git_since_last_commit))")\[\e[0m\]]\n\$'
+fi
+
+# vim: foldmethod=marker
