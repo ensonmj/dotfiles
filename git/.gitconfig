@@ -1,0 +1,13 @@
+[user]
+	name = ensonmj
+	email = ensonmj@gmail.com
+[core]
+	autocrlf = input
+	safecrlf = true
+[push]
+	default = simple
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
