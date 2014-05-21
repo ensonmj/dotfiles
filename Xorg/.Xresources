@@ -1,0 +1,30 @@
+! Xft {{{
+Xft.dpi: 96
+Xft.antialias: true
+Xft.rgba: rgb
+Xft.hinting: true
+Xft.hintstyle: hintslight
+! }}}
+
+! Xterm {{{
+xterm*termName: xterm-256color
+! English font
+xterm*faceName: xft:DejaVu Sans Mono:style=Regular:pixelsize=14
+! Chinese font
+xterm*faceNameDoublesize: xft:WenQuanYi Micro Hei Mono:pixelsize=14
+xterm*locale: true
+xterm*utf8: 2
+xterm*utf8Title: true
+xterm*inputMethod: ibus
+xterm*eightBitInput: true
+xterm*cjkWidth: true
+xterm*dynamicColors: true
+xterm*metaSendsEscape: true
+xterm*saveLines: 10240
+xterm*borderWidth: 0
+xterm.VT100.translations: #override: \
+    <Btn1Up>: select-end(CLIPBOARD, PRIMARY, CUT_BUFFER0) \n\
+    Ctrl <KeyPress> V: insert-selection(CLIPBOARD, PRIMARY, CUT_BUFFER0)
+! }}}
+
+! vim: foldmethod=marker
