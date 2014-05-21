@@ -1,3 +1,41 @@
+! Themes {{{
+Xcursor.theme: ComixCursors-Orange-Regular-Slim
+*cursorColor: #ACEA5C
+
+!        black red green yellow blue magenta cyan white
+! normal 0     1   2     3      4    5       6    7
+! bold   8     9   10    11     12   13      14   15
+
+! tvale {{{
+*background: #333333
+*foreground: #FFFFFF
+!black
+*color0 : #222222
+*color8 : #454545
+!red
+*color1 : #B22222
+*color9 : #FA8072
+!green
+*color2 : #556B2F
+*color10: #9ACD32
+!yellow
+*color3 : #B8860B
+*color11: #DAA520
+!blue
+*color4 : #4682B4
+*color12: #6495ED
+!magenta
+*color5 : #9932CC
+*color13: #DA70D6
+!cyan
+*color6 : #87CEEB
+*color14: #B0E0E6
+!white
+*color7 : #C0C0C0
+*color15: #FFFFFF
+! }}}
+! }}}
+
 ! Xft {{{
 Xft.dpi: 96
 Xft.antialias: true
@@ -6,25 +44,89 @@ Xft.hinting: true
 Xft.hintstyle: hintslight
 ! }}}
 
+! use ^? for backspace (xterm and friends) {{{
+! http://www.ibb.net/~anne/keyboard.html
+*VT100.Translations: #override \
+    <Key>BackSpace: string(0x7F)\n\
+    <Key>Delete: string("\033[3~")\n\
+    <Key>Home: string("\033[1~")\n\
+    <Key>End: string("\033[4~")
+
+*ttyModes: erase ^?
+! }}}
+
 ! Xterm {{{
-xterm*termName: xterm-256color
-! English font
-xterm*faceName: xft:DejaVu Sans Mono:style=Regular:pixelsize=14
-! Chinese font
-xterm*faceNameDoublesize: xft:WenQuanYi Micro Hei Mono:pixelsize=14
+xterm.termName: xterm-256color
+xterm.title: Xterm
+!xterm.vt100.allowTitleOps: false
+xterm*scrollBar: false
+xterm*rightScrollBar: true
+xterm*loginshell: true
+xterm*borderLess: true
+xterm*colorUL: green
+xterm*colorULMode: false
+xterm*colorBD: wheat
+xterm*colorBDMode: true
+xterm*veryBoldColors: 4
+xterm*cursorBlink: false
+xterm*cursorUnderLine: false
+xterm*cursorColor: green
+xterm*highlightSelection: true
+xterm*saveLines: 10240
+xterm*fastScroll: true
+xterm*inputMethod: ibus
+
+! locale and font
 xterm*locale: true
 xterm*utf8: 2
 xterm*utf8Title: true
-xterm*inputMethod: ibus
-xterm*eightBitInput: true
-xterm*cjkWidth: true
+xterm*faceName: xft:DejaVu Sans Mono:style=Regular:pixelsize=14
+xterm*faceNameDoublesize: xft:WenQuanYi Micro Hei Mono:antialias=True:pixelsize=14
+xterm*xftAntialias: true
+xterm*faceSize: 10
+!xterm*cjkWidth: false
 xterm*dynamicColors: true
+
+! fix alt and del key input
+xterm*eightBitInput: false
+xterm*altSendEscape: true
 xterm*metaSendsEscape: true
-xterm*saveLines: 10240
-xterm*borderWidth: 0
-xterm.VT100.translations: #override: \
-    <Btn1Up>: select-end(CLIPBOARD, PRIMARY, CUT_BUFFER0) \n\
-    Ctrl <KeyPress> V: insert-selection(CLIPBOARD, PRIMARY, CUT_BUFFER0)
+! use ^[[3~ for delete
+xterm*deleteIsDEL: false
+! use ^? for backspace
+xterm*backarrowKey: false ]]
+
+! print color and bold/underline attributes
+xterm*printAttributes: 2
+xterm*printerCommand: cat > ~/xtermdump
+!xterm*printerCommand: cat |urlview
+
+! copy&paste related
+!set SELECT to CLIPBOARD
+!xterm*selectToClipBoard: true
+xterm*trimSelection: true
+! mouse selecting to copy, alt-v to paste,
+! Ctrl p to print screen content to file
+! ~Shift~Ctrl<Btn2Up> define middle click!!
+! disable fontMenu
+XTerm*VT100.Translations: #override \
+    Mod1 <KeyPress> V : insert-selection(CLIPBOARD,PRIMARY,CUT_BUFFER1) \n\
+    ~Shift ~Ctrl<Btn2Up> : insert-selection(CLIPBOARD,PRIMARY,CUT_BUFFER1) \n\
+    ~Shift <BtnUp> : select-end(CLIPBOARD,PRIMARY,CUT_BUFFER1) \n\
+    !Ctrl <Btn3Down> : ignore() \n\
+    !Lock Ctrl <Btn3Down> : ignore() \n\
+    !Lock Ctrl @Num_Lock <Btn3Down> : ignore() \n\
+    ! @Num_Lock Ctrl <Btn3Down> : ignore() \n\
+    Ctrl <KeyPress> F9 : print() \n
+
+!allow selecting email/url by double click
+XTerm*charClass: 33:48,37-38:48,45-47:48,64:48,58:48,126:48,61:48,63:48,43:48,35:48
+
+XTerm*cursorColorBackground: DimGray
+XTerm*highlight: LemonChiffon
+XTerm*borderColor: SlateGrey
+XTerm*pointerShape: pencil
+XTerm*pointerColor: azure
 ! }}}
 
 ! vim: foldmethod=marker
