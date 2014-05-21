@@ -33,6 +33,7 @@ fi
 alias ls='ls -F --color=auto --show-control-chars'
 alias la='ls -a'
 alias ll='ls -l'
+alias grep="grep --color=auto"
 alias man='man -P most'
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 # }}}
