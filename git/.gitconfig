@@ -11,3 +11,4 @@
 	ci = commit
 	st = status
 	br = branch
+	sed = ! git grep -z --full-name -l '.' | xargs -0 sed -i -e
