@@ -84,7 +84,7 @@ end
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {
-    names = {"1|main", "2|www", "3|im", "4|gimp", "5|office", "6|music", "7|virtual", 8, 9},
+    names = {"1|main", "2|www", "3|files", "4|im", "5|music", "6", "7", 8, 9},
     layout = {layouts[1], layouts[8], layouts[8], layouts[7], layouts[1],
                 layouts[7], layouts[8], layouts[1], layouts[1]}
 }
@@ -106,8 +106,11 @@ myawesomemenu = {
 
 mymainmenu = awful.menu({ items = {
     { "awesome", myawesomemenu, beautiful.awesome_icon },
-    { "open terminal", terminal },
-    { "suspend", "systemclt suspend" },
+    { "terminal", terminal },
+    { "nautilus", "nautilus" },
+    { "firefox", "firefox" },
+    { "suspend", "systemctl suspend" },
+    { "hibernate", "systemctl hibernate" },
     { "poweroff", "zenity --question --tile 'poweroff' --text 'Are you sure?' \
     --default-no && systemctl poweroff", "/usr/share/icons/gnome/16x16/actions/gtk-quit.png" }
 }})
@@ -480,8 +483,6 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons } },
     { rule = { class = "MPlayer" },
-      properties = { floating = true } },
-    { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
