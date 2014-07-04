@@ -193,6 +193,10 @@ NeoBundle 'ujihisa/neco-ruby'
 NeoBundle 'ujihisa/neco-rubymf'
 "}}}
 
+" Go {{{
+NeoBundle 'fatih/vim-go'
+" }}}
+
 " Javascript {{{
 NeoBundle 'jelera/vim-javascript-syntax'
 NeoBundle 'teramako/jscomplete-vim'
@@ -1958,6 +1962,33 @@ unlet bundle
 nnoremap <silent> [Window]f :<C-u>Unite neosnippet/user neosnippet/runtime<CR>
 
 "}}}
+" ----------------------------------------------------
+" vim-go {{{
+" Show type info for the word under cursor
+au FileType go nmap <Leader>i <Plug>go-info
+" Open the relevant Godoc for the word under cursor
+au FileType go nmap <Leader>gd <Plug>go-doc
+au FileType go nmap <Leader>gv <Plug>go-doc-vertical
+" Open the Godoc in browser
+au FileType go nmap <Leader>gb <Plug>go-doc-browser
+" Commands
+au FileType go nmap <Leader>r <Plug>go-run
+au FileType go nmap <Leader>b <Plug>go-build
+au FileType go nmap <Leader>t <Plug>go-test
+" Goto Declaration
+au FileType go nmap gd <Plug>go-def
+" Open definition/declaration
+au FileType go nmap <Leader>ds <Plug>go-def-split
+au FileType go nmap <Leader>dv <Plug>go-def-vertical
+au FileType go nmap <Leader>dt <Plug>go-def-tab
+
+" Setting
+" Disable auto installation of binaries
+"let g:go_disable_autoinstall = 1
+" Disable auto fmt on save
+"let g:go_fmt_autosave = 0
+let g:go_snippent_engine = "neosnippet"
+" }}}
 " ----------------------------------------------------
 " vim-slime"{{{
 let g:slime_target = "tmux"
