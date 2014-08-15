@@ -106,6 +106,7 @@ call neobundle#config('neosnippet', {
             \ 'filetypes' : 'snippet',
             \ 'unite_sources' : ['snippet', 'neosnippet/user', 'neosnippet/runtime'],
             \ }})
+NeoBundle 'Shougo/neosnippet-snippets'
 
 NeoBundle 'Shougo/neobundle-vim-scripts', '', 'default'
 
@@ -658,16 +659,21 @@ endif
 set autoread
 set autowrite
 
+" 'ts' is how tab characters are displayed;
+" 'sts' is how many "spaces" to insert when the tab key is pressed;
+" 'sw' is how many "spaces" to use per indent level;
+" 'et' is whether to use spaces or tabs;
+" 'sta' lets you insert 'sw' "spaces" when pressing tab at the beginning of a line.
 " 设置没有展开的<Tab>的宽度为4个空格
-set tabstop=8
-" 新输入的<Tab>展开为n个空格
-set expandtab
+set tabstop=4
 " 4个空格代替一个输入的<Tab>
 set softtabstop=4
-
-" Autoindent width.
 " (自动) 缩进每一步使用的空白数目。用于 'cindent'、>>、<< 等。
 set shiftwidth=4
+" 新输入的<Tab>展开为空格
+set expandtab
+" 行首<Tab>按照shiftwidth展开
+set smarttab
 " Round indent by shiftwidth.
 set shiftround
 
@@ -880,6 +886,12 @@ nmap <up>    :3wincmd +<cr>
 nmap <down>  :3wincmd -<cr>
 "}}}}
 "}}}
+" ====================================================
+" Auto filetype command
+" ====================================================
+au FileType ruby setl sts=2 sw=2 et
+au FileType python setl sts=4 sw=4 et
+au FileType javascript setl sts=2 sw=2 et
 " ====================================================
 " Plugins configuration
 " ====================================================
