@@ -890,6 +890,7 @@ nmap <down>  :3wincmd -<cr>
 " Auto filetype command
 " ====================================================
 au FileType ruby setl sts=2 sw=2 et
+au FileType eruby setl sts=2 sw=2 et
 au FileType python setl sts=4 sw=4 et
 au FileType javascript setl sts=2 sw=2 et
 " ====================================================
