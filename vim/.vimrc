@@ -1997,7 +1997,7 @@ au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 
 " Setting
 " Disable auto installation of binaries
-"let g:go_disable_autoinstall = 1
+let g:go_disable_autoinstall = 1
 " Disable auto fmt on save
 "let g:go_fmt_autosave = 0
 let g:to_auto_type_info = 1
