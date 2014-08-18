@@ -210,15 +210,16 @@ NeoBundle 'elzr/vim-json'
 " Markup {{{
 
 NeoBundleLazy 'othree/html5.vim', {'autoload':
-            \ {'filetypes': ['html', 'xhtml', 'css']}}
+            \ {'filetypes': ['html', 'xhtml', 'eruby', 'css', 'scss']}}
 NeoBundleLazy 'mattn/emmet-vim', {'autoload':
-            \ {'filetypes': ['html', 'xhtml', 'css', 'xml', 'xls', 'markdown']}}
+            \ {'filetypes': ['html', 'xhtml', 'xml', 'xls', 'markdown',
+            \ 'eruby', 'css', 'scss']}}
 NeoBundleLazy 'sukima/xmledit', {'autoload':
-            \ {'filetypes': ['html', 'xhtml', 'xml']}}
+            \ {'filetypes': ['html', 'xhtml', 'xml', 'eruby']}}
 NeoBundleLazy 'ap/vim-css-color', {'autoload':
-            \ {'filetypes': 'css'}}
+            \ {'filetypes': ['css', 'scss']}}
 NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload':
-            \ {'filetypes': 'css'}}
+            \ {'filetypes': ['css', 'scss']}}
 NeoBundle 'greyblake/vim-preview'
 NeoBundle 'vim-pandoc/vim-pandoc'
 NeoBundle 'tpope/vim-haml'
@@ -891,6 +892,8 @@ nmap <down>  :3wincmd -<cr>
 " ====================================================
 au FileType ruby setl sts=2 sw=2 et
 au FileType eruby setl sts=2 sw=2 et
+au FileType css setl sts=2 sw=2 et
+au FileType scss setl sts=2 sw=2 et
 au FileType python setl sts=4 sw=4 et
 au FileType javascript setl sts=2 sw=2 et
 " ====================================================
