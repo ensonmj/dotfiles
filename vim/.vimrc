@@ -200,7 +200,7 @@ NeoBundle 'fatih/vim-go'
 
 " Javascript {{{
 NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'teramako/jscomplete-vim'
+NeoBundle 'mattn/jscomplete-vim'
 NeoBundle 'nono/jquery.vim'
 NeoBundle 'thinca/vim-textobj-function-javascript'
 NeoBundle 'kchmck/vim-coffee-script'
@@ -259,7 +259,7 @@ NeoBundle 'anyakichi/vim-textobj-xbrackets'
 NeoBundle 'sgur/vim-textobj-parameter'
 NeoBundle 'gilligan/textobj-gitgutter'
 " Smart selection of the closest text object
-NeoBundle 'Shougo/wildfire.vim'
+NeoBundle 'gcmt/wildfire.vim'
 "}}}
 
 " Text manipulation {{{
@@ -2082,6 +2082,15 @@ let g:bufferline_rotate = 1
 "autocmd VimEnter *
             "\ let &statusline='%{bufferline#refresh_status()}'
             "\ .bufferline#get_status_string()
+" }}}
+" ----------------------------------------------------
+" wildfire.vim {{{
+" This selects the next closest text object.
+map <SPACE> <Plug>(wildfire-fuel)
+" This selects the previous closest text object.
+vmap <C-SPACE> <Plug>(wildfire-water)
+" Quick selection
+nmap <leader>s <Plug>(wildfire-quick-select)
 " }}}
 " ====================================================
 " Support and Misc
