@@ -11,7 +11,9 @@
 	ci = commit
 	st = status
 	br = branch
-	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short --all
 	type = cat-file -t
 	dump = cat-file -p
 	sed = ! git grep -z --full-name -l '.' | xargs -0 sed -i -e
+[color]
+	ui = true
