@@ -145,3 +145,6 @@ bindsym $mod+r mode "resize"
 bar {
     status_command i3status
 }
+
+#ibus
+exec --no-startup-id ibus-daemon --xim --replace --daemonize &
