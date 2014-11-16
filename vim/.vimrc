@@ -274,7 +274,6 @@ NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-surround'
 " Smart and fast date changer
 NeoBundle 'tpope/vim-speeddating'
-NeoBundle 'chrisbra/SudoEdit.vim'
 NeoBundle 'duff/vim-bufonly'
 " multiple cursors
 NeoBundle 'terryma/vim-multiple-cursors'
@@ -325,6 +324,7 @@ NeoBundle 'bling/vim-bufferline'
 "NeoBundle 'itchyny/lightline.vim'
 " shortcut
 NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'Lokaltog/vim-easymotion'
 " marks admin
 NeoBundle 'kshenoy/vim-signature'
