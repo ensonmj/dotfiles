@@ -893,6 +893,7 @@ nmap <down>  :3wincmd -<cr>
 " {{{
 au FileType ruby setl sts=2 sw=2 et
 au FileType eruby setl sts=2 sw=2 et fdm=indent
+au FileType yaml setl sts=2 sw=2 et
 au FileType css setl sts=2 sw=2 et
 au FileType scss setl sts=2 sw=2 et
 au FileType python setl sts=4 sw=4 et
