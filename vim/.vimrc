@@ -304,6 +304,7 @@ if has('conceal')
 endif
 NeoBundleLazy 'joedicastro/vim-pentadactyl', {
             \ 'autoload': {'filetypes': ['pentadactyl']}}
+NeoBundle 'othree/eregex.vim'
 "}}}
 
 " Misc tools {{{
