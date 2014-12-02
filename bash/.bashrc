@@ -33,7 +33,7 @@ fi
 #golang
 if [ -d $HOME/Go ]; then
     export GOPATH=$HOME/Go
-    export PATH=$PATH:$HOME/go/bin
+    export PATH=$PATH:$HOME/Go/bin
 fi
 
 #nvm
