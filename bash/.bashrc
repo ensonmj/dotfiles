@@ -4,31 +4,6 @@
 #for pkgfile "command not found" hook
 source /etc/profile
 
-# Environment {{{
-#disable logging duplicated or blank command: ignoredups & ignorespace
-export HISTCONTROL=ignoreboth
-export EDITOR=vim
-#performance acceleration for sort etc.
-export LC_ALL=C
-export LANG=en_US.UTF-8
-export LESSCHARSET=utf-8
-unset SSH_ASKPASS
-
-if [ -z "$TMUX" ]; then
-    #run this outside of tmux!
-    for name in `tmux ls -F '#{session_name}' 2>/dev/null`; do
-        tmux setenv -g -t $name DISPLAY $DISPLAY #set display for all sessions
-    done
-fi
-
-[ -n "$TMUX" ] && export TERM=screen-256color
-
-#support pandoc
-if [ -d ~/.cabal ]; then
-    export PATH=".:$PATH:$(ruby -rubygems -e 'puts Gem.user_dir')/bin:~/.cabal/bin"
-fi
-# }}}
-
 # Alias {{{
 alias ls='ls -F --color=auto --show-control-chars'
 alias la='ls -a'
@@ -37,19 +12,28 @@ alias grep="grep --color=auto"
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 # }}}
 
-#dircolors
-if [ -f ~/.dircolors ]; then
-    eval `dircolors ~/.dircolors`
-fi
-
-#tmuxinator
-[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
+# Environment && Init scripts {{{
+#disable logging duplicated or blank command: ignoredups & ignorespace
+export HISTCONTROL=ignoreboth
+export EDITOR=vim
+#performance acceleration for sort etc.
+export LC_ALL=C
+export LANG=en_US.UTF-8
+export LESSCHARSET=utf-8
+unset SSH_ASKPASS
+export PATH=$PATH:.
 
 #rbenv
 if [ -d $HOME/.rbenv ]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
     source $HOME/.rbenv/completions/rbenv.bash
     eval "$(rbenv init -)"
+fi
+
+#golang
+if [ -d $HOME/Go ]; then
+    export GOPATH=$HOME/Go
+    export PATH=$PATH:$HOME/go/bin
 fi
 
 #nvm
@@ -64,7 +48,32 @@ if [ -d $HOME/.nvm ]; then
     export NODE_PATH="$LP"
 fi
 
-# self defined functions {{{
+#pandoc
+if [ -d $HOME/.cabal ]; then
+    export PATH="$PATH:$HOME/.cabal/bin"
+fi
+
+#dircolors
+if [ -f $HOME/.dircolors ]; then
+    eval `dircolors $HOME/.dircolors`
+fi
+
+#tmux
+if [ -z "$TMUX" ]; then
+    #run this outside of tmux!
+    for name in `tmux ls -F '#{session_name}' 2>/dev/null`; do
+        tmux setenv -g -t $name DISPLAY $DISPLAY #set display for all sessions
+    done
+else
+    #inside tmux!
+    export TERM=screen-256color
+fi
+
+#tmuxinator
+[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
+# }}}
+
+# self-defined functions {{{
 function man {
     env LESS_TERMCAP_mb=$'\E[01;31m' \
         LESS_TERMCAP_md=$'\E[01;38;5;74m' \
@@ -128,8 +137,9 @@ function vgdbg
         "$@"
 }
 # }}}
+#}}}
 
-# git {{{
+# PS1 {{{
 function git_since_last_commit
 {
     now=`date +%s`;
@@ -140,8 +150,6 @@ function git_since_last_commit
     minutes_since_last_commit=$((minutes_since_last_commit%60));
     echo "\e[31;1m|\e[34;1m ${hours_since_last_commit}h${minutes_since_last_commit}m";
 }
-#}}}
-#}}}
 
 PS1="\n[\[\e[36;1m\]\u\[\e[0m\]@\[\e[32;1m\]\h\[\e[0m\]:\[\e[31;1m\]\w\[\e[0m\]]\n\$ "
 if [ -f /usr/share/git/completion/git-prompt.sh ]; then
@@ -152,5 +160,6 @@ if [ -f /usr/share/git/completion/git-prompt.sh ]; then
     GIT_PS1_SHOWUPSTREAM="auto"
     PS1='\n[\[\e[36;1m\]\u\[\e[0m\]@\[\e[32;1m\]\h\[\e[0m\]: \[\e[31;1m\]\w\[\e[34;1m\] $(__git_ps1 "(%s $(git_since_last_commit))")\[\e[0m\]]\n\$'
 fi
+#}}}
 
 # vim: foldmethod=marker
