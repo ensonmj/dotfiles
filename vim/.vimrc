@@ -56,7 +56,7 @@ if has('vim_starting')
     endif
 endif
 
-call neobundle#rc(s:bundles_dir)
+call neobundle#begin(s:bundles_dir)
 
 " let NeoBundle manage NeoBundle
 NeoBundleFetch 'Shougo/neobundle.vim', '', 'default'
@@ -360,6 +360,8 @@ NeoBundle 'SearchComplete'
 "NeoBundle 'git://git.wincent.com/command-t.git'
 NeoBundle 'https://bitbucket.org/abudden/taghighlight', {'type' : 'hg'}
 "}}}
+
+call neobundle#end()
 "}}}
 " ====================================================
 " Platform depends
