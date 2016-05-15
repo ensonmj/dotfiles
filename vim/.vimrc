@@ -1,58 +1,469 @@
 " ====================================================
-" Initialize
-" ====================================================
+" Initialize(platform depends)
+" ----------------------------------------------------
 " {{{
-" Set augroup.
 augroup MyAutoCmd
     autocmd!
 augroup END
 
-" Use Vim settings, rather then Vi settings (much better!)."{{{
-" This must be first, because it changes other options as a side effect.
-set nocompatible
+if has('win32') || has('win64')
+    " For Windows"{{{
+    " 设置终端提示使用语言，解决consle输出乱码
+    language messages zh_CN.UTF-8
+    language time English
 
-" display incomplete commands
+    " In Windows, can't find exe, when $PATH isn't contained $VIM.
+    if $PATH !~? '\(^\|;\)' . escape($VIM, '\\') . '\(;\|$\)'
+        let $PATH = $VIM . ';' . $PATH
+    endif
+
+    if has('gui_running')
+        " 使用guifont设置英文字体
+        set guifont=Courier_New:h12:w7
+        " 使用guifontwide设置中文等宽字体
+        set guifontwide=NSimSun-18030,NSimSun
+    endif
+
+    " directory fow swap file
+    set directory+=$TMP
+
+    " directory for persistent undo
+    set undodir=$TMP
+    "}}}
+else
+    " For Linux"{{{
+    " 设置终端提示使用语言，解决consle输出乱码
+    language messages en_US.UTF-8
+    language time en_US.UTF-8
+
+    " Exchange path separator.
+    set shellslash
+
+    " directory for persistent undo
+    set undodir=/tmp
+
+    " For non GVim.
+    if !has('gui_running')
+        " Enable 256 color terminal.
+        if !exists('$TMUX')
+            set t_Co=256
+        endif
+    endif
+    "}}}
+endif
+"}}}
+" ====================================================
+" Encoding（兼容Linux）"{{{
+" 注意新建文件跟空文件的区别
+" 新建文件：使用vim建立的新文件，此时编码按照fileencoding来设置
+" 空文件：  比如在windows下，使用右键新建文本文档，这样就建立了一个空白文件
+"           vim打开此空白文件，会探测文件编码，由于文件是空白，所有探测结果
+"           肯定是fileencodings中的第一个（此处utf-8），这样在windows下用其
+"           他编辑器打开含有中文的文件时就会乱码。(set
+"           fenc=chinese)
+"           "}}}
+" ----------------------------------------------------
+"{{{
+set encoding=utf-8
+"set termencoding=utf-8
+"set fileencoding=chinese
+set fileencodings=usc-bom,utf-8,chinese
+
+" A fullwidth character is displayed in vim properly.
+"set ambiwidth=double
+
+" 解决quickfix 窗口乱码
+function! QfConvCU()
+    let qflist = getqflist()
+    for i in qflist
+        let i.text = iconv(i.text, "cp936", "utf-8")
+    endfor
+    call setqflist(qflist)
+endfunction
+function! QfConvUC()
+    let qflist = getqflist()
+    for i in qflist
+        let i.text = iconv(i.text, "utf-8", "cp936")
+    endfor
+    call setqflist(qflist)
+endfunction
+augroup MyAutoCmd
+"    autocmd BufReadPost quickfix call QfConv()
+augroup END
+"}}}
+" ====================================================
+" View
+" ----------------------------------------------------
+"{{{
+" Set maximam command line window.
+set cmdwinheight=5
+" Height of command line.
+"set cmdheight=2
+
+set colorcolumn=80
+
+" Don't complete from other buffer.
+set complete=.
+"set complete=.,w,b,i,t
+
+" For conceal
+set conceallevel=2
+set concealcursor=nc
+"set concealcursor=iv
+
+" When a line is long, do not omit it in @.
+set display=lastline
+" Display an invisible letter with hex format.
+set display+=uhex
+
+" Use vertical diff format
+set diffopt+=vertical
+
+" 设置窗口
+" set lines=35
+" set columns=100
+
+" 不显示工具栏
+set guioptions-=T
+
+" 不显示菜单栏
+"set guioptions-=m
+" 不显示撕裂菜单
+set guioptions-=t
+" 解决菜单乱码
+source $VIMRUNTIME/delmenu.vim
+" 加载默认菜单
+source $VIMRUNTIME/menu.vim
+" 设置菜单语言
+"set langmenu=en_US
+
+" 记录的历史命令数目
+set history=200
+
+" 状态栏显示
+" Always display statusline.
+set laststatus=2   " 显示状态栏 (默认值为 1, 无法显示状态栏)
+
+" Don't redraw while macro executing.
+set lazyredraw
+
+" 设置显示tab和行尾
+set list
+set listchars=tab:\|\ ,trail:-,extends:>,precedes:<
+
+" In many terminal emulators the mouse works just fine, thus enable it.
+set mouse=a
+
+" 显示行号
+set number
+
+" No equal window size.
+set noequalalways
+
+" Maintain a current line at the time of movement as much as possible.
+set nostartofline
+
+" Set popup menu max height.
+set pumheight=20
+
+" Report changes.
+set report=0
+
+" 在底部显示标尺，显示行号列号和百分比
+set ruler
+
+" 光标移动到buffer的顶部和底部时保持3距离
+set scrolloff=2
+
+" 信息提示格式
+set shortmess=aToOI
+
+" Display all the information of the tag by the supplement of the Insert mode.
+set showfulltag
+
+" Show (partial) command on statusline.
 set showcmd
 
 " define the behavior of the selection
 set selection=inclusive
 
-" For all text files set 'textwidth' to 80 characters.
-autocmd FileType text setlocal textwidth=80
+" Splitting a window will put the new window below the current one.
+set splitbelow
+" Splitting a window will put the new window right the current one.
+set splitright
 
-" In many terminal emulators the mouse works just fine, thus enable it.
-set mouse=a
+" Show title.
+set title
+" Title length.
+set titlelen=95
+" Title string.
+set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servername}
 
-" When editing a file, always jump to the last known cursor position.
-" Don't do it when the position is invalid or when inside an event handler
-" (happens when dropping a file on gvim).
-" Also don't do it when the mark is in the first line, that is the default
-" position when opening a file.
-autocmd BufReadPost *
-            \ if line("'\"") > 1 && line("'\"") <= line("$") |
-            \   exe "normal! g`\"" |
-            \ endif
+" Wrap long line.
+set wrap
+" Wrap conditions.
+set whichwrap+=h,l,<,>,[,],b,s,~
+" Turn down a long line appointed in 'breakat'
+set linebreak
+set breakat=\ \	;:,!?
+set showbreak=>\
+
+"Turn on Wild menu
+set wildmenu
+"set wildmode=longest,list
+set wildignore+=*.a,*.o
+set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
+set wildignore+=.git,.hg,.svn
+set wildignore+=*~,*.swp,*.tmp
+
+" Can supplement a tag in a command-line.
+set wildoptions=tagfile
+
+" Set minimal width for current window.
+set winwidth=30
+" Set minimal height for current window.
+set winheight=1
+
+" Adjust window size of preview and help.
+"set previewheight=10
+"set helpheight=12
+
 "}}}
+" ====================================================
+" Search
+" ----------------------------------------------------
+"{{{
+" Ignore the case of normal letters.
+set ignorecase
+" If the search pattern contains upper case characters, override ignorecase option.
+set smartcase
+
+" Enable incremental search.
+set incsearch
+" Enable highlight search result.
+set hlsearch
+
+" Searches wrap around the end of the file.
+set wrapscan
+"}}}
+"}}}
+" ====================================================
+" Edit
+" ----------------------------------------------------
+" {{{
+"Set to auto read when a file is changed from the outside
+set autoread
+set autowrite
+
+" 'ts' is how tab characters are displayed;
+" 'sts' is how many "spaces" to insert when the tab key is pressed;
+" 'sw' is how many "spaces" to use per indent level;
+" 'et' is whether to use spaces or tabs;
+" 'sta' lets you insert 'sw' "spaces" when pressing tab at the beginning of a line.
+" 设置没有展开的<Tab>的宽度为4个空格
+set tabstop=4
+" 4个空格代替一个输入的<Tab>
+set softtabstop=4
+" (自动) 缩进每一步使用的空白数目。用于 'cindent'、>>、<< 等。
+set shiftwidth=4
+" 新输入的<Tab>展开为空格
+set expandtab
+" 行首<Tab>按照shiftwidth展开
+set smarttab
+" Round indent by shiftwidth.
+set shiftround
+
+" Enable modeline.
+set modeline
+" Use clipboard register.
+set clipboard& clipboard+=unnamed
+
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
+" do not keep a backup file, use versions instead
+set nobackup
+
+" Highlight parenthesis.
+set showmatch
+" Highlight when CursorMoved.
+set cpoptions-=m
+set matchtime=3
+" Highlight <>.
+set matchpairs+=<:>
+
+" When on a buffer becomes hidden when it is abandoned.
+set hidden
+
+" 在插入模式按回车时，自动插入当前注释前导符。
+set formatoptions+=r
+" Enable multibyte format.
+set formatoptions+=mM
+
+" Ignore case on insert completion.
+set infercase
+
+" Enable folding.
+set foldenable
+" 设置折叠方式
+set foldmethod=indent
+" syntax is too slow
+"set foldmethod=syntax
+"set foldmethod=marker
+" Show folding level.
+"set foldcolumn=1
+set foldcolumn=3
+
+" grep选项
+"set grepprg=grep\ -nri
+" Use vimgrep.
+"set grepprg=internal
+" Use grep.
+set grepprg=grep\ -nH
+
+" Set undofile
+set undofile
+
+" auto change the current working director
+"set autochdir
+"autocmd BufEnter * silent! lcd %:p:h
+
+" 自动向当前文件的上级查找tag文件，直到找到为止
+" support vim-easytags
+set tags=./tags;~/.vimtags
+
+" Set keyword help.
+"set keywordprg=:help
 " }}}
 " ====================================================
-" plugins bundles
+" Syntax
+" ----------------------------------------------------
+" {{{
+" Switch syntax highlighting on, when the terminal has colors
+syntax on
+
+" Copy indent from current line, over to the new line
+set autoindent
+" Do smart indenting when starting a new line
+set smartindent
+
+augroup MyAutoCmd
+    " 自动给光标所在单词添加下划线
+    autocmd CursorHold * silent! exe printf('match Underlined /\<%s\>/', expand('<cword>'))
+    " 自动高亮匹配光标所在所有单词
+    "autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
+    "
+    " For all text files set 'textwidth' to 80 characters.
+    autocmd FileType text setlocal textwidth=80
+
+    " Auto reload vimrc and VimScript
+    autocmd BufWritePost,FileWritePost .vimrc,*.vim if &autoread | source <afile> | endif
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event handler
+    " (happens when dropping a file on gvim).
+    " Also don't do it when the mark is in the first line, that is the default
+    " position when opening a file.
+    autocmd BufReadPost *
+                \ if line("'\"") > 1 && line("'\"") <= line("$") |
+                \   exe "normal! g`\"" |
+                \ endif
+
+    " Close help and git window by pressing q.
+    autocmd FileType help,qf,quickrun,qfreplace,ref,git-status,git-log,gitcommit
+                \ nnoremap <buffer><silent> q :<C-u>call <sid>smart_close()<CR>
+    autocmd FileType * if (&readonly || !&modifiable) && !hasmapto('q', 'n')
+                \ | nnoremap <buffer><silent> q :<C-u>call <sid>smart_close()<CR>| endif
+
+    " auto filetype command
+    autocmd FileType ruby setlocal sts=2 sw=2 et
+    autocmd FileType eruby setlocal sts=2 sw=2 et fdm=indent
+    autocmd FileType yaml setlocal sts=2 sw=2 et
+    autocmd FileType css setlocal sts=2 sw=2 et
+    autocmd FileType scss setlocal sts=2 sw=2 et
+    autocmd FileType python setlocal sts=4 sw=4 et
+    autocmd FileType javascript setlocal sts=2 sw=2 et
+    autocmd FileType html setlocal sts=2 sw=2 et fdm=indent
+augroup END
+" }}}
 " ====================================================
+" Session
+" ----------------------------------------------------
+" viminfo"{{{
+" create viminfo :wviminfo [file]
+" load viminfo :rviminfo [file]
+"}}}
+" session"{{{
+" create sesssion :mksession [file]
+" load session :source {file}
+set sessionoptions-=curdir
+set sessionoptions+=sesdir
+"}}}
+" view"{{{
+" save fold and other status
+"au BufWinLeave *.* mkview
+" load all saved status
+"au BufWinEnter *.* silent loadview
+"}}}
+" ====================================================
+" Command
+" ----------------------------------------------------
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+if !exists(":DiffOrig")
+    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+                \ | wincmd p | diffthis
+endif
+" ====================================================
+" Key map
+" ----------------------------------------------------
+"{{{
+let mapleader = ","
+let maplocalleader = ","
+
+nnoremap Qa :qa<CR>
+nnoremap Q :q<CR>
+
+"change directory to the file being edited and display it
+nnoremap <Leader>cd :cd %:p:h<CR>:pwd<CR>
+
+"windows managment{{{{
+"close
+map <leader>wc :wincmd q<cr>
+"rotate
+map <leader>wr :wincmd r<cr>
+"move
+map <leader>h :wincmd H<cr>
+map <leader>k :wincmd K<cr>
+map <leader>l :wincmd L<cr>
+map <leader>j :wincmd J<cr>
+"resize
+map <leader>H :3wincmd <<cr>
+map <leader>K :3wincmd ><cr>
+map <leader>L :3wincmd +<cr>
+map <leader>J :3wincmd -<cr>
+"}}}}
+"}}}
+" ====================================================
+" Plugins bundles
+" ----------------------------------------------------
 " NeoBundle"{{{
 if has('win32') || has('win64')
     let s:bundles_dir = expand("$VIM/Vimfiles")
 else
     let s:bundles_dir = expand("$HOME/.vim/")
 endif
-let s:neobundle_dir = s:bundles_dir.'neobundle.vim'
+let s:neobundle_dir = s:bundles_dir . 'neobundle.vim'
 
 if has('vim_starting')
     if isdirectory(s:neobundle_dir)
-        execute 'set rtp+='.s:neobundle_dir
+        execute 'set rtp+=' . s:neobundle_dir
     else
         execute printf('!git clone %s://github.com/Shougo/neobundle.vim.git',
                     \ (exists('$http_proxy')?'https':'git'))
                     \ s:neobundle_dir
-        execute 'set rtp+='.s:neobundle_dir
+        execute 'set rtp+=' . s:neobundle_dir
     endif
 endif
 
@@ -64,16 +475,11 @@ NeoBundleFetch 'Shougo/neobundle.vim', '', 'default'
 " My Bundles here:
 " 1) original github repos {{{
 " Colorscheme {{{
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'joedicastro/vim-molokai256'
 NeoBundle 'toupeira/vim-desertink'
-" Make terminal themes from GUI themes
-NeoBundleLazy 'godlygeek/csapprox', { 'autoload' :
-        \ { 'commands' : ['CSApprox', 'CSApproxSnapshot']}}
+NeoBundle 'altercation/vim-colors-solarized'
 "}}}
 
 " Shougo {{{
-"After install, turn shell ~/.vim/vimproc, (n,g)make -f your_machines_makefile
 NeoBundle 'Shougo/vimproc', '', 'default'
 call neobundle#config('vimproc', {
             \ 'build' : {
@@ -90,13 +496,6 @@ call neobundle#config('echodoc',{
             \ 'autoload' : {
             \   'insert' : 1,
             \}})
-
-NeoBundle 'Shougo/neocomplete.vim', '', 'default'
-call neobundle#config('neocomplete.vim', {
-            \ 'lazy' : 1,
-            \ 'autoload' : {
-            \ 'insert' : 1,
-            \ }})
 
 NeoBundle 'Shougo/neosnippet', '', 'default'
 call neobundle#config('neosnippet', {
@@ -156,9 +555,10 @@ NeoBundle 'basyura/unite-rails'
 "}}}
 
 " File explorer (needed where ranger is not available)
+" depends on unite.vim
 NeoBundleLazy 'Shougo/vimfiler', {'autoload' : { 'commands' : ['VimFiler']}}
 
-" Junk files
+" Create scratch files with filetype
 NeoBundleLazy 'Shougo/junkfile.vim', {
             \ 'autoload' : { 'commands' : 'JunkfileOpen',
             \ 'unite_sources' : ['junkfile','junkfile/new']}}
@@ -171,27 +571,19 @@ NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
 " Show git repository changes in the current file
 NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'mhinz/vim-signify'
 " Git viewer
 NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'],
             \ 'autoload':{'commands':'Gitv'}}
 "}}}
 
 " Python {{{
-"NeoBundle 'nvie/vim-flake8'
-"NeoBundle 'kevinw/pyflakes-vim'
-"NeoBundle 'fs111/pydoc.vim'
 NeoBundleLazy 'klen/python-mode', {'autoload': {'filetypes': ['python']}}
 "}}}
 
 " Ruby {{{
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'tpope/vim-rails'
-NeoBundle 'nelstrom/vim-textobj-rubyblock'
-NeoBundle 't9md/vim-textobj-function-ruby'
-NeoBundle 'ujihisa/neco-ruby'
-"NeoBundle 'ecomba/vim-ruby-refactoring'
-"needs methodfinder gem
-NeoBundle 'ujihisa/neco-rubymf'
 "}}}
 
 " Go {{{
@@ -199,16 +591,12 @@ NeoBundle 'fatih/vim-go'
 " }}}
 
 " Javascript {{{
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'mattn/jscomplete-vim'
-NeoBundle 'nono/jquery.vim'
-NeoBundle 'thinca/vim-textobj-function-javascript'
-NeoBundle 'kchmck/vim-coffee-script'
+NeoBundleLazy 'pangloss/vim-javascript', {'autoload':{'filetypes':['javascript']}}
 NeoBundle 'elzr/vim-json'
 "}}}
 
 " Markup {{{
-
+NeoBundleLazy 'joedicastro/vim-markdown'
 NeoBundleLazy 'othree/html5.vim', {'autoload':
             \ {'filetypes': ['html', 'xhtml', 'eruby', 'css', 'scss']}}
 NeoBundleLazy 'mattn/emmet-vim', {'autoload':
@@ -221,43 +609,25 @@ NeoBundleLazy 'ap/vim-css-color', {'autoload':
 NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload':
             \ {'filetypes': ['css', 'scss']}}
 NeoBundle 'greyblake/vim-preview'
-NeoBundle 'vim-pandoc/vim-pandoc'
-NeoBundle 'tpope/vim-haml'
-NeoBundle 'slim-template/vim-slim'
-" Markdown Syntax
-NeoBundleLazy 'joedicastro/vim-markdown'
-" Makes a Markdown Extra preview into the browser
-NeoBundleLazy 'joedicastro/vim-markdown-extra-preview'
-" A smart and powerful Color Management tool. Needs to be loaded to be able
-" to use the mappings
-NeoBundleLazy 'Rykka/colorv.vim', {'autoload' : {
-            \ 'commands' : [
-                             \ 'ColorV', 'ColorVView', 'ColorVPreview',
-                             \ 'ColorVPicker', 'ColorVEdit', 'ColorVEditAll',
-                             \ 'ColorVInsert', 'ColorVList', 'ColorVName',
-                             \ 'ColorVScheme', 'ColorVSchemeFav',
-                             \ 'ColorVSchemeNew', 'ColorVTurn2'],
-            \ }}
+"NeoBundle 'tpope/vim-haml'
+"NeoBundle 'slim-template/vim-slim'
 "}}}
 
 " Text-object {{{
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'kana/vim-textobj-syntax'
-NeoBundle 'kana/vim-textobj-indent' " ai, ii, aI, iI
-NeoBundle 'kana/vim-textobj-line' " al, il
+NeoBundle 'kana/vim-textobj-indent' " ai/ii for a block of similarly indented lines, aI/iI for a block of lines with the same indentation
 NeoBundle 'kana/vim-textobj-underscore' " a_, i_
-NeoBundle 'kana/vim-textobj-function'
-NeoBundle 'kana/vim-textobj-lastpat' " a/, i/, a?, i?
-NeoBundle 'kana/vim-textobj-fold'
-NeoBundle 'kana/vim-textobj-entire' " ae, ie
-NeoBundle 'kana/vim-textobj-diff'
-NeoBundle 'kana/vim-textobj-datetime'
-NeoBundle 'thinca/vim-textobj-between'
-NeoBundle 'thinca/vim-textobj-comment'
-NeoBundle 'mattn/vim-textobj-url'
-NeoBundle 'anyakichi/vim-textobj-xbrackets'
-NeoBundle 'sgur/vim-textobj-parameter'
-NeoBundle 'gilligan/textobj-gitgutter'
+NeoBundle 'kana/vim-textobj-function' "af/if and aF/iF for a function/extensible for any language
+NeoBundle 'kana/vim-textobj-lastpat' " a/, i/, a?, i? for a region matched to the last search pattern
+NeoBundle 'kana/vim-textobj-fold' "az/iz for a block of folded lines
+NeoBundle 'kana/vim-textobj-datetime' " ada/ida and others for date and time
+NeoBundle 'Julian/vim-textobj-brace' " aj/ij for the closet region betwen any of () [] or {}
+NeoBundle 'glts/vim-textobj-comment' " ac/ic for a comment
+NeoBundle 'rhysd/vim-textobj-continuous-line' "av/iv for lines continued by \ in c++,sh,and others
+NeoBundle 'vimtaku/vim-textobj-keyvalue' " ak/ik, av/iv for key/value
+NeoBundle 'sgur/vim-textobj-parameter' " a,/i, for an argument to a function
+NeoBundle 'mattn/vim-textobj-url' "au/iu for a URL
 " Smart selection of the closest text object
 NeoBundle 'gcmt/wildfire.vim'
 "}}}
@@ -272,23 +642,9 @@ NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-repeat'
 " to surround vim objects with a pair of identical chars
 NeoBundle 'tpope/vim-surround'
-" Smart and fast date changer
-NeoBundle 'tpope/vim-speeddating'
-NeoBundle 'duff/vim-bufonly'
-" multiple cursors
-NeoBundle 'terryma/vim-multiple-cursors'
 
-NeoBundle 'kana/vim-wwwsearch'
-NeoBundleLazy 'kana/vim-smartword', { 'autoload' : {
-            \ 'mappings' : [
-            \ '<Plug>(smartword-w)', '<Plug>(smartword-b)', '<Plug>(smartword-ge)']
-            \ }}
 NeoBundleLazy 'kana/vim-smartchr', { 'autoload' : {
             \ 'insert' : 1,
-            \ }}
-NeoBundleLazy 'kana/vim-smarttill', { 'autoload' : {
-            \ 'mappings' : [
-            \ '<Plug>(smarttill-t)', '<Plug>(smarttill-T)']
             \ }}
 NeoBundleLazy 'kana/vim-operator-user'
 NeoBundleLazy 'kana/vim-operator-replace', {
@@ -299,41 +655,33 @@ NeoBundleLazy 'kana/vim-operator-replace', {
             \ }}
 
 NeoBundle 'jpalardy/vim-slime'
-if has('conceal')
-    NeoBundle 'Yggdroot/indentLine'
-endif
-NeoBundleLazy 'joedicastro/vim-pentadactyl', {
-            \ 'autoload': {'filetypes': ['pentadactyl']}}
+NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'othree/eregex.vim'
 "}}}
 
 " Misc tools {{{
-if has('win32') || has('win64')
-    NeoBundle 'xolox/vim-shell'
-endif
+NeoBundle 'kopischke/vim-stay'
+NeoBundle 'junegunn/fzf'
+NeoBundle 'junegunn/fzf.vim'
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
 
 NeoBundle 'scrooloose/syntastic'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'scrooloose/nerdtree', { 'augroup' : 'NERDTreeHijackNetrw' }
 NeoBundle 'majutsushi/tagbar'
-NeoBundle 'xuhdev/SingleCompile'
 " A better looking status line
 NeoBundle 'bling/vim-airline'
 NeoBundle 'bling/vim-bufferline'
-"NeoBundle 'itchyny/lightline.vim'
 " shortcut
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-eunuch'
+NeoBundle 'tpope/vim-commentary'
 NeoBundle 'Lokaltog/vim-easymotion'
 " marks admin
-NeoBundle 'kshenoy/vim-signature'
-" easily window resizing
-NeoBundle 'jimsei/winresizer'
+"NeoBundle 'kshenoy/vim-signature'
+let g:neobundle#install_process_timeout = 1800 "YouCompleteMe is so slow
 NeoBundle 'Valloric/YouCompleteMe', {
             \ 'build' : {
-            \   'unix' : './install.sh --clang-completer --system-libclang'
+            \   'unix' : './install.py --clang-completer --system-libclang --gocode-completer'
             \ },
             \}
 " Auto detect CJK and Unicode file encodings
@@ -345,572 +693,27 @@ NeoBundle 'mbbill/echofunc'
 "}}}
 " 2) vim-scripts repos {{{
 " https://githubcom/vim-scripts/xxx.git
-NeoBundle 'vimcdoc'
 NeoBundle 'matchit.zip'
-"NeoBundle 'Mark--Karkat'
 NeoBundle 'a.vim'
-NeoBundle 'Txtfmt-The-Vim-Highlighter'
 NeoBundle 'DoxygenToolkit.vim'
-NeoBundle 'Source-Explorer-srcexpl.vim'
-NeoBundle 'SearchComplete'
-"NeoBundle 'Pydiction'
-"NeoBundle 'dbext.vim'
 "}}}
-" 3) non github repos {{{
-"NeoBundle 'git://git.wincent.com/command-t.git'
-NeoBundle 'https://bitbucket.org/abudden/taghighlight', {'type' : 'hg'}
 "}}}
 
 call neobundle#end()
-"}}}
-" ====================================================
-" Platform depends
-" ====================================================
-" {{{
-let s:iswin = has('win32') || has('win64')
-if s:iswin
-    " For Windows"{{{
-    " 设置终端提示使用语言，解决consle输出乱码
-    language messages zh_CN.UTF-8
-    language time English
-
-    " In Windows, can't find exe, when $PATH isn't contained $VIM.
-    if $PATH !~? '\(^\|;\)' . escape($VIM, '\\') . '\(;\|$\)'
-        let $PATH = $VIM . ';' . $PATH
-    endif
-
-    if has('gui_running')
-        " 使用guifont设置英文字体
-        set guifont=Courier_New:h12:w7
-        " 使用guifontwide设置中文等宽字体
-        set guifontwide=NSimSun-18030,NSimSun
-    endif
-
-    " directory fow swap file
-    set directory+=$TMP
-
-    " directory for persistent undo
-    set undodir=$TMP
-
-    " Popup color.
-    hi Pmenu ctermbg=8
-    hi PmenuSel ctermbg=1
-    hi PmenuSbar ctermbg=0
-    "}}}
-else
-    " For Linux"{{{
-    " 设置终端提示使用语言，解决consle输出乱码
-    language messages en_US.UTF-8
-    language time en_US.UTF-8
-
-    " Exchange path separator.
-    set shellslash
-
-    " directory for persistent undo
-    set undodir=/tmp
-
-    " For non GVim.
-    if !has('gui_running')
-        " Enable 256 color terminal.
-        if !exists('$TMUX')
-            set t_Co=256
-        endif
-    endif
-    "}}}
-endif
-"}}}
-" ====================================================
-" Encoding（兼容Linux）"{{{
-" 注意新建文件跟空文件的区别
-" 新建文件：使用vim建立的新文件，此时编码按照fileencoding来设置
-" 空文件：  比如在windows下，使用右键新建文本文档，这样就建立了一个空白文件
-"           vim打开此空白文件，会探测文件编码，由于文件是空白，所有探测结果
-"           肯定是fileencodings中的第一个（此处utf-8），这样在windows下用其
-"           他编辑器打开含有中文的文件时就会乱码。(set
-"           fenc=chinese)
-"           "}}}
-" ====================================================
-"{{{
-set encoding=utf-8
-set termencoding=utf-8
-"let &termencoding=&encoding
-set fileencodings=usc-bom,utf-8,chinese
-"set fileencoding=chinese
-
-" Default fileformat.
-"set fileformat=dos
-" Automatic recognition of new line format.
-"set fileformats=dos,unix,mac
-" A fullwidth character is displayed in vim properly.
-"set ambiwidth=double
-
-" 解决quickfix 窗口乱码
-function! QfConvCU()
-    let qflist = getqflist()
-    for i in qflist
-        let i.text = iconv(i.text, "cp936", "utf-8")
-    endfor
-    call setqflist(qflist)
-endfunction
-function! QfConvUC()
-    let qflist = getqflist()
-    for i in qflist
-        let i.text = iconv(i.text, "utf-8", "cp936")
-    endfor
-    call setqflist(qflist)
-endfunction
-"au BufReadPost quickfix call QfConv()
-"}}}
-" ====================================================
-" View
-" ====================================================
-"{{{
-" colorscheme
-colorscheme desertink
-"set background=dark
-
-" Show title.
-set title
-" Title length.
-set titlelen=95
-" Title string.
-set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servername}
-
-" 设置窗口
-" set lines=35
-" set columns=100
-
-" 不显示工具栏
-set guioptions-=T
-
-" 不显示菜单栏
-"set guioptions-=m
-" 不显示撕裂菜单
-set guioptions-=t
-" 解决菜单乱码
-source $VIMRUNTIME/delmenu.vim
-" 加载默认菜单
-source $VIMRUNTIME/menu.vim
-" 设置菜单语言
-"set langmenu=en_US
-
-" 信息提示格式
-set shortmess=aToOI
-
-" 在底部显示标尺，显示行号列号和百分比
-set ruler
-
-" 显示行号
-set number
-
-" 光标移动到buffer的顶部和底部时保持3距离
-set scrolloff=2
-
-" 设置显示tab和行尾
-set list
-set listchars=tab:\|\ ,trail:-,extends:>,precedes:<
-"set listchars=tab:>-,trail:-,extends:>,precedes:<,eol:$
-"set listchars=tab:>-
-"set listchars=tab:\|\
-
-" Wrap long line.
-set wrap
-" Wrap conditions.
-set whichwrap+=h,l,<,>,[,],b,s,~
-
-" Turn down a long line appointed in 'breakat'
-set linebreak
-set showbreak=>\
-set breakat=\ \	;:,!?
-
-"Turn on Wild menu
-set wildmenu
-"set wildmode=longest,list
-set wildignore+=*.a,*.o
-set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
-set wildignore+=.git,.hg,.svn
-set wildignore+=*~,*.swp,*.tmp
-
-" Can supplement a tag in a command-line.
-set wildoptions=tagfile
-
-" Display all the information of the tag by the supplement of the Insert mode.
-set showfulltag
-
-" Don't complete from other buffer.
-set complete=.
-"set complete=.,w,b,i,t
-
-" Set popup menu max height.
-set pumheight=20
-
-" Adjust window size of preview and help.
-"set previewheight=10
-"set helpheight=12
-
-" When a line is long, do not omit it in @.
-set display=lastline
-" Display an invisible letter with hex format.
-set display+=uhex
-
-" Use vertical diff format
-set diffopt+=vertical
-
-" 记录的历史命令数目
-set history=200
-
-" Enable spell check.
-set spelllang=en_us
-
-" Report changes.
-set report=0
-
-" Splitting a window will put the new window below the current one.
-set splitbelow
-" Splitting a window will put the new window right the current one.
-set splitright
-" Set minimal width for current window.
-set winwidth=30
-" Set minimal height for current window.
-set winheight=1
-" No equal window size.
-set noequalalways
-
-set colorcolumn=80
-
-" Maintain a current line at the time of movement as much as possible.
-set nostartofline
-" Don't redraw while macro executing.
-set lazyredraw
-
-" For conceal
-set conceallevel=2
-set concealcursor=nc
-"set concealcursor=iv
-
-" 自动高亮匹配光标所在所有单词
-"autocmd CursorMoved * silent! exe printf('match IncSearch /\<%s\>/', expand('<cword>'))
-" 自动给光标所在单词添加下划线
-autocmd CursorHold * silent! exe printf('match Underlined /\<%s\>/', expand('<cword>'))
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-                \ | wincmd p | diffthis
-endif
-
-" 状态栏显示
-" Always display statusline.
-set laststatus=2   " 显示状态栏 (默认值为 1, 无法显示状态栏)
-
-" Set maximam command line window.
-set cmdwinheight=5
-" Height of command line.
-"set cmdheight=2
-" Show command on statusline.
-set showcmd
-"}}}
-" ====================================================
-" Search
-" ====================================================
-"{{{
-" Ignore the case of normal letters.
-set ignorecase
-" If the search pattern contains upper case characters, override ignorecase option.
-set smartcase
-
-" Enable incremental search.
-set incsearch
-" Enable highlight search result.
-set hlsearch
-
-" Searches wrap around the end of the file.
-set wrapscan
-" ----------------------------------------------------
-"path"{{{
-if has("win32")
-    "for work"{{{{
-    set path+=C:/Program\\\ Files/Microsoft\\\ Visual\\\ Studio\\\ 8/VC/include
-    set path+=C:/Program\\\ Files/Microsoft\\\ Visual\\\ Studio\\\ 8/VC/atlmfc/include
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ SDKs/Windows/v6.0/Include
-    "}}}}
-    "for mingw"{{{{
-    set path+=C:/MinGW/include
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include-fixed
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++/backward
-    set path+=C:/MinGW/lib/gcc/mingw32/4.5.2/include/c++/mingw32
-    "}}}}
-    "for home"{{{{
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ Visual\\\ Studio\\\ 10.0/VC/include
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ Visual\\\ Studio\\\ 10.0/VC/atlmfc/include
-    set path+=C:/Program\\\ Files\\\ (x86)/Microsoft\\\ SDKs/Windows/v7.0A/Include
-    "}}}}
-else
-    set path+=/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include
-    set path+=/opt/tilera/netlib-1.1.0.150605/netlib/include
-endif
-"}}}
-"}}}
-" ====================================================
-" Edit
-" ====================================================
-" {{{
-"Set to auto read when a file is changed from the outside
-set autoread
-set autowrite
-
-" 'ts' is how tab characters are displayed;
-" 'sts' is how many "spaces" to insert when the tab key is pressed;
-" 'sw' is how many "spaces" to use per indent level;
-" 'et' is whether to use spaces or tabs;
-" 'sta' lets you insert 'sw' "spaces" when pressing tab at the beginning of a line.
-" 设置没有展开的<Tab>的宽度为4个空格
-set tabstop=4
-" 4个空格代替一个输入的<Tab>
-set softtabstop=4
-" (自动) 缩进每一步使用的空白数目。用于 'cindent'、>>、<< 等。
-set shiftwidth=4
-" 新输入的<Tab>展开为空格
-set expandtab
-" 行首<Tab>按照shiftwidth展开
-set smarttab
-" Round indent by shiftwidth.
-set shiftround
-
-" Enable modeline.
-set modeline
-" Use clipboard register.
-set clipboard& clipboard+=unnamed
-
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-" do not keep a backup file, use versions instead
-set nobackup
-
-" Highlight parenthesis.
-set showmatch
-" Highlight when CursorMoved.
-set cpoptions-=m
-set matchtime=3
-" Highlight <>.
-set matchpairs+=<:>
-
-" When on a buffer becomes hidden when it is abandoned.
-set hidden
-
-" 在插入模式按回车时，自动插入当前注释前导符。
-set formatoptions+=r
-" Enable multibyte format.
-set formatoptions+=mM
-
-" Ignore case on insert completion.
-set infercase
-
-" Enable folding.
-set foldenable
-" 设置折叠方式
-"set foldmethod=indent
-set foldmethod=syntax
-"set foldmethod=expr
-"set foldmethod=marker
-" Show folding level.
-"set foldcolumn=1
-set foldcolumn=3
-"启动vim时不要自动折叠代码
-"set foldlevel=100
-set fillchars=vert:\|
-set commentstring=%s
-
-" grep选项
-"set grepprg=grep\ -nri
-" Use vimgrep.
-"set grepprg=internal
-" Use grep.
-set grepprg=grep\ -nH
-
-" Set undofile
-set undofile
-
-" auto change the current working director
-set autochdir
-"autocmd BufEnter * silent! lcd %:p:h
-
-" 自动向当前文件的上级查找tag文件，直到找到为止
-set tags=./tags;
-
-" Set keyword help.
-"set keywordprg=:help
-
-" 添加帮助支持
-if has('win32') || has('win64')
-    nmap <F1> :silent !cmd /C start iexplore "http://search.msdn.microsoft.com/search/default.aspx?query=<cword>"<CR>;
-else
-    source $VIMRUNTIME/ftplugin/man.vim
-    "nmap m :Man =expand("")
-endif
-" }}}
-" ====================================================
-" Syntax
-" ====================================================
-" {{{
-" Switch syntax highlighting on, when the terminal has colors
-syntax on
 
 " Enable file type detection.
-" Use the default filetype settings, so that mail gets 'tw' set to 72, 'cindent' is on in C files, etc.
-" Also load indent files, to automatically do language-dependent indenting.
 filetype plugin indent on
 
-" Copy indent from current line, over to the new line
-set autoindent
-" Do smart indenting when starting a new line
-set smartindent
-
-augroup MyAutoCmd
-    " Easily load VimScript.
-    autocmd FileType vim nnoremap <silent><buffer> [Space]so :write \| source % \| echo "source " . bufname('%')<CR>
-
-    " Auto reload VimScript.
-    autocmd BufWritePost,FileWritePost *.vim if &autoread | source <afile> | echo "source " . bufname('%') | endif
-
-    " Close help and git window by pressing q.
-    autocmd FileType help,git-status,git-log,qf,gitcommit,quickrun,qfreplace,ref,simpletap-summary,vcs-commit,vcs-status,vim-hacks
-                \ nnoremap <buffer><silent> q :<C-u>call <sid>smart_close()<CR>
-    autocmd FileType * if (&readonly || !&modifiable) && !hasmapto('q', 'n')
-                \ | nnoremap <buffer><silent> q :<C-u>call <sid>smart_close()<CR>| endif
-
-
-    " Manage long Rakefile easily
-    autocmd BufNewfile,BufRead Rakefile foldmethod=syntax foldnestmax=1
-
-    " Enable omni completion.
-    autocmd FileType ada setlocal omnifunc=adacomplete#Complete
-    autocmd FileType c setlocal omnifunc=ccomplete#Complete
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    "autocmd FileType java setlocal omnifunc=javacomplete#Complete
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-    "autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-    "autocmd FileType sql setlocal omnifunc=sqlcomplete#Complete
-    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup END
-
-" Syntax highlight for user commands.
-augroup syntax-highlight-extends
-    autocmd!
-    autocmd Syntax vim call s:set_syntax_of_user_defined_commands()
-augroup END
-
-function! s:set_syntax_of_user_defined_commands()
-    redir => _
-    silent! command
-    redir END
-
-    let command_names = []
-    for command_info in split(_, '\n')[1:]
-        let command_name = matchstr(command_info, '^[!"b]*\s\+\zs\u\w*\ze')
-        call add(command_names, command_name)
-    endfor
-
-    if empty(command_names) | return | endif
-
-    execute 'syntax keyword vimCommand contained ' . join(command_names)
-endfunction
-" }}}
-" ====================================================
-" Session
-" ====================================================
-" viminfo"{{{
-" create viminfo :wviminfo [file]
-" load viminfo :rviminfo [file]
 "}}}
-" session"{{{
-" create sesssion :mksession [file]
-" load session :source {file}
-set sessionoptions-=curdir
-set sessionoptions+=sesdir
-"}}}
-" view"{{{
-" save fold and other status
-"au BufWinLeave *.* mkview
-" load all saved status
-"au BufWinEnter *.* silent loadview
-"}}}
-" ====================================================
-" Key map
-" ====================================================
-"{{{
-let mapleader = ","
-let maplocalleader = ","
-
-nnoremap Qa :qa<CR>
-nnoremap Q :q<CR>
-
-"change directory to the file being edited and display it
-nnoremap <Leader>cd :cd %:p:h<CR>:pwd<CR>
-
-"windows managment{{{{
-function! WinMove(key)
-    let t:curwin = winnr()
-    exec "wincmd ".a:key
-    if (t:curwin == winnr()) "we havent moved
-        if (match(a:key,'[jk]')) "were we going up/down
-            wincmd v
-        else
-            wincmd s
-        endif
-        exec "wincmd ".a:key
-    endif
-endfunction
-
-map <leader>h :call WinMove('h')<cr>
-map <leader>k :call WinMove('k')<cr>
-map <leader>l :call WinMove('l')<cr>
-map <leader>j :call WinMove('j')<cr>
-"close
-map <leader>wc :wincmd q<cr>
-"rotate
-map <leader>wr <C-W>r
-"move
-map <leader>H :wincmd H<cr>
-map <leader>K :wincmd K<cr>
-map <leader>L :wincmd L<cr>
-map <leader>J :wincmd J<cr>
-"resize
-nmap <left>  :3wincmd <<cr>
-nmap <right> :3wincmd ><cr>
-nmap <up>    :3wincmd +<cr>
-nmap <down>  :3wincmd -<cr>
-"}}}}
-"}}}
-" ====================================================
-" Auto filetype command
-" ====================================================
-" {{{
-au FileType ruby setl sts=2 sw=2 et
-au FileType eruby setl sts=2 sw=2 et fdm=indent
-au FileType yaml setl sts=2 sw=2 et
-au FileType css setl sts=2 sw=2 et
-au FileType scss setl sts=2 sw=2 et
-au FileType python setl sts=4 sw=4 et
-au FileType javascript setl sts=2 sw=2 et
-au FileType html setl sts=2 sw=2 et fdm=indent
-" }}}
 " ====================================================
 " Plugins configuration
-" ====================================================
+" ----------------------------------------------------
 " inner{{{
 " Disable GetLatestVimPlugin.vim
 let g:loaded_getscriptPlugin = 1
-" Disable netrw.vim
-let g:loaded_netrwPlugin = 1
+" colorscheme
+colorscheme desertink
+"set background=dark
 " }}}
 " ----------------------------------------------------
 " vim-color-solarized {{{
@@ -928,15 +731,6 @@ let g:solarized_underline = 0
 map <C-F12> :!ctags -R --c-kinds=+p --c++-kinds=+p --fields=+ialS --extra=+q . <CR><CR>
 "}}}
 " ----------------------------------------------------
-" Tagbar"{{{
-nnoremap <silent> <Leader>tb :TagbarOpenAutoClose()<CR>
-let g:tagbar_width = 25
-let g:tagbar_compact = 1
-let g:tagbar_autoclose = 1
-let g:tagbar_autofocus = 1
-let g:tagbar_autoshowtag = 1
-"}}}
-" ----------------------------------------------------
 " vim-easytags"{{{
 " use the following setting to enable project specific tags files
 let g:easytags_include_members = 1
@@ -945,7 +739,6 @@ let g:easytags_include_members = 1
 " You can also define your own style if you want:
 "highlight cMember gui=italic
 let g:easytags_dynamic_files = 1
-let g:easytags_by_filetype = "~/.neocomplete/tags_cache/"
 
 " Faster syntax highlighting using Python
 let g:easytags_python_enabled = 1
@@ -953,12 +746,17 @@ let g:easytags_updatetime_autodisable = 1
 " highlight is so slow that I close this feature
 let g:easytags_on_cursorhold = 0
 let g:easytags_auto_highlight = 0
-map <C-F11> :UpdateTags -R --fields=+ialS --c-kinds=+p --c++-kinds=+p --extra=+q . <CR><CR>
+map <C-F11> :UpdateTags -R --c-kinds=+p --c++-kinds=+p --fields=+ialS --extra=+q . <CR><CR>
 "}}}
 " ----------------------------------------------------
-" vim-css-color{{{
-let g:ccsColorVimDoNotMessMyUpdatetime = 1
-" }}}
+" Tagbar"{{{
+nnoremap <silent> <Leader>tb :TagbarOpenAutoClose()<CR>
+let g:tagbar_width = 25
+let g:tagbar_compact = 1
+let g:tagbar_autoclose = 1
+let g:tagbar_autofocus = 1
+let g:tagbar_autoshowtag = 1
+"}}}
 " ----------------------------------------------------
 " TagHighlight"{{{
 if ! exists('g:TagHighlightSettings')
@@ -974,25 +772,9 @@ let g:TagHighlightSettings['FileTypeLanguageOverrides'] =
             \ {'gitcommit': 'c'}
 " }}}
 " ----------------------------------------------------
-" nerdtree"{{{
-" toggles NERDTree on and off
-map <F2> :NERDTreeToggle<CR>
-imap <F2> <Esc>:NERDTreeToggle<CR>i
-"nnoremap <silent> <BS> :<C-u>NERDTreeToggle<CR>
-"}}}
-" ----------------------------------------------------
-" netrw{{{
-"let g:netrw_liststyle=3
-let g:netrw_browse_split=4
-let g:netrw_preview=1
-let g:netrw_altv=1
-let g:netrw_list_hide= '*.swp *.swo *~'
-" Change default directory.
-set browsedir=current
-if executable('wget')
-    let g:netrw_http_cmd = 'wget'
-endif
-"}}}
+" vim-css-color{{{
+let g:ccsColorVimDoNotMessMyUpdatetime = 1
+" }}}
 " ----------------------------------------------------
 " DoxygenToolkit"{{{
 "let g:DoxygenToolkit_commentType="C++"
@@ -1008,10 +790,6 @@ nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>gb :Gblame<CR>
 nmap <Leader>gd :Gdiff<CR>
 nmap <Leader>gp :Git push<CR>
-" }}}
-" ----------------------------------------------------
-" Undotree {{{
-nnoremap U :<C-u>UndotreeToggle<CR>
 " }}}
 " ----------------------------------------------------
 " unite"{{{
@@ -1042,11 +820,6 @@ elseif executable('ack')
     let g:unite_source_grep_recursive_opt=''
     let g:unite_source_grep_search_word_highlight = 1
 endif
-
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#custom#source('file_mru,file_rec,file_rec/async,grep,locate',
-            \ 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/'], '\|'))
 
 " key mappings"{{{
 " The prefix key.
@@ -1581,92 +1354,6 @@ let g:unite_source_menu_menus.bookmarks.command_candidates = [
 nnoremap <silent>[menu]m :Unite -silent menu:bookmarks<CR>
 " }}}
 
-" colorv menu {{{
-function! GetColorFormat()
-    let formats = {'r' : 'RGB',
-                  \'n' : 'NAME',
-                  \'s' : 'HEX',
-                  \'ar': 'RGBA',
-                  \'pr': 'RGBP',
-                  \'pa': 'RGBAP',
-                  \'m' : 'CMYK',
-                  \'l' : 'HSL',
-                  \'la' : 'HSLA',
-                  \'h' : 'HSV',
-                  \}
-    let formats_menu = ["\n"]
-    for [k, v] in items(formats)
-        call add(formats_menu, " ".k."\t".v."\n")
-    endfor
-    let fsel = get(formats, input('Choose a format: '.join(formats_menu).'? '))
-    return fsel
-endfunction
-
-function! GetColorMethod()
-    let methods = {
-                   \'h' : 'Hue',
-                   \'s' : 'Saturation',
-                   \'v' : 'Value',
-                   \'m' : 'Monochromatic',
-                   \'a' : 'Analogous',
-                   \'3' : 'Triadic',
-                   \'4' : 'Tetradic',
-                   \'n' : 'Neutral',
-                   \'c' : 'Clash',
-                   \'q' : 'Square',
-                   \'5' : 'Five-Tone',
-                   \'6' : 'Six-Tone',
-                   \'2' : 'Complementary',
-                   \'p' : 'Split-Complementary',
-                   \'l' : 'Luma',
-                   \'g' : 'Turn-To',
-                   \}
-    let methods_menu = ["\n"]
-    for [k, v] in items(methods)
-        call add(methods_menu, " ".k."\t".v."\n")
-    endfor
-    let msel = get(methods, input('Choose a method: '.join(methods_menu).'? '))
-    return msel
-endfunction
-
-let g:unite_source_menu_menus.colorv = {
-    \ 'description' : ' color management
-        \ ⌘ [space]c',
-    \}
-let g:unite_source_menu_menus.colorv.command_candidates = [
-    \['▷ open colorv ⌘ ,cv',
-        \'ColorV'],
-    \['▷ open colorv with the color under the cursor ⌘ ,cw',
-        \'ColorVView'],
-    \['▷ preview colors ⌘ ,cpp',
-        \'ColorVPreview'],
-    \['▷ color picker ⌘ ,cd',
-        \'ColorVPicker'],
-    \['▷ edit the color under the cursor ⌘ ,ce',
-        \'ColorVEdit'],
-    \['▷ edit the color under the cursor (and all the concurrences) ⌘ ,cE',
-        \'ColorVEditAll'],
-    \['▷ insert a color ⌘ ,cii',
-        \'exe "ColorVInsert " .GetColorFormat()'],
-    \['▷ color list relative to the current ⌘ ,cgh',
-        \'exe "ColorVList " .GetColorMethod() "
-\ ".input("number of colors? (optional): ")
-        \ " ".input("number of steps? (optional): ")'],
-    \['▷ show colors list (Web W3C colors) ⌘ ,cn',
-        \'ColorVName'],
-    \['▷ choose color scheme (ColourLovers, Kuler) ⌘ ,css',
-        \'ColorVScheme'],
-    \['▷ show favorite color schemes ⌘ ,csf',
-        \'ColorVSchemeFav'],
-    \['▷ new color scheme ⌘ ,csn',
-        \'ColorVSchemeNew'],
-    \['▷ create hue gradation between two colors',
-        \'exe "ColorVTurn2 " " ".input("Color 1 (hex): ")
-        \" ".input("Color 2 (hex): ")'],
-    \]
-nnoremap <silent>[menu]c :Unite -silent menu:colorv<CR>
-" }}}
-
 " vim menu {{{
 let g:unite_source_menu_menus.vim = {
     \ 'description' : ' vim
@@ -1721,8 +1408,6 @@ let sow_moveto_entry ={'description': 'action :move entry to ...',}
 function! sow_moveto_entry.func(candidates)
     echo "test"
 endfunction
-call unite#custom_action('source/sow_moveentry_entry/*', 'sow_moveto_entry', sow_moveto_entry)
-call unite#custom_default_action('source/sow_moveentry_entry/*', 'sow_moveto_entry')
 "}}}
 " unite-session."{{{
 " Save session automatically.
@@ -1741,18 +1426,26 @@ let g:unite_source_grep_default_opts = '-iRHn'
 "}}}
 "}}}
 " ----------------------------------------------------
-" smartword.vim"{{{
-" Replace w and others with smartword-mappings
-nmap w  <Plug>(smartword-w)
-nmap b  <Plug>(smartword-b)
-nmap ge  <Plug>(smartword-ge)
-xmap w  <Plug>(smartword-w)
-xmap b  <Plug>(smartword-b)
-" Operator pending mode.
-omap <Leader>w  <Plug>(smartword-w)
-omap <Leader>b  <Plug>(smartword-b)
-omap <Leader>ge  <Plug>(smartword-ge)
-"}}}
+" VimFiler {{{
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_restore_alternate_file = 1
+"let g:vimfiler_preview_action = 'auto_preview'
+let g:vimfiler_tree_leaf_icon = "⋮"
+let g:vimfiler_tree_leaf_icon = '┆'
+let g:vimfiler_tree_opened_icon = "▼"
+let g:vimfiler_tree_closed_icon = "▷"
+let g:vimfiler_tree_indentation = 1
+let g:vimfiler_file_icon = ' '
+let g:vimfiler_readonly_file_icon = ''
+let g:vimfiler_marked_file_icon = '✓'
+let g:vimfiler_quick_look_command = 'gloobus-preview'
+
+let g:vimfiler_ignore_pattern =
+    \ '^\%(\.git\|\.idea\|\.DS_Store\|\.vagrant\|\.stversions\|\.tmp'
+    \ .'\|node_modules\|.*\.pyc\|.*\.egg-info\|__pycache__\)$'
+
+map <F2> :VimFiler<CR>
+" }}}
 " ----------------------------------------------------
 " smartchr.vim"{{{
 let bundle = neobundle#get('vim-smartchr')
@@ -1790,16 +1483,7 @@ function! bundle.hooks.on_source(bundle)
                     \| inoremap <buffer> <expr> < smartchr#loop('<', '<%', '<%=')
     augroup END
 endfunction
-
 unlet bundle
-"}}}
-" ----------------------------------------------------
-" smarttill.vim"{{{
-xmap q  <Plug>(smarttill-t)
-xmap Q  <Plug>(smarttill-T)
-" Operator pending mode.
-omap q  <Plug>(smarttill-t)
-omap Q  <Plug>(smarttill-T)
 "}}}
 " ----------------------------------------------------
 " delimitMate{{{
@@ -1810,19 +1494,14 @@ let g:delimitMate_expand_cr = 1
 " }}}
 " ----------------------------------------------------
 " Syntastic{{{
-"let g:syntastic_c_compiler="tile-gcc"
-"let g:syntastic_c_include_dirs = ["/opt/tilera/TileraMDE-4.1.3.150969/tilegx/tile/usr/include", "/opt/tilera/netlib-1.1.0.150605/netlib/include", "/opt/tilera/netlib-1.1.0.150605/app/trafgen_netlib/build/include"]
+"let g:syntastic_c_compiler="clang"
+"let g:syntastic_c_include_dirs = ["",""]
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_mode_map = { 'mode': 'active',
-            \ 'active_filetypes': ['ruby', 'eruby', 'html', 'xml', 'c', 'cpp'],
+            \ 'active_filetypes': ['ruby', 'eruby', 'html', 'xml', 'c', 'cpp', 'go', 'py'],
             \ 'passive_filetypes': ['javascript', 'css', 'php'] }
 " }}}
-" ----------------------------------------------------
-" SingleCompile"{{{
-nmap <F7> :SCCompile
-nmap <F5> :SCCompileRun<CR>:SCViewResult<CR>
-"}}}
 " ----------------------------------------------------
 " echodoc.vim"{{{
 let bundle = neobundle#get('echodoc')
@@ -1834,119 +1513,24 @@ unlet bundle
 " ----------------------------------------------------
 " YouCompleteMe"{{{
 let bundle = neobundle#get('YouCompleteMe')
+" check whether characters before current column are all space "{{{
+func! s:check_back_space()
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1] =~ '\s'
+endfunc
+"}}}
 func! bundle.hooks.on_source(bundle)
-"let g:ycm_server_use_vim_stdout = 1
-"let g:ycm_server_log_level = 'debug'
-let g:ycm_key_invoke_completion = '<Tab>'
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0
+    "let g:ycm_server_use_vim_stdout = 1
+    "let g:ycm_server_log_level = 'debug'
+    let g:ycm_key_invoke_completion = '<Tab>'
+    let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+    let g:ycm_confirm_extra_conf = 0
 
-nnoremap <Leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-n>" :
-            "\ <SID>check_back_space() ? "\<TAB>" :
-            "\ "\<C-x>\<C-o>"
+    nnoremap <Leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+    "inoremap <expr><S-TAB> pumvisible() ? "\<C-n>" :
+    "\ <SID>check_back_space() ? "\<TAB>" :
+    "\ "\<C-x>\<C-o>"
 endfunc!
-unlet bundle
-" }}}
-" ----------------------------------------------------
-" neocomplete{{{
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 0
-
-let bundle = neobundle#get('neocomplete.vim')
-function! bundle.hooks.on_source(bundle)
-    " Use smartcase.
-    let g:neocomplete#enable_smart_case = 1
-    " Use fuzzy completion.
-    let g:neocomplete#enable_fuzzy_completion = 1
-
-    " Set minimum syntax keyword length.
-    let g:neocomplete#sources#syntax#min_keyword_length = 3
-    " Set auto completion length.
-    let g:neocomplete#auto_completion_start_length = 2
-    " Set manual completion length.
-    let g:neocomplete#manual_completion_start_length = 0
-    " Set minimum keyword length.
-    let g:neocomplete#min_keyword_length = 3
-
-    " For auto select.
-    let g:neocomplete#enable_complete_select = 0
-    let g:neocomplete#enable_auto_select = 0
-    let g:neocomplete#enable_refresh_always = 0
-    if g:neocomplete#enable_complete_select
-        set completeopt-=noselect
-        set completeopt+=noinsert
-    endif
-
-    let g:neocomplete#enable_auto_delimiter = 1
-    let g:neocomplete#disable_auto_select_buffer_name_pattern =
-                \ '\[Command Line\]'
-    let g:neocomplete#max_list = 100
-    let g:neocomplete#force_overwrite_completefunc = 1
-    if !exists('g:neocomplete#sources#omni#input_patterns')
-        let g:neocomplete#sources#omni#input_patterns = {}
-    endif
-    if !exists('g:neocomplete#sources#omni#functions')
-        let g:neocomplete#sources#omni#functions = {}
-    endif
-    if !exists('g:neocomplete#force_omni_input_patterns')
-        let g:neocomplete#force_omni_input_patterns = {}
-    endif
-    let g:neocomplete#enable_auto_close_preview = 1
-
-    " let g:neocomplete#force_omni_input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-    let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-
-    " Define keyword pattern.
-    if !exists('g:neocomplete#keyword_patterns')
-        let g:neocomplete#keyword_patterns = {}
-    endif
-    let g:neocomplete#keyword_patterns._ = '[0-9a-zA-Z:#_]\+'
-    let g:neocomplete#keyword_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-    let g:neocomplete#sources#vim#complete_functions = {
-                \ 'Ref' : 'ref#complete',
-                \ 'Unite' : 'unite#complete_source',
-                \}
-    call neocomplete#custom#source('look', 'min_pattern_length', 4)
-
-    " mappings."{{{
-    " <C-f>, <C-b>: page move.
-    inoremap <expr><C-f> pumvisible() ? "\<PageDown>" : "\<Right>"
-    inoremap <expr><C-b> pumvisible() ? "\<PageUp>" : "\<Left>"
-    " <C-y>: paste.
-    inoremap <expr><C-y> pumvisible() ? neocomplete#close_popup() : "\<C-r>\""
-    " <C-e>: close popup.
-    inoremap <expr><C-e> pumvisible() ? neocomplete#cancel_popup() : "\<End>"
-    " <C-k>: unite completion.
-    "imap <C-k> <Plug>(neocomplete_start_unite_complete)
-    " <C-h>, <BS>: close popup and delete backword char.
-    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-    " <C-n>: neocomplete.
-    inoremap <expr><C-n> pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>\<Down>"
-    " <C-p>: keyword completion.
-    inoremap <expr><C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
-    "inoremap <expr>' pumvisible() ? neocomplete#close_popup() : "'"
-
-    imap <expr> ` pumvisible() ?
-                \ "\<Plug>(neocomplete_start_unite_quick_match)" : '`'
-
-    inoremap <expr><C-x><C-f>
-                \ neocomplete#start_manual_complete('filename_complete')
-
-    inoremap <expr><C-g> neocomplete#undo_completion()
-    inoremap <expr><C-l> neocomplete#complete_common_string()
-
-    " <TAB>: completion.
-    inoremap <expr><TAB> pumvisible() ? "\<C-n>" :
-                \ <SID>check_back_space() ? "\<TAB>" :
-                \ neocomplete#start_manual_complete()
-    " <S-TAB>: completion back.
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-    "}}}
-endfunction
 unlet bundle
 " }}}
 " ----------------------------------------------------
@@ -1975,11 +1559,7 @@ function! bundle.hooks.on_source(bundle)
 
     " let g:snippets_dir = '~/.vim/snippets/,~/.vim/bundle/snipmate/snippets/'
     "let g:neosnippet#snippets_directory = '~/.vim/snippets'
-    if has('conceal')
-        set conceallevel=2
-    endif
 endfunction
-
 unlet bundle
 
 nnoremap <silent> [Window]f :<C-u>Unite neosnippet/user neosnippet/runtime<CR>
@@ -1987,41 +1567,47 @@ nnoremap <silent> [Window]f :<C-u>Unite neosnippet/user neosnippet/runtime<CR>
 "}}}
 " ----------------------------------------------------
 " vim-go {{{
-" Show type info for the word under cursor
-au FileType go nmap <Leader>i <Plug>(go-info)
-" Open the relevant Godoc for the word under cursor
-au FileType go nmap <Leader>gd <Plug>(go-doc)
-au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
-" Open the Godoc in browser
-au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
 " Commands
 au FileType go nmap <Leader>r <Plug>(go-run)
 au FileType go nmap <Leader>b <Plug>(go-build)
 au FileType go nmap <Leader>t <Plug>(go-test)
-" Goto Declaration
-au FileType go nmap gd <Plug>(go-def)
 " Open definition/declaration
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
 au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
 au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+" Open the relevant Godoc for the word under cursor
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+" Show a list of interfaces which is implemented by the type under cursor
+au FileType go nmap <Leader>s <Plug>(go-implements)
+" Show type info for the word under cursor
+au FileType go nmap <Leader>i <Plug>(go-info)
+" Rename the identifier under the cursor
+au FileType go nmap <Leader>e <Plug>(go-rename)
 
 " Setting
 " Disable auto installation of binaries
 let g:go_disable_autoinstall = 1
+
 " Disable auto fmt on save
 "let g:go_fmt_autosave = 0
+let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1
+
 let g:to_auto_type_info = 1
 let g:go_snippent_engine = "neosnippet"
+
+" highlight
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
 " }}}
 " ----------------------------------------------------
 " vim-slime"{{{
 let g:slime_target = "tmux"
 let g:slime_paste_file = tempname()
-"}}}
-" ----------------------------------------------------
-" showmarks.vim"{{{
-" 自动生成帮助文档,需要手动建立doc文件夹
-let g:showmarks_enable=0
 "}}}
 " ----------------------------------------------------
 " Cscope"{{{
@@ -2060,35 +1646,26 @@ endif
 " ----------------------------------------------------
 " vim-airline {{{
 " 状态栏格式定义
-"let g:airline_left_sep = "|"
-"let g:airline_left_alt_sep = "|"
-"let g:airline_right_sep = "|"
-"let g:airline_right_alt_sep = "|"
 " unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_alt_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_alt_sep = '◀'
+let g:airline_left_sep = '▶'
+let g:airline_left_alt_sep = '»'
+let g:airline_right_sep = '◀'
+let g:airline_right_alt_sep = '«'
+" don't show bufferline in statusline
+let g:airline_section_c = '%t'
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
-"let g:airline_symbols.linenr = '␊'
-"let g:airline_symbols.linenr = '␤'
 let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.branch = '⎇'
 let g:airline_symbols.paste = 'ρ'
-"let g:airline_symbols.paste = 'Þ'
-"let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
 " }}}
 " ----------------------------------------------------
 " vim-bufferline {{{
-"let g:bufferline_echo = 0
 let g:bufferline_rotate = 1
-"autocmd VimEnter *
-            "\ let &statusline='%{bufferline#refresh_status()}'
-            "\ .bufferline#get_status_string()
+let g:bufferline_fixed_index = 0 "always first
 " }}}
 " ----------------------------------------------------
 " wildfire.vim {{{
@@ -2099,15 +1676,14 @@ vmap <C-SPACE> <Plug>(wildfire-water)
 " Quick selection
 nmap <leader>s <Plug>(wildfire-quick-select)
 " }}}
+" ----------------------------------------------------
+" python-mode {{{
+" python-mode autocomplete conflict with YouCompleteMe
+let g:pymode_rope_completion = 0
+" }}}
 " ====================================================
 " Support and Misc
-" ====================================================
-" check whether characters before current column are all space "{{{
-func! s:check_back_space()
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1] =~ '\s'
-endfunc
-"}}}
+" ----------------------------------------------------
 " Use Ranger as a file explorer {{{
 func! s:ranger_chooser()
     exec "silent !ranger --choosefile=/tmp/chosenfile " . expand("%:p:h")
@@ -2131,5 +1707,5 @@ if !has('vim_starting')
     call neobundle#call_hook('on_source')
 endif
 "}}}
-" ----------------------------------------------------
+" ====================================================
 " vim: foldmethod=marker
