@@ -149,7 +149,7 @@ set lazyredraw
 
 " 设置显示tab和行尾
 set list
-set listchars=tab:\|\ ,trail:-,extends:>,precedes:<
+set listchars=tab:\|\ ,trail:-,extends:>,precedes:<,nbsp:␣
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 set mouse=a
@@ -206,7 +206,8 @@ set whichwrap+=h,l,<,>,[,],b,s,~
 " Turn down a long line appointed in 'breakat'
 set linebreak
 set breakat=\ \	;:,!?
-set showbreak=>\
+" set showbreak=>\
+set showbreak=↪
 
 "Turn on Wild menu
 set wildmenu
@@ -358,16 +359,6 @@ augroup MyAutoCmd
 
     " Auto reload vimrc and VimScript
     autocmd BufWritePost,FileWritePost .vimrc,*.vim if &autoread | source <afile> | endif
-
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    " Also don't do it when the mark is in the first line, that is the default
-    " position when opening a file.
-    autocmd BufReadPost *
-                \ if line("'\"") > 1 && line("'\"") <= line("$") |
-                \   exe "normal! g`\"" |
-                \ endif
 
     " Close help and git window by pressing q.
     autocmd FileType help,qf,quickrun,qfreplace,ref,git-status,git-log,gitcommit
