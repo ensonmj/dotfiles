@@ -105,6 +105,8 @@ alias grep="grep --color=auto"
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 #alias tmux='tmux -2'
 alias payu="PACMAN=pacmatic nice packer -Syu"
+alias gaproxy='export http_proxy=http://127.0.0.1:8087 https_proxy=http://127.0.0.1:8087'
+alias noproxy='unset http_proxy https_proxy'
 #}}}
 
 # self-defined functions {{{
