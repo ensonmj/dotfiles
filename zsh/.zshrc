@@ -29,7 +29,9 @@ ZSH_THEME="kphoen"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(archlinux colored-man-pages cp docker extract fzf git go history sudo z zsh-autosuggestions)
+plugins=(archlinux colored-man-pages colorize command-not-found copydir copyfile cp
+dircycle encode64 extract history tmux tmuxinator urltools web-search z git go svn
+node npm nvm bundler gem rbenv pip fzf sudo zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -39,16 +41,13 @@ source $ZSH/oh-my-zsh.sh
 unsetopt correctall
 setopt correct
 
-#for pkgfile "command not found" hook
-source /etc/profile
-
 # Environment {{{
 GDK_BACKEND=wayland
 CLUTTER_BACKEND=wayland
 SDL_VIDEODRIVER=wayland
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-export EDITOR=vi
+export EDITOR=vim
 export LESSCHARSET=utf-8
 export PATH=$PATH:.
 unset SSH_ASKPASS
@@ -56,44 +55,17 @@ unset SSH_ASKPASS
 #dircolors
 [[ -f $HOME/.dircolors ]] && eval `dircolors $HOME/.dircolors`
 
-#tmux
-[[ -n "$TMUX" ]] && export TERM=screen-256color
-
 # local opt bin
 [[ -d $HOME/.opt/bin ]] && export PATH="$HOME/.opt/bin:$PATH"
 
 #pandoc
 [[ -d $HOME/.cabal ]] && export PATH="$PATH:$HOME/.cabal/bin"
 
-#tmuxinator
-[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
-
-#rbenv
-if [[ -d $HOME/.rbenv ]]; then
-    export PATH="$HOME/.rbenv/bin:$PATH"
-    source $HOME/.rbenv/completions/rbenv.bash
-    eval "$(rbenv init -)"
-fi
-export PATH="$HOME/.gem/ruby/2.3.0/bin:$PATH"
-
 #golang
 if [[ -d $HOME/Code/Go ]]; then
     export GOPATH=$HOME/Code/Go
     export PATH=$PATH:$HOME/Code/Go/bin
 fi
-
-#nvm
-if [[ -d $HOME/.nvm ]]; then
-    source $HOME/.nvm/nvm.sh
-    source $HOME/.nvm/bash_completion
-
-    #nvm doesn't seem to set $NODE_PATH automatically
-    NP=$(which node)
-    BP=${NP%bin/node} #this replaces the string 'bin/node'
-    LP="${BP}lib/node_modules"
-    export NODE_PATH="$LP"
-fi
-
 # }}}
 
 # Alias {{{
@@ -108,6 +80,12 @@ alias payu="PACMAN=pacmatic nice packer -Syu"
 alias gaproxy='export http_proxy=http://127.0.0.1:8087 https_proxy=http://127.0.0.1:8087'
 alias noproxy='unset http_proxy https_proxy'
 #}}}
+
+# Automatically quote globs in URL and remote references
+__remote_commands=(scp rsync wget curl)
+autoload -U url-quote-magic
+zle -N self-insert url-quote-magic
+zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
 
 # self-defined functions {{{
 function man {
