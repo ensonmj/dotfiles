@@ -425,15 +425,15 @@ map <leader>wc :wincmd q<cr>
 "rotate
 map <leader>wr :wincmd r<cr>
 "move
-map <leader>h :wincmd H<cr>
-map <leader>k :wincmd K<cr>
-map <leader>l :wincmd L<cr>
-map <leader>j :wincmd J<cr>
+map <leader>wh :wincmd H<cr>
+map <leader>wk :wincmd K<cr>
+map <leader>wl :wincmd L<cr>
+map <leader>wj :wincmd J<cr>
 "resize
-map <leader>H :3wincmd <<cr>
-map <leader>K :3wincmd ><cr>
-map <leader>L :3wincmd +<cr>
-map <leader>J :3wincmd -<cr>
+map <leader>wH :3wincmd <<cr>
+map <leader>wK :3wincmd ><cr>
+map <leader>wL :3wincmd +<cr>
+map <leader>wJ :3wincmd -<cr>
 "}}}}
 "}}}
 " ====================================================
@@ -666,6 +666,7 @@ NeoBundle 'bling/vim-bufferline'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-eunuch'
 NeoBundle 'tpope/vim-commentary'
+NeoBundle 'tpope/vim-obsession'
 NeoBundle 'Lokaltog/vim-easymotion'
 " marks admin
 "NeoBundle 'kshenoy/vim-signature'
@@ -679,6 +680,10 @@ NeoBundle 'Valloric/YouCompleteMe', {
 NeoBundle 'mbbill/fencview'
 " Display c/c++ function declaration in vim command/status line
 NeoBundle 'mbbill/echofunc'
+" For edit .tmux.conf
+NeoBundle 'tmux-plugins/vim-tmux'
+" Restore 'FocusGained' and 'FocusLost' autocommand events when using vim in tmux
+NeoBundle 'tmux-plugins/vim-tmux-focus-events'
 
 "}}}
 "}}}
