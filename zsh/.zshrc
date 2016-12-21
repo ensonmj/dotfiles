@@ -1,41 +1,45 @@
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/GitRepo/oh-my-zsh
+[[ -d $HOME/.zsh/antigen ]] || git clone https://github.com/zsh-users/antigen $HOME/.zsh/antigen
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="kphoen"
+export ADOTDIR=$HOME/.zsh/antigen
+source $HOME/.zsh/antigen/antigen.zsh
 
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Set to this to use case-sensitive completion
-# CASE_SENSITIVE="true"
-
-# Comment this out to disable weekly auto-update checks
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment following line if you want to disable colors in ls
-# DISABLE_LS_COLORS="true"
-
-# Uncomment following line if you want to disable autosetting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(archlinux colored-man-pages colorize command-not-found copydir copyfile cp
-dircycle encode64 extract history tmux tmuxinator urltools web-search z git go svn
-node npm nvm bundler gem rbenv pip fzf sudo zsh-autosuggestions)
-
-source $ZSH/oh-my-zsh.sh
-
-# Customize to your needs...
+antigen use oh-my-zsh
+antigen bundles <<EOBUNDLES
+    archlinux
+    common-aliase
+    colored-man-pages
+    colorize
+    command-not-found
+    copydir
+    copyfile
+    cp
+    dircycle
+    encode64
+    extract
+    history
+    tmux
+    tmuxinator
+    urltools
+    web-search
+    z
+    git
+    go
+    svn
+    node
+    npm
+    nvm
+    bundler
+    gem
+    rbenv
+    pip
+    sudo
+    andrewferrier/fzf-z
+    zsh-users/zsh-autosuggestions
+    zsh-users/zsh-history-substring-search
+    zsh-users/zsh-syntax-highlighting
+EOBUNDLES
+antigen theme gnzh
+antigen apply
 
 # Disable autocorrect arguments but keep cmds
 unsetopt correctall
@@ -79,6 +83,10 @@ alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc"
 alias payu="PACMAN=pacmatic nice packer -Syu"
 alias gaproxy='export http_proxy=http://127.0.0.1:8087 https_proxy=http://127.0.0.1:8087'
 alias noproxy='unset http_proxy https_proxy'
+if [[ -d $HOME/Code/hadoop-client ]]; then
+    alias hd='$HOME/Code/hadoop-client/hadoop/bin/hadoop --config $HOME/Code/hadoop-client/hadoop/conf/mulan'
+    alias hdol='$HOME/Code/hadoop-client/hadoop/bin/hadoop --config $HOME/Code/hadoop-client/hadoop/conf/khan'
+fi
 #}}}
 
 # Automatically quote globs in URL and remote references
@@ -88,24 +96,25 @@ zle -N self-insert url-quote-magic
 zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
 
 # self-defined functions {{{
-function man {
-    env LESS_TERMCAP_mb=$'\E[01;31m' \
-        LESS_TERMCAP_md=$'\E[01;38;5;74m' \
-        LESS_TERMCAP_me=$'\E[0m' \
-        LESS_TERMCAP_se=$'\E[0m' \
-        LESS_TERMCAP_so=$'\E[38;5;246m' \
-        LESS_TERMCAP_ue=$'\E[0m' \
-        LESS_TERMCAP_us=$'\E[04;38;5;146m' \
-        man "$@"
-}
+# function man
+# {
+#     env LESS_TERMCAP_mb=$'\E[01;31m' \
+#         LESS_TERMCAP_md=$'\E[01;38;5;74m' \
+#         LESS_TERMCAP_me=$'\E[0m' \
+#         LESS_TERMCAP_se=$'\E[0m' \
+#         LESS_TERMCAP_so=$'\E[38;5;246m' \
+#         LESS_TERMCAP_ue=$'\E[0m' \
+#         LESS_TERMCAP_us=$'\E[04;38;5;146m' \
+#         man "$@"
+# }
 
-svndiff()
+function svndiff
 {
     svn diff "$@" | dos2unix | vim - -R "+colorscheme koehler"
 }
 
 # should use colormake in github
-make()
+function make
 {
   pathpat="(/[^/]*)+:[0-9]+"
   ccred=$(echo -e "\033[0;31m")
