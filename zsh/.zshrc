@@ -1,45 +1,115 @@
-[[ -d $HOME/.zsh/antigen ]] || git clone https://github.com/zsh-users/antigen $HOME/.zsh/antigen
+# zplug {{{
+export ZPLUG_HOME=$HOME/.zplug
+[[ -d $ZPLUG_HOME ]] || git clone https://github.com/zplug/zplug $ZPLUG_HOME
+source $ZPLUG_HOME/init.zsh
 
-export ADOTDIR=$HOME/.zsh/antigen
-source $HOME/.zsh/antigen/antigen.zsh
+zplug "zplug/zplug"
+zplug "plugins/archlinux", from:oh-my-zsh
+zplug "plugins/common-aliase", from:oh-my-zsh
+zplug "plugins/colored-man-pages", from:oh-my-zsh
+zplug "plugins/colorize", from:oh-my-zsh
+zplug "plugins/command-not-found", from:oh-my-zsh
+zplug "plugins/copydir", from:oh-my-zsh
+zplug "plugins/copyfile", from:oh-my-zsh
+zplug "plugins/cp", from:oh-my-zsh
+zplug "plugins/dircycle", from:oh-my-zsh
+zplug "plugins/encode64", from:oh-my-zsh
+zplug "plugins/extract", from:oh-my-zsh
+zplug "plugins/history", from:oh-my-zsh
+zplug "plugins/tmux", from:oh-my-zsh
+zplug "plugins/tmuxinator", from:oh-my-zsh
+zplug "plugins/urltools", from:oh-my-zsh
+zplug "plugins/web-search", from:oh-my-zsh
+zplug "plugins/z", from:oh-my-zsh
+zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/go", from:oh-my-zsh
+zplug "plugins/svn", from:oh-my-zsh
+zplug "plugins/node", from:oh-my-zsh
+zplug "plugins/npm", from:oh-my-zsh
+zplug "plugins/bundler", from:oh-my-zsh
+zplug "plugins/gem", from:oh-my-zsh
+zplug "plugins/rbenv", from:oh-my-zsh
+zplug "plugins/pip", from:oh-my-zsh
+zplug "plugins/sudo", from:oh-my-zsh
+zplug "themes/gnzh", from:oh-my-zsh, as:theme
 
-antigen use oh-my-zsh
-antigen bundles <<EOBUNDLES
-    archlinux
-    common-aliase
-    colored-man-pages
-    colorize
-    command-not-found
-    copydir
-    copyfile
-    cp
-    dircycle
-    encode64
-    extract
-    history
-    tmux
-    tmuxinator
-    urltools
-    web-search
-    z
-    git
-    go
-    svn
-    node
-    npm
-    nvm
-    bundler
-    gem
-    rbenv
-    pip
-    sudo
-    andrewferrier/fzf-z
-    zsh-users/zsh-autosuggestions
-    zsh-users/zsh-history-substring-search
-    zsh-users/zsh-syntax-highlighting
-EOBUNDLES
-antigen theme gnzh
-antigen apply
+# Grab binaries from Github Release
+# and rename with the "rename-to:" tag
+zplug "junegunn/fzf-bin", \
+    from:gh-r, \
+    as:command, \
+    rename-to:fzf, \
+    use:"*darwin*amd64*"
+
+zplug "andrewferrier/fzf-z"
+zplug "djui/alias-tips"
+zplug "hlissner/zsh-autopair", nice: 10
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zsh-users/zsh-history-substring-search"
+
+# zsh-syntax-highlighting must be loaded after executing compinit command
+# and sourcing other plugins
+# (If the defer tag is given 2 or above, run after compinit command)
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+# Then, source plugins and add commands to $PATH
+zplug load
+# }}}
+
+# antigen {{{
+# [[ -d $HOME/.zsh/antigen ]] || git clone https://github.com/zsh-users/antigen $HOME/.zsh/antigen
+
+# export adotdir=$HOME/.zsh/antigen
+# source $HOME/.zsh/antigen/antigen.zsh
+
+# antigen use oh-my-zsh
+# antigen bundles <<eobundles
+#     archlinux
+#     common-aliase
+#     colored-man-pages
+#     colorize
+#     command-not-found
+#     copydir
+#     copyfile
+#     cp
+#     dircycle
+#     encode64
+#     extract
+#     history
+#     tmux
+#     tmuxinator
+#     urltools
+#     web-search
+#     z
+#     git
+#     go
+#     svn
+#     node
+#     npm
+#     nvm
+#     bundler
+#     gem
+#     rbenv
+#     pip
+#     sudo
+#     andrewferrier/fzf-z
+#     djui/alias-tips
+#     hlissner/zsh-autopair
+#     zsh-users/zsh-autosuggestions
+#     zsh-users/zsh-history-substring-search
+#     zsh-users/zsh-syntax-highlighting
+# eobundles
+# antigen theme gnzh
+# antigen apply
+# }}}
 
 # Disable autocorrect arguments but keep cmds
 unsetopt correctall
@@ -108,14 +178,12 @@ zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le 
 #         man "$@"
 # }
 
-function svndiff
-{
+svndiff () {
     svn diff "$@" | dos2unix | vim - -R "+colorscheme koehler"
 }
 
 # should use colormake in github
-function make
-{
+make () {
   pathpat="(/[^/]*)+:[0-9]+"
   ccred=$(echo -e "\033[0;31m")
   ccyellow=$(echo -e "\033[0;33m")
@@ -125,8 +193,7 @@ function make
 }
 
 # valgrind {{{
-function vgrun
-{
+vgrun () {
   local COMMAND="$1"
   local NAME="$2"
   [[ -n "$COMMAND" ]] || { echo "Syntax: vgrun <command> <name>"; return; }
@@ -138,8 +205,7 @@ function vgrun
         $COMMAND | tee valgrind-${NAME}-output.log 2>&1
 }
 
-function vgtrace
-{
+vgtrace () {
   local COMMAND="$1"
   local NAME="$2"
   [[ -n "$COMMAND" ]] || { echo "Syntax: vgtrace <command> <name>"; return; }
@@ -151,8 +217,7 @@ function vgtrace
         $COMMAND | tee valgrind-${NAME}-output.log 2>&1
 }
 
-function vgdbg
-{
+vgdbg () {
   [[ -n "$*" ]] || { echo "Syntax: vgrun <command>"; return; }
   valgrind \
         --leak-check=full --error-limit=no --track-origins=yes \
