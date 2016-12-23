@@ -114,9 +114,18 @@ zplug load
 # antigen apply
 # }}}
 
+# zsh option {{{
 # Disable autocorrect arguments but keep cmds
 unsetopt correctall
 setopt correct
+
+autoload -U zmv
+# autoload run-help
+
+# bindkey
+# \^ = ctrl
+# \^[ = esc
+# }}}
 
 # Environment {{{
 GDK_BACKEND=wayland
