@@ -4,28 +4,27 @@ export ZPLUG_HOME=$HOME/.zplug
 source $ZPLUG_HOME/init.zsh
 
 zplug "zplug/zplug"
+zplug "robbyrussell/oh-my-zsh", use:"lib/*.zsh"
 zplug "plugins/archlinux", from:oh-my-zsh
 zplug "plugins/common-aliase", from:oh-my-zsh
 zplug "plugins/colored-man-pages", from:oh-my-zsh
-zplug "plugins/colorize", from:oh-my-zsh
+zplug "plugins/colorize", from:oh-my-zsh # colorize($@)
 zplug "plugins/command-not-found", from:oh-my-zsh
-zplug "plugins/copydir", from:oh-my-zsh
-zplug "plugins/copyfile", from:oh-my-zsh
-zplug "plugins/cp", from:oh-my-zsh
-zplug "plugins/dircycle", from:oh-my-zsh
-zplug "plugins/encode64", from:oh-my-zsh
-zplug "plugins/extract", from:oh-my-zsh
-zplug "plugins/history", from:oh-my-zsh
-zplug "plugins/tmux", from:oh-my-zsh
-zplug "plugins/tmuxinator", from:oh-my-zsh
-zplug "plugins/urltools", from:oh-my-zsh
-zplug "plugins/web-search", from:oh-my-zsh
+zplug "plugins/copydir", from:oh-my-zsh # copydir()
+zplug "plugins/copyfile", from:oh-my-zsh # copyfile($1)
+zplug "plugins/cp", from:oh-my-zsh # cpv($@)
+zplug "plugins/dircycle", from:oh-my-zsh # C-S-Left/Right
+zplug "plugins/encode64", from:oh-my-zsh # e64($1) d64($1)
+zplug "plugins/extract", from:oh-my-zsh # x($@)
+zplug "plugins/urltools", from:oh-my-zsh # urlencode($1) urldecode($1)
+zplug "plugins/web-search", from:oh-my-zsh # google/baidu/github/ddg/wiki/...($1)
 zplug "plugins/z", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/go", from:oh-my-zsh
 zplug "plugins/svn", from:oh-my-zsh
 zplug "plugins/node", from:oh-my-zsh
 zplug "plugins/npm", from:oh-my-zsh
+# zplug "plugins/nvm", from:oh-my-zsh
 zplug "plugins/bundler", from:oh-my-zsh
 zplug "plugins/gem", from:oh-my-zsh
 zplug "plugins/rbenv", from:oh-my-zsh
@@ -35,22 +34,24 @@ zplug "themes/gnzh", from:oh-my-zsh, as:theme
 
 # Grab binaries from Github Release
 # and rename with the "rename-to:" tag
+zplug "junegunn/fzf", \
+    as:command, \
+    use:"bin/fzf-tmux"
 zplug "junegunn/fzf-bin", \
     from:gh-r, \
     as:command, \
     rename-to:fzf, \
     use:"*darwin*amd64*"
-
 zplug "andrewferrier/fzf-z"
+
 zplug "djui/alias-tips"
-zplug "hlissner/zsh-autopair", nice: 10
+zplug "hlissner/zsh-autopair", defer:2
+zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-history-substring-search"
-
 # zsh-syntax-highlighting must be loaded after executing compinit command
 # and sourcing other plugins
-# (If the defer tag is given 2 or above, run after compinit command)
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+zplug "zsh-users/zsh-syntax-highlighting", defer:3
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -61,6 +62,7 @@ if ! zplug check --verbose; then
 fi
 
 # Then, source plugins and add commands to $PATH
+# zplug load --verbose
 zplug load
 # }}}
 
@@ -103,6 +105,7 @@ zplug load
 #     andrewferrier/fzf-z
 #     djui/alias-tips
 #     hlissner/zsh-autopair
+#     zsh-users/zsh-completions
 #     zsh-users/zsh-autosuggestions
 #     zsh-users/zsh-history-substring-search
 #     zsh-users/zsh-syntax-highlighting
