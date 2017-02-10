@@ -59,8 +59,7 @@ endif
 " 空文件：  比如在windows下，使用右键新建文本文档，这样就建立了一个空白文件
 "           vim打开此空白文件，会探测文件编码，由于文件是空白，所有探测结果
 "           肯定是fileencodings中的第一个（此处utf-8），这样在windows下用其
-"           他编辑器打开含有中文的文件时就会乱码。(set
-"           fenc=chinese)
+"           他编辑器打开含有中文的文件时就会乱码。(set fenc=chinese)
 "           "}}}
 " ----------------------------------------------------
 "{{{
@@ -276,8 +275,8 @@ set shiftround
 
 " Enable modeline.
 set modeline
-" Use clipboard register.
-set clipboard& clipboard+=unnamed
+" Use + as clipboard register.
+set clipboard^=unnamedplus
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -707,6 +706,7 @@ filetype plugin indent on
 " inner{{{
 " Disable GetLatestVimPlugin.vim
 let g:loaded_getscriptPlugin = 1
+
 " colorscheme
 colorscheme desertink
 "set background=dark
@@ -784,7 +784,6 @@ let g:DoxygenToolkit_licenseTag="My own license"
 "autocmd BufNewFile,BufRead fugitive://* set bufhidden=delete
 nmap <Leader>gs :Gstatus<CR>
 nmap <Leader>gb :Gblame<CR>
-nmap <Leader>gd :Gdiff<CR>
 nmap <Leader>gp :Git push<CR>
 " }}}
 " ----------------------------------------------------
@@ -1172,8 +1171,6 @@ let g:unite_source_menu_menus.git.command_candidates = [
         \'normal ,gV'],
     \['▷ git status (fugitive) ⌘ ,gs',
         \'Gstatus'],
-    \['▷ git diff (fugitive) ⌘ ,gd',
-        \'Gdiff'],
     \['▷ git commit (fugitive) ⌘ ,gc',
         \'Gcommit'],
     \['▷ git log (fugitive) ⌘ ,gl',
@@ -1596,9 +1593,15 @@ let g:go_snippent_engine = "neosnippet"
 " highlight
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
-let g:go_highlight_structs = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+
+" using with syntastic
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+let g:syntastic_mode_map = {'mode': 'active', 'passive_filetypes': ['go']}
+let g:go_list_type = "quickfix"
 " }}}
 " ----------------------------------------------------
 " vim-slime"{{{
