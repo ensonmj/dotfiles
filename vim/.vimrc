@@ -400,11 +400,10 @@ set sessionoptions+=sesdir
 " ----------------------------------------------------
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-                \ | wincmd p | diffthis
-endif
+command! DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+            \ | wincmd p | diffthis
+" In case /tmp get's clean out, make a new tmp directory for vim
+command! MkTmpdir call mkdir(fnamemodify(tempname(), ":p:h"))
 " ====================================================
 " Key map
 " ----------------------------------------------------
@@ -1705,6 +1704,6 @@ if !has('vim_starting')
     " Call on_source hook when reloading .vimrc.
     call neobundle#call_hook('on_source')
 endif
-"}}}
+" }}}
 " ====================================================
 " vim: foldmethod=marker
