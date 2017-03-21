@@ -373,6 +373,7 @@ augroup MyAutoCmd
     autocmd FileType scss setlocal sts=2 sw=2 et
     autocmd FileType python setlocal sts=4 sw=4 et
     autocmd FileType javascript setlocal sts=2 sw=2 et
+    autocmd FileType json setlocal sts=2 sw=2 et fdm=syntax
     autocmd FileType html setlocal sts=2 sw=2 et fdm=indent
 augroup END
 " }}}
@@ -1673,6 +1674,10 @@ map <SPACE> <Plug>(wildfire-fuel)
 vmap <C-SPACE> <Plug>(wildfire-water)
 " Quick selection
 nmap <leader>s <Plug>(wildfire-quick-select)
+" }}}
+" ----------------------------------------------------
+" vim-json {{{
+let g:vim_json_syntax_conceal = 0
 " }}}
 " ----------------------------------------------------
 " python-mode {{{
