@@ -1,117 +1,117 @@
 # zplug {{{
-export ZPLUG_HOME=$HOME/.zplug
-[[ -d $ZPLUG_HOME ]] || git clone https://github.com/zplug/zplug $ZPLUG_HOME
-source $ZPLUG_HOME/init.zsh
+# export ZPLUG_HOME=$HOME/.zplug
+# [[ -d $ZPLUG_HOME ]] || git clone https://github.com/zplug/zplug $ZPLUG_HOME
+# source $ZPLUG_HOME/init.zsh
 
-zplug "zplug/zplug"
-zplug "robbyrussell/oh-my-zsh", use:"lib/*.zsh"
-zplug "plugins/archlinux", from:oh-my-zsh
-zplug "plugins/common-aliase", from:oh-my-zsh
-zplug "plugins/colored-man-pages", from:oh-my-zsh
-zplug "plugins/colorize", from:oh-my-zsh # colorize($@)
-zplug "plugins/command-not-found", from:oh-my-zsh
-zplug "plugins/copydir", from:oh-my-zsh # copydir()
-zplug "plugins/copyfile", from:oh-my-zsh # copyfile($1)
-zplug "plugins/cp", from:oh-my-zsh # cpv($@)
-zplug "plugins/dircycle", from:oh-my-zsh # C-S-Left/Right
-zplug "plugins/encode64", from:oh-my-zsh # e64($1) d64($1)
-zplug "plugins/extract", from:oh-my-zsh # x($@)
-zplug "plugins/urltools", from:oh-my-zsh # urlencode($1) urldecode($1)
-zplug "plugins/web-search", from:oh-my-zsh # google/baidu/github/ddg/wiki/...($1)
-zplug "plugins/z", from:oh-my-zsh
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/go", from:oh-my-zsh
-zplug "plugins/svn", from:oh-my-zsh
-zplug "plugins/node", from:oh-my-zsh
-zplug "plugins/npm", from:oh-my-zsh
-# zplug "plugins/nvm", from:oh-my-zsh
-zplug "plugins/bundler", from:oh-my-zsh
-zplug "plugins/gem", from:oh-my-zsh
-zplug "plugins/rbenv", from:oh-my-zsh
-zplug "plugins/pip", from:oh-my-zsh
-zplug "plugins/sudo", from:oh-my-zsh
-zplug "themes/gnzh", from:oh-my-zsh, as:theme
+# zplug "zplug/zplug"
+# zplug "robbyrussell/oh-my-zsh", use:"lib/*.zsh"
+# zplug "plugins/archlinux", from:oh-my-zsh
+# zplug "plugins/common-aliase", from:oh-my-zsh
+# zplug "plugins/colored-man-pages", from:oh-my-zsh
+# zplug "plugins/colorize", from:oh-my-zsh # colorize($@)
+# zplug "plugins/command-not-found", from:oh-my-zsh
+# zplug "plugins/copydir", from:oh-my-zsh # copydir()
+# zplug "plugins/copyfile", from:oh-my-zsh # copyfile($1)
+# zplug "plugins/cp", from:oh-my-zsh # cpv($@)
+# zplug "plugins/dircycle", from:oh-my-zsh # C-S-Left/Right
+# zplug "plugins/encode64", from:oh-my-zsh # e64($1) d64($1)
+# zplug "plugins/extract", from:oh-my-zsh # x($@)
+# zplug "plugins/urltools", from:oh-my-zsh # urlencode($1) urldecode($1)
+# zplug "plugins/web-search", from:oh-my-zsh # google/baidu/github/ddg/wiki/...($1)
+# zplug "plugins/z", from:oh-my-zsh
+# zplug "plugins/git", from:oh-my-zsh
+# zplug "plugins/go", from:oh-my-zsh
+# zplug "plugins/svn", from:oh-my-zsh
+# zplug "plugins/node", from:oh-my-zsh
+# zplug "plugins/npm", from:oh-my-zsh
+# # zplug "plugins/nvm", from:oh-my-zsh
+# zplug "plugins/bundler", from:oh-my-zsh
+# zplug "plugins/gem", from:oh-my-zsh
+# zplug "plugins/rbenv", from:oh-my-zsh
+# zplug "plugins/pip", from:oh-my-zsh
+# zplug "plugins/sudo", from:oh-my-zsh
+# zplug "themes/gnzh", from:oh-my-zsh, as:theme
 
-# Grab binaries from Github Release
-# and rename with the "rename-to:" tag
-zplug "junegunn/fzf", \
-    as:command, \
-    use:"bin/fzf-tmux"
-zplug "junegunn/fzf-bin", \
-    from:gh-r, \
-    as:command, \
-    rename-to:fzf, \
-    use:"*darwin*amd64*"
-zplug "andrewferrier/fzf-z"
+# # Grab binaries from Github Release
+# # and rename with the "rename-to:" tag
+# zplug "junegunn/fzf", \
+#     as:command, \
+#     use:"bin/fzf-tmux"
+# zplug "junegunn/fzf-bin", \
+#     from:gh-r, \
+#     as:command, \
+#     rename-to:fzf, \
+#     use:"*darwin*amd64*"
+# zplug "andrewferrier/fzf-z"
 
-zplug "djui/alias-tips"
-zplug "hlissner/zsh-autopair", defer:2
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-history-substring-search"
-# zsh-syntax-highlighting must be loaded after executing compinit command
-# and sourcing other plugins
-zplug "zsh-users/zsh-syntax-highlighting", defer:3
+# zplug "djui/alias-tips"
+# zplug "hlissner/zsh-autopair", defer:2
+# zplug "zsh-users/zsh-completions"
+# zplug "zsh-users/zsh-autosuggestions"
+# zplug "zsh-users/zsh-history-substring-search"
+# # zsh-syntax-highlighting must be loaded after executing compinit command
+# # and sourcing other plugins
+# zplug "zsh-users/zsh-syntax-highlighting", defer:3
 
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
+# # Install plugins if there are plugins that have not been installed
+# if ! zplug check --verbose; then
+#     printf "Install? [y/N]: "
+#     if read -q; then
+#         echo; zplug install
+#     fi
+# fi
 
-# Then, source plugins and add commands to $PATH
-# zplug load --verbose
-zplug load
+# # Then, source plugins and add commands to $PATH
+# # zplug load --verbose
+# zplug load
 # }}}
 
 # antigen {{{
-# [[ -d $HOME/.zsh/antigen ]] || git clone https://github.com/zsh-users/antigen $HOME/.zsh/antigen
+[[ -d $HOME/.zsh/antigen ]] || git clone https://github.com/zsh-users/antigen $HOME/.zsh/antigen
 
-# export adotdir=$HOME/.zsh/antigen
-# source $HOME/.zsh/antigen/antigen.zsh
+export adotdir=$HOME/.zsh/antigen
+source $HOME/.zsh/antigen/antigen.zsh
 
-# antigen use oh-my-zsh
-# antigen bundles <<eobundles
-#     archlinux
-#     common-aliase
-#     colored-man-pages
-#     colorize
-#     command-not-found
-#     copydir
-#     copyfile
-#     cp
-#     dircycle
-#     encode64
-#     extract
-#     history
-#     tmux
-#     tmuxinator
-#     urltools
-#     web-search
-#     z
-#     git
-#     go
-#     svn
-#     node
-#     npm
-#     nvm
-#     bundler
-#     gem
-#     rbenv
-#     pip
-#     sudo
-#     andrewferrier/fzf-z
-#     djui/alias-tips
-#     hlissner/zsh-autopair
-#     zsh-users/zsh-completions
-#     zsh-users/zsh-autosuggestions
-#     zsh-users/zsh-history-substring-search
-#     zsh-users/zsh-syntax-highlighting
-# eobundles
-# antigen theme gnzh
-# antigen apply
+antigen use oh-my-zsh
+antigen bundles <<eobundles
+    archlinux
+    common-aliase
+    colored-man-pages
+    colorize
+    command-not-found
+    copydir
+    copyfile
+    cp
+    dircycle
+    encode64
+    extract
+    history
+    tmux
+    tmuxinator
+    urltools
+    web-search
+    z
+    git
+    go
+    svn
+    node
+    npm
+    nvm
+    bundler
+    gem
+    rbenv
+    pip
+    sudo
+    andrewferrier/fzf-z
+    djui/alias-tips
+    hlissner/zsh-autopair
+    zsh-users/zsh-completions
+    zsh-users/zsh-autosuggestions
+    zsh-users/zsh-history-substring-search
+    zsh-users/zsh-syntax-highlighting
+eobundles
+antigen theme gnzh
+antigen apply
 # }}}
 
 # zsh option {{{
@@ -148,10 +148,7 @@ unset SSH_ASKPASS
 [[ -d $HOME/.cabal ]] && export PATH="$PATH:$HOME/.cabal/bin"
 
 #golang
-if [[ -d $HOME/Code/Go ]]; then
-    export GOPATH=$HOME/Code/Go
-    export PATH=$PATH:$HOME/Code/Go/bin
-fi
+[[ -d $HOME/go ]] && export PATH="$PATH:$HOME/go/bin"
 # }}}
 
 # Alias {{{
