@@ -2,3 +2,4 @@
 *.swo
 *~
 pentadactyl/.pentadactyl/info
+ssh/.ssh/known_hosts
