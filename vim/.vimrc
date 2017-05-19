@@ -683,6 +683,8 @@ NeoBundle 'mbbill/echofunc'
 NeoBundle 'tmux-plugins/vim-tmux'
 " Restore 'FocusGained' and 'FocusLost' autocommand events when using vim in tmux
 NeoBundle 'tmux-plugins/vim-tmux-focus-events'
+" Use '*' and '#' to search current selection
+NeoBundle 'bronson/vim-visual-star-search'
 
 "}}}
 "}}}
