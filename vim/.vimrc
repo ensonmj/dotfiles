@@ -434,6 +434,10 @@ map <leader>wK :3wincmd ><cr>
 map <leader>wL :3wincmd +<cr>
 map <leader>wJ :3wincmd -<cr>
 "}}}}
+
+" Easy expansion of the active file directory
+" taken from Practical Vim
+cnoremap <expr> %% getcmdtype() == ":" ? expand('%:h').'/' : '%%'
 "}}}
 " ====================================================
 " Plugins bundles
