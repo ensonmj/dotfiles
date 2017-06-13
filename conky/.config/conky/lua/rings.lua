@@ -312,7 +312,8 @@ function rings_stat(cr)
 
     local updates=conky_parse('${updates}')
     update_num=tonumber(updates)
-    if update_num>2 then
+    -- make sure update_interval * update_num > 5s
+    if update_num>1 then
         for i in pairs(settings_table) do
             setup_rings(cr,settings_table[i])
         end

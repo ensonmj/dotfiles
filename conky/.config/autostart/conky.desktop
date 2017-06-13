@@ -1,10 +1,11 @@
 [Desktop Entry]
-Encoding=UTF-8
-Version=0.0.1
 Type=Application
-Name=conky
-Comment=
-Exec=conky -d -p 10 -c ./config/conky/conky.conf
+Version=0.0.1
+Name=Conky
+Comment=Conky autostart script
+path=$HOME/.config/conky
+Exec=sh -c "conky -d -p 5 -c $HOME/.config/conky/conky.conf"
+NoDisplay=true
+X-GNOME-Autostart-Phase=Application
 StartupNotify=false
-Terminal=false
 Hidden=false
