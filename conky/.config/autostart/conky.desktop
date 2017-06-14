@@ -2,10 +2,6 @@
 Type=Application
 Version=0.0.1
 Name=Conky
-Comment=Conky autostart script
-path=$HOME/.config/conky
-Exec=sh -c "conky -d -p 5 -c $HOME/.config/conky/conky.conf"
 NoDisplay=true
-X-GNOME-Autostart-Phase=Application
-StartupNotify=false
-Hidden=false
+Comment=Conky autostart script
+Exec=sh -c "conky -d -p 5 -c $HOME/.config/conky/conky.conf"
