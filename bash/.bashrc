@@ -85,9 +85,15 @@ function man {
         man "$@"
 }
 
-svndiff()
-{
-    svn diff "$@" | dos2unix | vim - -R "+colorscheme koehler"
+svn () {
+    if [[ "$1" == "log" ]]; then
+        # -FX tell `less` to quit if entire file fits on the first screen, not to switch to the alternate screen
+        command svn "$@" | less -FX
+    elif [[ "$1" == "diff" ]]; then
+        command svn "$@" | dos2unix | vim - -R "+colorscheme koehler"
+    else
+        command svn "$@"
+    fi
 }
 
 # should use colormake in github
