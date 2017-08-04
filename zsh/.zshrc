@@ -131,8 +131,8 @@ autoload -U zmv
 GDK_BACKEND=wayland
 CLUTTER_BACKEND=wayland
 SDL_VIDEODRIVER=wayland
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+export LC_ALL=en_US.utf8
+export LANG=en_US.utf8
 export EDITOR=vim
 export LESSCHARSET=utf-8
 export PATH=$PATH:.
@@ -187,8 +187,15 @@ zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le 
 #         man "$@"
 # }
 
-svndiff () {
-    svn diff "$@" | dos2unix | vim - -R "+colorscheme koehler"
+svn () {
+    if [[ "$1" == "log" ]]; then
+        # -FX tell `less` to quit if entire file fits on the first screen, not to switch to the alternate screen
+        command svn "$@" | less -FX
+    elif [[ "$1" == "diff" ]]; then
+        command svn "$@" | dos2unix | vim - -R "+colorscheme koehler"
+    else
+        command svn "$@"
+    fi
 }
 
 # should use colormake in github
