@@ -17,3 +17,5 @@
 	sed = ! git grep -z --full-name -l '.' | xargs -0 sed -i -e
 [color]
 	ui = true
+[http]
+	sslVerify = false
