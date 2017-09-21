@@ -1,3 +1,40 @@
+# Environment {{{
+GDK_BACKEND=wayland
+CLUTTER_BACKEND=wayland
+SDL_VIDEODRIVER=wayland
+export LC_ALL=en_US.utf8
+export LANG=en_US.utf8
+export EDITOR=vim
+export LESSCHARSET=utf-8
+export PATH=$PATH:.
+unset SSH_ASKPASS
+
+# ZSH_CACHE_DIR
+[[ -d $HOME/.zsh/cache ]] || mkdir -p "$HOME/.zsh/cache" && export ZSH_CACHE_DIR=$HOME/.zsh/cache
+
+# local opt bin
+[[ -d $HOME/.opt/bin ]] && export PATH="$HOME/.opt/bin:$PATH"
+
+#pandoc
+[[ -d $HOME/.cabal ]] && export PATH="$PATH:$HOME/.cabal/bin"
+
+#golang
+[[ -d $HOME/go ]] && export PATH="$PATH:$HOME/go/bin"
+# }}}
+
+# Alias {{{
+alias ls='ls -F --color=auto --show-control-chars'
+alias la='ls -a'
+alias ll='ls -l'
+alias lla='ls -al'
+alias grep="grep --color=auto"
+alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
+#alias tmux='tmux -2'
+alias payu="PACMAN=pacmatic nice packer -Syu"
+alias gaproxy='export http_proxy=http://127.0.0.1:8087 https_proxy=http://127.0.0.1:8087'
+alias noproxy='unset http_proxy https_proxy'
+#}}}
+
 # zplug {{{
 # export ZPLUG_HOME=$HOME/.zplug
 # [[ -d $ZPLUG_HOME ]] || git clone https://github.com/zplug/zplug $ZPLUG_HOME
@@ -125,54 +162,18 @@ autoload -U zmv
 # bindkey
 # \^ = ctrl
 # \^[ = esc
-# }}}
-
-# Environment {{{
-GDK_BACKEND=wayland
-CLUTTER_BACKEND=wayland
-SDL_VIDEODRIVER=wayland
-export LC_ALL=en_US.utf8
-export LANG=en_US.utf8
-export EDITOR=vim
-export LESSCHARSET=utf-8
-export PATH=$PATH:.
-unset SSH_ASKPASS
-
-#dircolors
-[[ -f $HOME/.dircolors ]] && eval `dircolors $HOME/.dircolors`
-
-# local opt bin
-[[ -d $HOME/.opt/bin ]] && export PATH="$HOME/.opt/bin:$PATH"
-
-#pandoc
-[[ -d $HOME/.cabal ]] && export PATH="$PATH:$HOME/.cabal/bin"
-
-#golang
-[[ -d $HOME/go ]] && export PATH="$PATH:$HOME/go/bin"
-# }}}
-
-# Alias {{{
-alias ls='ls -F --color=auto --show-control-chars'
-alias la='ls -a'
-alias ll='ls -l'
-alias lla='ls -al'
-alias grep="grep --color=auto"
-alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
-#alias tmux='tmux -2'
-alias payu="PACMAN=pacmatic nice packer -Syu"
-alias gaproxy='export http_proxy=http://127.0.0.1:8087 https_proxy=http://127.0.0.1:8087'
-alias noproxy='unset http_proxy https_proxy'
-if [[ -d $HOME/Code/hadoop-client ]]; then
-    alias hd='$HOME/Code/hadoop-client/hadoop/bin/hadoop --config $HOME/Code/hadoop-client/hadoop/conf/mulan'
-    alias hdol='$HOME/Code/hadoop-client/hadoop/bin/hadoop --config $HOME/Code/hadoop-client/hadoop/conf/khan'
-fi
-#}}}
 
 # Automatically quote globs in URL and remote references
 __remote_commands=(scp rsync wget curl)
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
+# }}}
+
+# Load scripts {{{
+#dircolors
+[[ -f $HOME/.dircolors ]] && eval `dircolors $HOME/.dircolors`
+# }}}
 
 # self-defined functions {{{
 # function man
