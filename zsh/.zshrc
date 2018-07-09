@@ -22,6 +22,11 @@ unset SSH_ASKPASS
 [[ -d $HOME/go ]] && export PATH="$PATH:$HOME/go/bin"
 # }}}
 
+if brew list | grep coreutils > /dev/null ; then
+  PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+  MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"
+fi
+
 # Alias {{{
 alias ls='ls -F --color=auto --show-control-chars'
 alias la='ls -a'
@@ -31,8 +36,8 @@ alias grep="grep --color=auto"
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 #alias tmux='tmux -2'
 alias payu="PACMAN=pacmatic nice packer -Syu"
-alias gaproxy='export http_proxy=http://127.0.0.1:8087 https_proxy=http://127.0.0.1:8087'
-alias noproxy='unset http_proxy https_proxy'
+alias proxy='export all_proxy=socks5://127.0.0.1:1080 http_proxy=socks5://127.0.0.1:1080 https_proxy=socks5://127.0.0.1:1080 no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"'
+alias noproxy='unset all_proxy http_proxy https_proxy no_proxy'
 #}}}
 
 # zplug {{{
