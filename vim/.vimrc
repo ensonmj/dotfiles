@@ -605,6 +605,7 @@ NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload':
 NeoBundle 'greyblake/vim-preview'
 "NeoBundle 'tpope/vim-haml'
 "NeoBundle 'slim-template/vim-slim'
+NeoBundle 'cespare/vim-toml'
 "}}}
 
 " Text-object {{{
@@ -676,7 +677,7 @@ NeoBundle 'Lokaltog/vim-easymotion'
 let g:neobundle#install_process_timeout = 1800 "YouCompleteMe is so slow
 NeoBundle 'Valloric/YouCompleteMe', {
             \ 'build' : {
-            \   'unix' : './install.py --clang-completer --system-libclang --gocode-completer'
+            \   'unix' : './install.py --clang-completer --system-libclang --go-completer --js-completer'
             \ },
             \}
 " Auto detect CJK and Unicode file encodings
