@@ -228,6 +228,7 @@ set winheight=1
 "set previewheight=10
 "set helpheight=12
 
+set viewoptions=cursor,folds,slash,unix
 "}}}
 " ====================================================
 " Search
