@@ -275,8 +275,14 @@ set shiftround
 
 " Enable modeline.
 set modeline
-" Use + as clipboard register.
-set clipboard^=unnamedplus
+" yank to clipboard
+if has("clipboard")
+    set clipboard=unnamed " copy to the system clipboard
+
+    if has("unnamedplus") " X11 support
+        set clipboard+=unnamedplus
+    endif
+endif
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
