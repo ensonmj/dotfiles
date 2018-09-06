@@ -314,12 +314,12 @@ set infercase
 set foldenable
 " 设置折叠方式
 set foldmethod=indent
-" syntax is too slow
-"set foldmethod=syntax
+"set foldmethod=syntax " too slow
 "set foldmethod=marker
 " Show folding level.
 "set foldcolumn=1
 set foldcolumn=3
+set foldlevel=99
 
 " grep选项
 "set grepprg=grep\ -nri
@@ -382,6 +382,21 @@ augroup MyAutoCmd
     autocmd FileType javascript setlocal sts=2 sw=2 et
     autocmd FileType json setlocal sts=2 sw=2 et fdm=syntax
     autocmd FileType html setlocal sts=2 sw=2 et fdm=indent
+
+    au BufNewFile,BufRead *.py
+            \ set tabstop=4
+            \ set softtabstop=4
+            \ set shiftwidth=4
+            \ set textwidth=79
+            \ set expandtab
+            \ set autoindent
+            \ set fileformat=unix
+    " au BufNewFile,BufRead *.js,*.html,*.css
+    "         \ set tabstop=2
+    "         \ set softtabstop=2
+    "         \ set shiftwidth=2
+    " unnecessary whitespace
+    au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 augroup END
 " }}}
 " ====================================================
@@ -477,7 +492,6 @@ NeoBundleFetch 'Shougo/neobundle.vim', '', 'default'
 " 1) original github repos {{{
 " Colorscheme {{{
 NeoBundle 'toupeira/vim-desertink'
-NeoBundle 'altercation/vim-colors-solarized'
 "}}}
 
 " Shougo {{{
@@ -567,19 +581,20 @@ NeoBundleLazy 'Shougo/junkfile.vim', {
 
 " VCS {{{
 " browse the vim undo tree
-NeoBundleLazy 'mbbill/undotree', {'autoload':{'commands':'UndotreeToggle'}}
-NeoBundle 'tpope/vim-git'
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive' }
-" Show git repository changes in the current file
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'mhinz/vim-signify'
-" Git viewer
 NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'],
             \ 'autoload':{'commands':'Gitv'}}
+" Show cvs repository changes in the current file
+NeoBundle 'mhinz/vim-signify'
 "}}}
 
+" Go {{{
+NeoBundle 'fatih/vim-go'
+" }}}
+
 " Python {{{
-NeoBundleLazy 'klen/python-mode', {'autoload': {'filetypes': ['python']}}
+NeoBundle 'python-mode/python-mode'
+NeoBundle 'tmhedberg/SimpylFold'
 "}}}
 
 " Ruby {{{
@@ -587,16 +602,13 @@ NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'tpope/vim-rails'
 "}}}
 
-" Go {{{
-NeoBundle 'fatih/vim-go'
-" }}}
-
 " Javascript {{{
 NeoBundleLazy 'pangloss/vim-javascript', {'autoload':{'filetypes':['javascript']}}
-NeoBundle 'elzr/vim-json'
 "}}}
 
 " Markup {{{
+NeoBundle 'elzr/vim-json'
+NeoBundle 'cespare/vim-toml'
 NeoBundleLazy 'joedicastro/vim-markdown'
 NeoBundleLazy 'othree/html5.vim', {'autoload':
             \ {'filetypes': ['html', 'xhtml', 'eruby', 'css', 'scss']}}
@@ -609,10 +621,7 @@ NeoBundleLazy 'ap/vim-css-color', {'autoload':
             \ {'filetypes': ['css', 'scss']}}
 NeoBundleLazy 'hail2u/vim-css3-syntax', {'autoload':
             \ {'filetypes': ['css', 'scss']}}
-NeoBundle 'greyblake/vim-preview'
-"NeoBundle 'tpope/vim-haml'
-"NeoBundle 'slim-template/vim-slim'
-NeoBundle 'cespare/vim-toml'
+NeoBundle 'posva/vim-vue'
 "}}}
 
 " Text-object {{{
@@ -667,8 +676,10 @@ NeoBundle 'junegunn/fzf'
 NeoBundle 'junegunn/fzf.vim'
 NeoBundle 'xolox/vim-misc'
 NeoBundle 'xolox/vim-easytags'
+NeoBundle 'rickhowe/diffchar.vim'
+NeoBundle 'AndrewRadev/linediff.vim'
 
-NeoBundle 'scrooloose/syntastic'
+" NeoBundle 'vim-syntastic/syntastic'
 NeoBundle 'majutsushi/tagbar'
 " A better looking status line
 NeoBundle 'bling/vim-airline'
@@ -702,6 +713,7 @@ NeoBundle 'bronson/vim-visual-star-search'
 "}}}
 " 2) vim-scripts repos {{{
 " https://githubcom/vim-scripts/xxx.git
+NeoBundle 'indentpython.vim'
 NeoBundle 'matchit.zip'
 NeoBundle 'a.vim'
 NeoBundle 'DoxygenToolkit.vim'
@@ -724,11 +736,15 @@ let g:loaded_getscriptPlugin = 1
 " colorscheme
 colorscheme desertink
 "set background=dark
-" }}}
-" ----------------------------------------------------
-" vim-color-solarized {{{
-let g:solarized_termcolors = 256
-let g:solarized_underline = 0
+
+" python warning
+let python_highlight_all = 1
+" let python_no_builtin_highlight = 1
+" let python_no_doctest_code_highlight = 1
+" let python_no_doctest_highlight = 1
+" let python_no_exception_highlight = 1
+" let python_no_number_highlight = 1
+" let python_space_error_highlight = 1
 " }}}
 " ----------------------------------------------------
 " Ctags"{{{
@@ -788,18 +804,10 @@ let g:ccsColorVimDoNotMessMyUpdatetime = 1
 " ----------------------------------------------------
 " DoxygenToolkit"{{{
 "let g:DoxygenToolkit_commentType="C++"
-let g:DoxygenToolkit_authorName="Ma Jian <majiana@sugon.com>"
+let g:DoxygenToolkit_authorName="ensonmj <ensonmj@gmail.com>"
 let g:DoxygenToolkit_licenseTag="My own license"
 "let g:DoxygenToolkit_briefTag_funcName="yes"
 "}}}
-" ----------------------------------------------------
-" fugitive"{{{
-" it is a default behavior
-"autocmd BufNewFile,BufRead fugitive://* set bufhidden=delete
-nmap <Leader>gs :Gstatus<CR>
-nmap <Leader>gb :Gblame<CR>
-nmap <Leader>gp :Git push<CR>
-" }}}
 " ----------------------------------------------------
 " unite"{{{
 "let g:unite_enable_start_insert = 1
@@ -1532,6 +1540,7 @@ func! bundle.hooks.on_source(bundle)
     let g:ycm_key_invoke_completion = '<Tab>'
     let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
     let g:ycm_confirm_extra_conf = 0
+    let g:ycm_autoclose_preview_window_after_completion = 1
 
     nnoremap <Leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
     "inoremap <expr><S-TAB> pumvisible() ? "\<C-n>" :
@@ -1694,9 +1703,8 @@ nmap <leader>s <Plug>(wildfire-quick-select)
 let g:vim_json_syntax_conceal = 0
 " }}}
 " ----------------------------------------------------
-" python-mode {{{
-" python-mode autocomplete conflict with YouCompleteMe
-let g:pymode_rope_completion = 0
+" SimpylFold {{{
+let g:SimpylFold_docstring_preview = 1
 " }}}
 " ====================================================
 " Support and Misc
