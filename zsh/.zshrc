@@ -20,6 +20,9 @@ unset SSH_ASKPASS
 
 #golang
 [[ -d $HOME/go ]] && export PATH="$PATH:$HOME/go/bin"
+
+#rust
+[[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
 # }}}
 
 if brew list | grep coreutils > /dev/null ; then
