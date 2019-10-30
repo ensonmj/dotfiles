@@ -37,14 +37,6 @@ else
 
     " directory for persistent undo
     set undodir=/tmp
-
-    " For non GVim.
-    if !has('gui_running')
-        " Enable 256 color terminal.
-        if !exists('$TMUX')
-            set t_Co=256
-        endif
-    endif
     "}}}
 endif
 "}}}
@@ -61,22 +53,12 @@ endif
 "{{{
 set encoding=utf-8
 set termencoding=utf-8
-"set fileencoding=chinese
+" set fileencoding=chinese
 set fileencodings=usc-bom,utf-8,chinese,latin1
 
 " A fullwidth character is displayed in vim properly.
 set ambiwidth=double
 "}}}
-" ====================================================
-" Syntax
-" ----------------------------------------------------
-" {{{
-" Switch syntax highlighting on, when the terminal has colors
-" vim-plug will enable syntax and filetype
-" syntax on
-" filetype plugin indent on
-
-" }}}
 " ====================================================
 " View
 " ----------------------------------------------------
@@ -88,7 +70,7 @@ endif
 " Height of command line.
 set cmdheight=2
 
-set colorcolumn=90
+set colorcolumn=80
 
 " For conceal
 set conceallevel=2
@@ -101,18 +83,6 @@ set display=lastline,uhex
 " Use vertical diff format
 set diffopt+=vertical
 
-" 不显示工具栏
-set guioptions-=T
-" 不显示菜单栏
-set guioptions-=m
-" 不显示撕裂菜单
-set guioptions-=t
-" 解决菜单乱码
-source $VIMRUNTIME/delmenu.vim
-" 加载默认菜单
-source $VIMRUNTIME/menu.vim
-" 设置菜单语言
-set langmenu=en_US
 " 状态栏显示
 set laststatus=2
 
@@ -317,7 +287,7 @@ command! MkTmpdir call mkdir(fnamemodify(tempname(), ":p:h"))
 augroup MyAutoCmd
     autocmd!
     " Auto reload vimrc and VimScript
-    autocmd BufWritePost,FileWritePost .vimrc,*.vim if &autoread | source <afile> | endif
+    "autocmd BufWritePost,FileWritePost .vimrc,*.vim if &autoread | source <afile> | endif
 
     " 自动给光标所在单词添加下划线
     autocmd CursorHold * silent! exe printf('match Underlined /\<%s\>/', expand('<cword>'))
@@ -410,7 +380,7 @@ if has("cscope")
 endif
 "}}}
 " ====================================================
-" Plugins
+" Plugins {{{
 " ----------------------------------------------------
 if has('win32') || has('win64')
     let s:bundle_dir = expand("$VIM/Vimfiles")
@@ -464,7 +434,6 @@ let g:go_highlight_fields = 1
 let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
-
 " }}}
 " }}}
 
@@ -474,6 +443,7 @@ Plug 'vim-python/python-syntax'
 let g:python_highlight_all = 1
 " }}}
 Plug 'python-mode/python-mode'
+let g:pymode_rope_regenerate_on_write = 0
 " SimpylFold {{{
 Plug 'tmhedberg/SimpylFold'
 let g:SimpylFold_docstring_preview = 1
@@ -525,10 +495,7 @@ Plug 'rhysd/vim-textobj-continuous-line' " av/iv for lines continued by \ in c++
 Plug 'vimtaku/vim-textobj-keyvalue' " ak/ik, av/iv for key/value
 Plug 'sgur/vim-textobj-parameter' " a,/i, for an argument to a function
 Plug 'mattn/vim-textobj-url' " au/iu for a URL
-" wildfire.vim {{{
-" Smart selection of the closest text object
-Plug 'gcmt/wildfire.vim'
-" }}}
+Plug 'gcmt/wildfire.vim' " smart selection of the closest text object
 "}}}
 
 " Text manipulation {{{
@@ -593,6 +560,8 @@ let g:echodoc_enable_at_startup = 1
 " Misc tools {{{
 Plug 'toupeira/vim-desertink' " colorscheme
 Plug 'joshdick/onedark.vim' " colorscheme
+Plug 'jeffkreeftmeijer/vim-dim' " colorscheme
+Plug 'liuchengxu/vim-which-key'
 Plug 'Shougo/junkfile.vim' " Create scratch files with filetype
 
 Plug 'kopischke/vim-stay'
@@ -602,13 +571,6 @@ Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-scripts/matchit.zip'
 Plug 'vim-scripts/a.vim'
-" DoxygenToolkit"{{{
-Plug 'vim-scripts/DoxygenToolkit.vim'
-"let g:DoxygenToolkit_commentType="C++"
-let g:DoxygenToolkit_authorName="ensonmj <ensonmj@gmail.com>"
-let g:DoxygenToolkit_licenseTag="My own license"
-"let g:DoxygenToolkit_briefTag_funcName="yes"
-"}}}
 " tags {{{
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'skywind3000/gutentags_plus'
@@ -628,7 +590,7 @@ let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 "}}}
 "}}}
 
-" ale {{{
+" ale linter {{{
 Plug 'w0rp/ale'
 let g:ale_fix_on_save = 1
 let g:ale_echo_msg_format = '[%linter%] %code: %%s'
@@ -732,21 +694,32 @@ Plug 'ncm2/ncm2-tagprefix'
 Plug 'ncm2/ncm2-html-subscope'
 Plug 'ncm2/ncm2-markdown-subscope'
 "}}}
+" }}}
 
 call plug#end()
+" }}}
 " ====================================================
 " settings after plugin
 " ====================================================
 " colorscheme {{{
 " colorscheme desertink
-colorscheme onedark
+" colorscheme onedark
+colorscheme dim
 " }}}
 " ====================================================
 " Key map
 " ----------------------------------------------------
 "{{{
-let mapleader = ","
+let mapleader = "\<Space>"
 let maplocalleader = ","
+
+" vim-which-key {{{
+" Define prefix dictionary
+" let g:which_key_map =  {}
+
+nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
+nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
+" }}}
 
 " Easy expansion of the active file directory
 " taken from Practical Vim
@@ -779,12 +752,12 @@ vmap <Leader>a: :Tabularize /:\zs<CR>
 " }}}
 
 " wildfire {{{
-" selects the next closest text object
-map <SPACE> <Plug>(wildfire-fuel)
-" selects the previous closest text object
-vmap <C-SPACE> <Plug>(wildfire-water)
-" quick selection
-nmap <Leader>s <Plug>(wildfire-quick-select)
+" " selects the next closest text object
+" map <SPACE> <Plug>(wildfire-fuel)
+" " selects the previous closest text object
+" vmap <C-SPACE> <Plug>(wildfire-water)
+" " quick selection
+" nmap <Leader>s <Plug>(wildfire-quick-select)
 " }}}
 
 " NCM+UltiSnips function parameter expansion {{{
