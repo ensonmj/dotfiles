@@ -1,47 +1,14 @@
 # Environment {{{
-GDK_BACKEND=wayland
-CLUTTER_BACKEND=wayland
-SDL_VIDEODRIVER=wayland
-export LC_ALL=en_US.utf8
-export LANG=en_US.utf8
-export EDITOR=vim
-export LESSCHARSET=utf-8
-export PATH=$PATH:.
-unset SSH_ASKPASS
+[[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
 # ZSH_CACHE_DIR
 [[ -d $HOME/.zsh/cache ]] || mkdir -p "$HOME/.zsh/cache" && export ZSH_CACHE_DIR=$HOME/.zsh/cache
-
-# local opt bin
-[[ -d $HOME/.opt/bin ]] && export PATH="$HOME/.opt/bin:$PATH"
-
-#pandoc
-[[ -d $HOME/.cabal ]] && export PATH="$PATH:$HOME/.cabal/bin"
-
-#golang
-[[ -d $HOME/go ]] && export PATH="$PATH:$HOME/go/bin"
-
-#rust
-[[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
 # }}}
 
-if brew list | grep coreutils > /dev/null ; then
-  PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
-  MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"
-fi
-
-# Alias {{{
-alias ls='ls -F --color=auto --show-control-chars'
-alias la='ls -a'
-alias ll='ls -l'
-alias lla='ls -al'
-alias grep="grep --color=auto"
-alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
-#alias tmux='tmux -2'
-alias payu="PACMAN=pacmatic nice packer -Syu"
-alias proxy='export all_proxy=socks5://127.0.0.1:1080 http_proxy=socks5://127.0.0.1:1080 https_proxy=socks5://127.0.0.1:1080 no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"'
-alias noproxy='unset all_proxy http_proxy https_proxy no_proxy'
-#}}}
+#if brew list | grep coreutils > /dev/null ; then
+#  PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+#  MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"
+#fi
 
 # zplug {{{
 # export ZPLUG_HOME=$HOME/.zplug
@@ -128,6 +95,7 @@ antigen bundles <<eobundles
     copyfile
     cp
     dircycle
+    docker
     encode64
     extract
     history
@@ -138,13 +106,9 @@ antigen bundles <<eobundles
     z
     git
     go
-    svn
     node
     npm
     nvm
-    bundler
-    gem
-    rbenv
     pip
     sudo
     andrewferrier/fzf-z
@@ -177,79 +141,5 @@ autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
 # }}}
-
-# Load scripts {{{
-#dircolors
-[[ -f $HOME/.dircolors ]] && eval `dircolors $HOME/.dircolors`
-# }}}
-
-# self-defined functions {{{
-# function man
-# {
-#     env LESS_TERMCAP_mb=$'\E[01;31m' \
-#         LESS_TERMCAP_md=$'\E[01;38;5;74m' \
-#         LESS_TERMCAP_me=$'\E[0m' \
-#         LESS_TERMCAP_se=$'\E[0m' \
-#         LESS_TERMCAP_so=$'\E[38;5;246m' \
-#         LESS_TERMCAP_ue=$'\E[0m' \
-#         LESS_TERMCAP_us=$'\E[04;38;5;146m' \
-#         man "$@"
-# }
-
-svn () {
-    if [[ "$1" == "log" ]]; then
-        # -FX tell `less` to quit if entire file fits on the first screen, not to switch to the alternate screen
-        command svn "$@" | less -FX
-    elif [[ "$1" == "diff" ]]; then
-        command svn "$@" | dos2unix | vim - -R "+colorscheme koehler"
-    else
-        command svn "$@"
-    fi
-}
-
-# should use colormake in github
-make () {
-  pathpat="(/[^/]*)+:[0-9]+"
-  ccred=$(echo -e "\033[0;31m")
-  ccyellow=$(echo -e "\033[0;33m")
-  ccend=$(echo -e "\033[0m")
-  /usr/bin/make "$@" 2>&1 | sed -e "/[Ee]rror[: ]/ s%$pathpat%$ccred&$ccend%g" -e "/[Ww]arning[: ]/ s%$pathpat%$ccyellow&$ccend%g"
-  return ${PIPESTATUS[0]}
-}
-
-# valgrind {{{
-vgrun () {
-  local COMMAND="$1"
-  local NAME="$2"
-  [[ -n "$COMMAND" ]] || { echo "Syntax: vgrun <command> <name>"; return; }
-  [[ -n "$NAME" ]] || { echo "Syntax vgrun <command> <name>"; return; }
-  valgrind \
-        --leak-check=full --error-limit=no --track-origins=yes \
-        --undef-value-errors=yes --log-file=valgrind-${NAME}.log \
-        --read-var-info=yes \
-        $COMMAND | tee valgrind-${NAME}-output.log 2>&1
-}
-
-vgtrace () {
-  local COMMAND="$1"
-  local NAME="$2"
-  [[ -n "$COMMAND" ]] || { echo "Syntax: vgtrace <command> <name>"; return; }
-  [[ -n "$NAME" ]] || { echo "Syntax vgtrace <command> <name>"; return; }
-  valgrind \
-        --leak-check=full --error-limit=no --track-origins=yes \
-        --undef-value-errors=yes --log-file=valgrind-${NAME}.log \
-        --read-var-info=yes --trace-children=yes \
-        $COMMAND | tee valgrind-${NAME}-output.log 2>&1
-}
-
-vgdbg () {
-  [[ -n "$*" ]] || { echo "Syntax: vgrun <command>"; return; }
-  valgrind \
-        --leak-check=full --error-limit=no --track-origins=yes \
-        --undef-value-errors=yes --read-var-info=yes --db-attach=yes \
-        "$@"
-}
-# }}}
-#}}}
 
 # vim: foldmethod=marker
