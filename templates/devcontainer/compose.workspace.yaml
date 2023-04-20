@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  workspace:
+    env_file: .env
+    environment:
+      - http_proxy=${localEnv:http_proxy}
+      - https_proxy=${localEnv:https_proxy}
+      - no_proxy=${localEnv:no_proxy}
+    build:
+      context: ../ci/docker
+      dockerfile: Dockerfile
+      args:
+        - HttpsProxyHost=${localEnv:HTTP_PROXY_HOST}
+        - HttpsProxyPort=${localEnv:HTTP_PROXY_PORT}
+        - HttpProxyHost=${localEnv:HTTP_PROXY_HOST}
+        - HttpProxyPort=${localEnv:HTTP_PROXY_PORT}
+    volumes:
+      - ${localEnv:HOME}/.gitconfig:/home/vscode/.gitconfig,
+      - ${localEnv:HOME}/.ssh:/home/vscode/.ssh,
+      - ${localEnv:HOME}/.m2:/home/vscode/.m2,
+      - ${localEnv:HOME}/.sbt:/home/vscode/.sbt,
+      - ${localEnv:BIG_STORAGE}:/storage,
+      - /tmp:/tmp,
+    network_mode: host
+    # ports:
+    #   - "80:80"
+    #   - "443:443"
+    init: true
+    restart: unless-stopped
+
+# networks:
+#   '1':
+#     driver: host
+
+# volumes:
+#   '1':
+#     name: '23'
+#     driver: local
