@@ -27,8 +27,6 @@ alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc"
 alias payu="PACMAN=pacmatic nice packer -Syu"
 # }}}
 
-#}}}
-
 # Environment {{{
 GDK_BACKEND=wayland
 CLUTTER_BACKEND=wayland
@@ -103,7 +101,7 @@ fi
 
 # self-defined functions {{{
 # https://gist.github.com/yougg/5d2b3353fc5e197a0917aae0b3287d64
-proxy () {
+function proxy () {
     local PROTO="${1:-socks5}" # socks5(local DNS), socks5h(remote DNS), http, https
     local HOST="${2:-127.0.0.1}"
     local PORT="${3:-8080}"
@@ -120,12 +118,12 @@ proxy () {
     export NO_PROXY="$no_proxy"
 }
 
-noproxy() {
+function noproxy() {
     unset http_proxy https_proxy ftp_proxy rsync_proxy all_proxy no_proxy
     unset HTTP_PROXY HTTPS_PROXY FTP_PROXY RSYNC_PROXY ALL_PROXY NO_PROXY
 }
 
-gitproxy() {
+function gitproxy() {
     local PROTO="${1:-http}" # http, https
     local HOST="${2:-127.0.0.1}"
     local PORT="${3:-1080}"
@@ -147,7 +145,7 @@ gitproxy() {
     # git config --global url.'ssh://git@github.com/'.insteadOf 'git://github.com/'
 }
 
-nogitproxy() {
+function nogitproxy() {
     git config --global --unset http.proxy
     git config --global --unset https.proxy
     git config --global --unset core.sshCommand
@@ -157,7 +155,7 @@ nogitproxy() {
     # git config --global --remove-section url.'ssh://git@github.com/'
 }
 
-sshproxy() {
+function sshproxy() {
     local TARGET_ADDR="${1}"
     local HOST="${2:-127.0.0.1}"
     local PORT="${3:-22}"
@@ -197,7 +195,7 @@ sshproxy() {
     ssh -o "$SSH_PROXY" $TARGET_ADDR
 }
 
-svn () {
+function svn() {
     if [[ "$1" == "log" ]]; then
         # -FX tell `less` to quit if entire file fits on the first screen, not to switch to the alternate screen
         command svn "$@" | less -FX
@@ -209,7 +207,7 @@ svn () {
 }
 
 # should use colormake in github
-make () {
+function make() {
     pathpat="(/[^/]*)+:[0-9]+"
     ccred=$(echo -e "\033[0;31m")
     ccyellow=$(echo -e "\033[0;33m")
@@ -219,7 +217,7 @@ make () {
 }
 
 # valgrind {{{
-vgrun () {
+function vgrun() {
     local COMMAND="$1"
     local NAME="$2"
     [[ -n "$COMMAND" ]] || { echo "Syntax: vgrun <command> <name>"; return; }
@@ -229,9 +227,9 @@ vgrun () {
         --undef-value-errors=yes --log-file=valgrind-${NAME}.log \
         --read-var-info=yes \
         $COMMAND | tee valgrind-${NAME}-output.log 2>&1
-    }
+}
 
-vgtrace () {
+function vgtrace() {
     local COMMAND="$1"
     local NAME="$2"
     [[ -n "$COMMAND" ]] || { echo "Syntax: vgtrace <command> <name>"; return; }
@@ -241,16 +239,16 @@ vgtrace () {
         --undef-value-errors=yes --log-file=valgrind-${NAME}.log \
         --read-var-info=yes --trace-children=yes \
         $COMMAND | tee valgrind-${NAME}-output.log 2>&1
-    }
+}
 
-vgdbg () {
+function vgdbg() {
     [[ -n "$*" ]] || { echo "Syntax: vgrun <command>"; return; }
     valgrind \
         --leak-check=full --error-limit=no --track-origins=yes \
         --undef-value-errors=yes --read-var-info=yes --db-attach=yes \
         "$@"
-    }
+}
 # }}}
-#}}}
+# }}}
 
 # vim: foldmethod=marker
