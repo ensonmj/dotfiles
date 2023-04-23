@@ -32,8 +32,9 @@ GDK_BACKEND=wayland
 CLUTTER_BACKEND=wayland
 SDL_VIDEODRIVER=wayland
 #performance acceleration for sort etc.
-export LC_ALL=C
-#export LC_ALL=en_US.utf8
+#export LC_ALL=C
+#zsh PROMPT can be disrupted by "LC_ALL=C"
+export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LESSCHARSET=utf-8
 export EDITOR=vim
@@ -44,6 +45,7 @@ unset SSH_ASKPASS
 [[ -d $HOME/bin ]] && export PATH="$HOME/bin:$PATH"
 [[ -d $HOME/.opt/bin ]] && export PATH="$HOME/.opt/bin:$PATH"
 [[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ -d /snap/bin ]] && export PATH="$PATH:/snap/bin"
 
 #pandoc
 [[ -d $HOME/.cabal/bin ]] && export PATH="$PATH:$HOME/.cabal/bin"
