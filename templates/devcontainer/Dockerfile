@@ -27,6 +27,7 @@ RUN apt-get update && \
     tzdata \
     vim \
     git \
+    less \
     curl \
     wget \
     tar \
@@ -36,6 +37,7 @@ RUN apt-get update && \
     cmake \
     ninja-build \
     build-essential \
+    clang-format \
     connect-proxy \
     libiberty-dev libdwarf-dev libre2-dev \
     libz-dev libssl-dev libboost-all-dev \

@@ -10,6 +10,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # cargo install sccache
 cargo install fd-find
 cargo install ripgrep
+cargo install just
 
 sudo apt update
 sudo apt install -y stow

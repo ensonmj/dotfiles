@@ -9,12 +9,28 @@
 			"HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}"
 		}
 	},
+	"containerEnv": {
+		"HTTP_PROXY_HOST": "${localEnv:HTTP_PROXY_HOST}",
+		"HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}",
+		"http_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+		"HTTP_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+		"https_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+		"HTTPS_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}"
+	},
 	"runArgs": [
 		"--hostname",
 		"dev"
 	],
 	// https://aka.ms/vscode-remote/containers/non-root
 	"remoteUser": "vscode",
+	"remoteEnv": {
+		"http_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
+		"HTTP_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
+		"https_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
+		"HTTPS_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}"
+	},
+	// "workspaceMount": "type=bind,src=${localWorkspaceFolder},dst=/home/vscode/${localWorkspaceFolderBasename}",
+	// "workspaceFolder": "/home/vscode /${localWorkspaceFolderBasename}",
 	"mounts": [
 		"type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
 		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
@@ -36,7 +52,7 @@
 				"editor.minimap.enabled": false,
 				"http.proxySupport": "on",
 				// "dotfiles.repository": "https://github.com/ensonmj/dotfiles",
-				// "dotfiles.targetPath": "~/.dotfiles"
+				// "dotfiles.targetPath": "~/.dotfiles",
 				// "dotfiles.installCommand": "~/.dotfiles/install.sh",
 				// "cmake.configureOnOpen": false,
 				// "cmake.configureArgs": [
