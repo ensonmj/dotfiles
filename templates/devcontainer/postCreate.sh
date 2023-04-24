@@ -13,10 +13,10 @@ cargo install fd-find
 cargo install ripgrep
 cargo install just
 
-sudo apt update
-sudo apt install -y stow
 git clone https://github.com/ensonmj/dotfiles .dotfiles
 pushd ~/.dotfiles
 stow -S zsh
 popd
+
+sudo apt update
 sudo apt install -y zsh

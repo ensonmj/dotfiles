@@ -25,6 +25,7 @@ RUN apt-get update && \
     sudo \
     locales \
     tzdata \
+    stow \
     vim \
     git \
     less \
