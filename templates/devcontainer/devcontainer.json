@@ -10,6 +10,7 @@
 		}
 	},
 	"containerEnv": {
+		"DISPLAY": "${localEnv:DISPLAY}",
 		"HTTP_PROXY_HOST": "${localEnv:HTTP_PROXY_HOST}",
 		"HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}",
 		"http_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
@@ -24,6 +25,7 @@
 	// https://aka.ms/vscode-remote/containers/non-root
 	"remoteUser": "vscode",
 	"remoteEnv": {
+		"DISPLAY": "${containerEnv:DISPLAY}",
 		"http_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
 		"HTTP_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
 		"https_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
@@ -32,12 +34,14 @@
 	// "workspaceMount": "type=bind,src=${localWorkspaceFolder},dst=/home/vscode/${localWorkspaceFolderBasename}",
 	// "workspaceFolder": "/home/vscode /${localWorkspaceFolderBasename}",
 	"mounts": [
+		"type=bind,source=${localEnv:BIG_STORAGE},target=/storage", // big storage
+		"type=bind,source=/tmp,target=/tmp",
+		// "type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix",
+		"type=bind,source=${localEnv:HOME}/.Xauthority,target=/home/vscode/.Xauthority", // xauth list | tail 1
 		"type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
 		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
 		"type=bind,source=${localEnv:HOME}/.m2,target=/home/vscode/.m2",
 		"type=bind,source=${localEnv:HOME}/.sbt,target=/home/vscode/.sbt"
-		"type=bind,source=${localEnv:BIG_STORAGE},target=/storage", // big storage
-		"type=bind,source=/tmp,target=/tmp",
 	],
 	"postCreateCommand": "bash .devcontainer/postCreate.sh",
 	// "dockerComposeFile": [
