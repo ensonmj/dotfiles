@@ -40,6 +40,12 @@ export LESSCHARSET=utf-8
 export EDITOR=vim
 export PATH=$PATH:.
 unset SSH_ASKPASS
+# enable public access for X11, this should just set on ssh client side {{{
+# export DISPLAY=$(ip route list default | awk '{print $3}'):0
+# export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+# export DISPLAY=$(host `hostname` | grep -oP '(\s)\d+(\.\d+){3}' | tail -1 | awk '{ print $NF }' | tr -d '\r'):0
+# export LIBGL_ALWAYS_INDIRECT=1
+# }}}
 
 # set PATH so it includes user's private bin if it exists
 [[ -d $HOME/bin ]] && export PATH="$HOME/bin:$PATH"
