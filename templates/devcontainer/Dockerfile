@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 AS base
+FROM ubuntu:20.04 AS base
 
 USER root
 WORKDIR /
@@ -21,11 +21,12 @@ RUN if [ -n "$HTTP_PROXY" -a -n "$HTTPS_PROXY" ]; \
 
 RUN apt-get update && \
     apt-get -y install --no-install-recommends \
-    software-properties-common \
-    sudo \
+    build-essential \
+    ca-certificates \
     locales \
     tzdata \
     stow \
+    sudo \
     vim \
     git \
     less \
@@ -34,12 +35,6 @@ RUN apt-get update && \
     tar \
     zip \
     unzip \
-    ccache \
-    cmake \
-    ninja-build \
-    build-essential \
-    clang-format \
-    connect-proxy \
     libiberty-dev libdwarf-dev libre2-dev \
     libz-dev libssl-dev libboost-all-dev \
     libcurl4-openssl-dev libjemalloc-dev \
@@ -55,3 +50,28 @@ RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
 RUN groupadd -g 1000 vscode && \
   useradd -u 1000 -m -g vscode -s /bin/bash vscode && \
   echo "vscode ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/vscode
+
+ARG CPP
+RUN if [ -n "$CPP" ]; \
+    then \
+        apt-get update && \
+        apt-get -y install --no-install-recommends \
+        ccache \
+        cmake \
+        ninja-build \
+        clang-format \
+        && rm -rf /var/lib/apt/lists/*; \
+    fi
+
+ARG JAVA
+RUN if [ -n "$JAVA" ]; \
+    then \
+        apt-get update && \
+        apt-get -y install --no-install-recommends \
+        maven \
+        openjdk-8-jdk \
+        openjdk-8-source \
+        openjdk-8-doc \
+        openjdk-8-dbg \
+        && rm -rf /var/lib/apt/lists/*; \
+    fi

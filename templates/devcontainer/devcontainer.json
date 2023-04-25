@@ -6,7 +6,9 @@
 		"args": {
 			"TIMEZONE": "PRC",
 			"HTTP_PROXY_HOST": "${localEnv:HTTP_PROXY_HOST}",
-			"HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}"
+			"HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}",
+			"CPP": "ON",
+			"JAVA": "ON"
 		}
 	},
 	"containerEnv": {
@@ -32,7 +34,7 @@
 		"HTTPS_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}"
 	},
 	// "workspaceMount": "type=bind,src=${localWorkspaceFolder},dst=/home/vscode/${localWorkspaceFolderBasename}",
-	// "workspaceFolder": "/home/vscode /${localWorkspaceFolderBasename}",
+	// "workspaceFolder": "/home/vscode/${localWorkspaceFolderBasename}",
 	"mounts": [
 		"type=bind,source=${localEnv:BIG_STORAGE},target=/storage", // big storage
 		"type=bind,source=/tmp,target=/tmp",
@@ -41,7 +43,8 @@
 		"type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
 		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
 		"type=bind,source=${localEnv:HOME}/.m2,target=/home/vscode/.m2",
-		"type=bind,source=${localEnv:HOME}/.sbt,target=/home/vscode/.sbt"
+		"type=bind,source=${localEnv:HOME}/.sbt,target=/home/vscode/.sbt",
+		"type=bind,source=${localEnv:HOME}/.cache,target=/home/vscode/.cache"
 	],
 	"postCreateCommand": "bash .devcontainer/postCreate.sh",
 	// "dockerComposeFile": [
@@ -55,8 +58,8 @@
 			"settings": {
 				"editor.minimap.enabled": false,
 				"http.proxySupport": "on",
-				// "dotfiles.repository": "https://github.com/ensonmj/dotfiles",
-				// "dotfiles.targetPath": "~/.dotfiles",
+				"dotfiles.repository": "https://github.com/ensonmj/dotfiles",
+				"dotfiles.targetPath": "~/.dotfiles"
 				// "dotfiles.installCommand": "~/.dotfiles/install.sh",
 				// "cmake.configureOnOpen": false,
 				// "cmake.configureArgs": [
