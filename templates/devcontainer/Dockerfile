@@ -49,6 +49,8 @@ ARG TIMEZONE=PRC
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
     echo $TIMEZONE > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
 
 RUN groupadd -g 1000 vscode && \
   useradd -u 1000 -m -g vscode -s /bin/bash vscode && \
