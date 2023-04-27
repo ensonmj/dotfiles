@@ -1,6 +1,6 @@
 {
 	"name": "${localWorkspaceFolderBasename}",
-	"privileged": true,
+	"initializeCommand": "bash .devcontainer/setup.sh",
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
@@ -20,7 +20,13 @@
 		"https_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
 		"HTTPS_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}"
 	},
-	"initializeCommand": "bash .devcontainer/setup.sh",
+	"privileged": true,
+	"capAdd": [
+		"SYS_PTRACE" // for gdb attach
+	],
+	"securityOpt": [
+		"seccomp=unconfined" // allow all syscall
+	],
 	"runArgs": [
 		"--hostname=dev",
 		"--network=host"
