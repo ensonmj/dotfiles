@@ -15,27 +15,17 @@ ENV https_proxy="https://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
 ENV HTTPS_PROXY="https://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
 
 RUN test -n "$HTTP_PROXY_HOST" && test -n "$HTTP_PROXY_PORT" && \
-    echo "Acquire::http::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT/\";" > /etc/apt/apt.conf.d/01proxy.conf && \
-    echo "Acquire::https::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT/\";" >> /etc/apt/apt.conf.d/01proxy.conf
+    echo "Acquire::http::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT\";" > /etc/apt/apt.conf.d/01proxy.conf && \
+    echo "Acquire::https::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT\";" >> /etc/apt/apt.conf.d/01proxy.conf
 
 RUN apt-get update && \
-    apt-get -y install --no-install-recommends \
-    build-essential \
-    ca-certificates \
-    locales \
-    tzdata \
-    stow \
-    sudo \
-    vim \
-    gdb \
-    git \
-    less \
-    curl \
-    wget \
-    tar \
-    zip \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+    ca-certificates locales tzdata sudo \
+    build-essential curl git less net-tools \
+    stow tar vim unzip wget zip && \
+    apt-get autoremove -y && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
 
 ARG TIMEZONE=PRC
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
@@ -52,23 +42,20 @@ ARG CPP
 RUN if [ -n "$CPP" ]; \
     then \
         apt-get update && \
-        apt-get -y install --no-install-recommends \
-        ccache \
-        cmake \
-        ninja-build \
-        clang-format \
-        && rm -rf /var/lib/apt/lists/*; \
+        apt-get install -y --no-install-recommends \
+        ccache cmake gdb ninja-build clang-format && \
+        apt-get autoremove -y && \
+        apt-get clean -y && \
+        rm -rf /var/lib/apt/lists/*; \
     fi
 
 ARG JAVA
 RUN if [ -n "$JAVA" ]; \
     then \
         apt-get update && \
-        apt-get -y install --no-install-recommends \
-        maven \
-        openjdk-8-jdk \
-        openjdk-8-source \
-        openjdk-8-doc \
-        openjdk-8-dbg \
-        && rm -rf /var/lib/apt/lists/*; \
+        apt-get install -y --no-install-recommends \
+        maven openjdk-8-jdk openjdk-8-source openjdk-8-doc && \
+        apt-get autoremove -y && \
+        apt-get clean -y && \
+        rm -rf /var/lib/apt/lists/*; \
     fi
