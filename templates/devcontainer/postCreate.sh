@@ -1,27 +1,19 @@
 #!/bin/bash
 
+# "docker run --hostname=dev" not add entry into /etc/hosts
+echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo tee -a /etc/hosts
+
 if [ -n "$HTTP_PROXY" ]
 then
     echo "http_proxy=$HTTP_PROXY" >> ~/.wgetrc
     echo "https_proxy=$HTTP_PROXY" >> ~/.wgetrc
 fi
 
-pushd ~/.dotfiles
-stow -S zsh
-stow -S profile
-stow -S bash
-popd
-
-sudo apt update
-sudo apt install -y zsh
-
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
-# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source ~/.cargo/env
-# cargo install sccache
-cargo install fd-find
-cargo install ripgrep
-cargo install just
+# pushd ~/.dotfiles
+# stow -S zsh
+# stow -S profile
+# stow -S bash
+# popd
 
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
 echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
@@ -39,6 +31,16 @@ EOF
     # mvn clean generate-sources ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut
     # kill -9 `jps | awk '{print $1}'`
 fi
+
+sudo apt update
+sudo apt install -y zsh
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+source ~/.cargo/env
+# cargo install sccache
+cargo install fd-find
+cargo install ripgrep
+cargo install just
 
 curl -s "https://get.sdkman.io" | bash
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

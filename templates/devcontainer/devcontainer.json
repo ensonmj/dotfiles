@@ -50,7 +50,7 @@
 		"type=bind,source=${localEnv:HOME}/.cache,target=/home/vscode/.cache",
 		"type=bind,source=${localEnv:STORAGE},target=/storage", // big storage
 		"type=bind,source=/tmp,target=/tmp",
-		"type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix", // for correct permission
+		"type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix"
 	],
 	// "dockerComposeFile": [
 	//     // The order of the files is important since later files override previous ones
