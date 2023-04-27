@@ -12,7 +12,7 @@
 #if [ -n "$BASH_VERSION" ]; then
 #    # include .bashrc if it exists
 #    if [ -f "$HOME/.bashrc" ]; then
-#	. "$HOME/.bashrc"
+#        . "$HOME/.bashrc"
 #    fi
 #fi
 
@@ -28,9 +28,9 @@ alias payu="PACMAN=pacmatic nice packer -Syu"
 # }}}
 
 # Environment {{{
-GDK_BACKEND=wayland
-CLUTTER_BACKEND=wayland
-SDL_VIDEODRIVER=wayland
+# GDK_BACKEND=wayland
+# CLUTTER_BACKEND=wayland
+# SDL_VIDEODRIVER=wayland
 #performance acceleration for sort etc.
 #export LC_ALL=C
 #zsh PROMPT can be disrupted by "LC_ALL=C"
@@ -95,9 +95,11 @@ fi
 #tmux
 if [ -z "$TMUX" ]; then
     #run this outside of tmux!
-    for name in `tmux ls -F '#{session_name}' 2>/dev/null`; do
-        tmux setenv -g -t $name DISPLAY $DISPLAY #set display for all sessions
-    done
+    if [ -n "$DISPLAY" ]; then
+        for name in `tmux ls -F '#{session_name}' 2>/dev/null`; do
+            tmux setenv -g -t $name DISPLAY $DISPLAY #set display for all sessions
+        done
+    fi
 else
     #inside tmux!
     export TERM=screen-256color
@@ -109,7 +111,7 @@ fi
 
 # self-defined functions {{{
 # https://gist.github.com/yougg/5d2b3353fc5e197a0917aae0b3287d64
-function proxy () {
+function proxy() {
     local PROTO="${1:-socks5}" # socks5(local DNS), socks5h(remote DNS), http, https
     local HOST="${2:-127.0.0.1}"
     local PORT="${3:-8080}"
