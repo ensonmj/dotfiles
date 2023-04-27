@@ -14,10 +14,9 @@ ENV HTTP_PROXY="http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
 ENV https_proxy="https://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
 ENV HTTPS_PROXY="https://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
 
-RUN if [ -n "$HTTP_PROXY" -a -n "$HTTPS_PROXY" ]; \
-    then echo "Acquire::http::Proxy \"$HTTP_PROXY\";" >> /etc/apt/apt.conf && \
-    echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf; \
-    fi
+RUN test -n "$HTTP_PROXY_HOST" && test -n "$HTTP_PROXY_PORT" && \
+    echo "Acquire::http::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT/\";" > /etc/apt/apt.conf.d/01proxy.conf && \
+    echo "Acquire::https::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT/\";" >> /etc/apt/apt.conf.d/01proxy.conf
 
 RUN apt-get update && \
     apt-get -y install --no-install-recommends \
@@ -28,6 +27,7 @@ RUN apt-get update && \
     stow \
     sudo \
     vim \
+    gdb \
     git \
     less \
     curl \
@@ -35,9 +35,6 @@ RUN apt-get update && \
     tar \
     zip \
     unzip \
-    libiberty-dev libdwarf-dev libre2-dev \
-    libz-dev libssl-dev libboost-all-dev \
-    libcurl4-openssl-dev libjemalloc-dev \
     && rm -rf /var/lib/apt/lists/*
 
 ARG TIMEZONE=PRC
