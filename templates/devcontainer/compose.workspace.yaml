@@ -19,8 +19,7 @@ services:
     volumes:
       - ${localEnv:HOME}/.gitconfig:/home/vscode/.gitconfig,
       - ${localEnv:HOME}/.ssh:/home/vscode/.ssh,
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - ${localEnv:HOME}/.Xauthority:/home/vscode/.Xauthority,
+      # - ${localEnv:HOME}/.Xauthority:/home/vscode/.Xauthority,
       - ${localWorkspaceFolder}/.devcontainer/sbt/repositories:/home/vscode/.sbt/repositories,
       - ${localEnv:STORAGE}:/storage,
     network_mode: host

@@ -32,6 +32,7 @@
 		"seccomp=unconfined" // allow all syscall
 	],
 	"runArgs": [
+		"--name=${localWorkspaceFolderBasename}",
 		"--hostname=dev",
 		"--network=host"
 	],
@@ -46,10 +47,11 @@
 	// "workspaceMount": "type=bind,src=${localWorkspaceFolder},dst=/home/vscode/${localWorkspaceFolderBasename}",
 	// "workspaceFolder": "/home/vscode/${localWorkspaceFolderBasename}",
 	"mounts": [
+		// "ssh -X" change inode of ".Xauthority", so it can't keep sync with host, then authentication will faild
+		// https://medium.com/@jonsbun/why-need-to-be-careful-when-mounting-single-files-into-a-docker-container-4f929340834
+		// "type=bind,source=${localEnv:HOME}/.Xauthority,target=/home/vscode/.Xauthority", // xauth list | tail 1
 		"type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
 		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
-		"type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix",
-		"type=bind,source=${localEnv:HOME}/.Xauthority,target=/home/vscode/.Xauthority", // xauth list | tail 1
 		"type=bind,source=${localEnv:HOME}/.dotfiles/templates/devcontainer,target=/workspaces/${localWorkspaceFolderBasename}/.devcontainer", // keep sync
 		"type=bind,source=${localWorkspaceFolder}/.devcontainer/sbt/repositories,target=/home/vscode/.sbt/repositories",
 		"type=bind,source=${localEnv:STORAGE},target=/storage" // big storage
