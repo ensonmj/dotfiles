@@ -7,6 +7,7 @@ services:
       - http_proxy=${localEnv:http_proxy}
       - https_proxy=${localEnv:https_proxy}
       - no_proxy=${localEnv:no_proxy}
+      - DISPLAY=${localEnv:DISPLAY}
     build:
       context: ../ci/docker
       dockerfile: Dockerfile
@@ -18,11 +19,12 @@ services:
     volumes:
       - ${localEnv:HOME}/.gitconfig:/home/vscode/.gitconfig,
       - ${localEnv:HOME}/.ssh:/home/vscode/.ssh,
-      - ${localEnv:HOME}/.m2:/home/vscode/.m2,
-      - ${localEnv:HOME}/.sbt:/home/vscode/.sbt,
-      - ${localEnv:BIG_STORAGE}:/storage,
-      - /tmp:/tmp,
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${localEnv:HOME}/.Xauthority:/home/vscode/.Xauthority,
+      - ${localWorkspaceFolder}/.devcontainer/sbt/repositories:/home/vscode/.sbt/repositories,
+      - ${localEnv:STORAGE}:/storage,
     network_mode: host
+    privileged: true
     # ports:
     #   - "80:80"
     #   - "443:443"
