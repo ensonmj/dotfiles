@@ -702,9 +702,9 @@ call plug#end()
 " settings after plugin
 " ====================================================
 " colorscheme {{{
-" colorscheme desertink
+colorscheme desertink
 " colorscheme onedark
-colorscheme dim
+" colorscheme dim
 " }}}
 " ====================================================
 " Key map
