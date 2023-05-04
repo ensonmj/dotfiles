@@ -2,6 +2,8 @@
 
 # "docker run --hostname=dev" not add entry into /etc/hosts
 echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo tee -a /etc/hosts
+# if kernel.yama.ptrace_scope in /etc/sysctl.d/10-ptrace.conf not set to 0
+# echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 
 if [ -n "$HTTP_PROXY" ]
 then

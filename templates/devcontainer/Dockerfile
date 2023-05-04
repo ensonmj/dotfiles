@@ -43,10 +43,11 @@ RUN if [ -n "$CPP" ]; \
     then \
         apt-get update && \
         apt-get install -y --no-install-recommends \
-        ccache cmake gdb ninja-build clang-format && \
+        ccache cmake gdb gdbserver ninja-build clang-format && \
         apt-get autoremove -y && \
         apt-get clean -y && \
-        rm -rf /var/lib/apt/lists/*; \
+        rm -rf /var/lib/apt/lists/* &&
+        sed -i /kernel.yama.ptrace_scope/s/[0-9]$/0/g /etc/sysctl.d/10-ptrace.conf; \
     fi
 
 ARG JAVA
@@ -58,27 +59,27 @@ RUN if [ -n "$JAVA" ]; \
         maven openjdk-8-jdk openjdk-8-source openjdk-8-doc && \
         apt-get autoremove -y && \
         apt-get clean -y && \
-        rm -rf /var/lib/apt/lists/*; \
-    fi && \
-    if [ -n "$MAVEN_MIRROR_URL" ]; \
-    then \
-      MAVEN_SETTINGS_TEMPLATE="<settings><mirrors><mirror><id>mavenmirror</id><mirrorOf>central</mirrorOf><name>MavenMirror</name><url>{{MAVEN_MIRROR_URL}}</url></mirror></mirrors><proxies><proxy><id>httpproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>http</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy><proxy><id>httpsproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>https</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy></proxies></settings>"; \
-      MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s@{{MAVEN_MIRROR_URL}}@$MAVEN_MIRROR_URL@g"); \
-    else \
-      MAVEN_SETTINGS_TEMPLATE="<settings><proxies><proxy><id>httpproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>http</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy><proxy><id>httpsproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>https</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy></proxies></settings>"; \
-    fi && \
-    if [ -n "$HTTP_PROXY_HOST" -a -n "$HTTP_PROXY_PORT" ]; \
-    then \
-      MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_ENABLE}}/true/g"); \
-      MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_HOST}}/$HTTP_PROXY_HOST/g"); \
-      MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_PORT}}/$HTTP_PROXY_PORT/g"); \
-    else \
-      MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_ENABLE}}/false/g"); \
-      MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_HOST}}/localhost/g"); \
-      MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_PORT}}/8080/g"); \
-    fi && \
-    MAVEN_SETTINGS=$MAVEN_SETTINGS_TEMPLATE && \
-    mkdir -p /root/.m2/ && \
-    echo $MAVEN_SETTINGS > /root/.m2/settings.xml && \
-    mkdir -p /home/vscode/.m2/ && \
-    echo $MAVEN_SETTINGS > /home/vscode/.m2/settings.xml
+        rm -rf /var/lib/apt/lists/* && \
+        if [ -n "$MAVEN_MIRROR_URL" ]; \
+        then \
+          MAVEN_SETTINGS_TEMPLATE="<settings><mirrors><mirror><id>mavenmirror</id><mirrorOf>central</mirrorOf><name>MavenMirror</name><url>{{MAVEN_MIRROR_URL}}</url></mirror></mirrors><proxies><proxy><id>httpproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>http</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy><proxy><id>httpsproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>https</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy></proxies></settings>"; \
+          MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s@{{MAVEN_MIRROR_URL}}@$MAVEN_MIRROR_URL@g"); \
+        else \
+          MAVEN_SETTINGS_TEMPLATE="<settings><proxies><proxy><id>httpproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>http</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy><proxy><id>httpsproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>https</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy></proxies></settings>"; \
+        fi && \
+        if [ -n "$HTTP_PROXY_HOST" -a -n "$HTTP_PROXY_PORT" ]; \
+        then \
+          MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_ENABLE}}/true/g"); \
+          MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_HOST}}/$HTTP_PROXY_HOST/g"); \
+          MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_PORT}}/$HTTP_PROXY_PORT/g"); \
+        else \
+          MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_ENABLE}}/false/g"); \
+          MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_HOST}}/localhost/g"); \
+          MAVEN_SETTINGS_TEMPLATE=$(echo $MAVEN_SETTINGS_TEMPLATE | sed "s/{{MAVEN_PROXY_PORT}}/8080/g"); \
+        fi && \
+        MAVEN_SETTINGS=$MAVEN_SETTINGS_TEMPLATE && \
+        mkdir -p /root/.m2/ && \
+        echo $MAVEN_SETTINGS > /root/.m2/settings.xml && \
+        mkdir -p /home/vscode/.m2/ && \
+        echo $MAVEN_SETTINGS > /home/vscode/.m2/settings.xml; \
+    fi
