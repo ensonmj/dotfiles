@@ -133,6 +133,20 @@ function noproxy() {
     unset HTTP_PROXY HTTPS_PROXY FTP_PROXY RSYNC_PROXY ALL_PROXY NO_PROXY
 }
 
+function wgetproxy() {
+    local HOST="${1:-127.0.0.1}"
+    local PORT="${2:-8080}"
+    local ADDR="http://$HOST:$PORT"
+
+    echo "http_proxy=$ADDR" >> ~/.wgetrc
+    echo "https_proxy=$ADDR" >> ~/.wgetrc
+}
+
+function nowgetproxy() {
+    sed -i '/http_proxy/d' ~/.wgetrc
+    sed -i '/https_proxy/d' ~/.wgetrc
+}
+
 function gitproxy() {
     local PROTO="${1:-http}" # http, https
     local HOST="${2:-127.0.0.1}"
