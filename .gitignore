@@ -2,5 +2,6 @@
 *.swo
 *~
 pentadactyl/.pentadactyl/info
-ssh/.ssh/known_hosts
+ssh/.ssh/known_hosts*
+ssh/.ssh/id*
 csd-wrapper/.cisco/hostscan/
