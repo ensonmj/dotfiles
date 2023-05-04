@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM ubuntu:20.04 AS base
 
 USER root
@@ -11,21 +12,22 @@ ENV HTTP_PROXY_HOST=$HTTP_PROXY_HOST
 ENV HTTP_PROXY_PORT=$HTTP_PROXY_PORT
 ENV http_proxy="http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
 ENV HTTP_PROXY="http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
-ENV https_proxy="https://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
-ENV HTTPS_PROXY="https://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
+ENV https_proxy="http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
+ENV HTTPS_PROXY="http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT"
 
 RUN test -n "$HTTP_PROXY_HOST" && test -n "$HTTP_PROXY_PORT" && \
     echo "Acquire::http::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT\";" >> /etc/apt/apt.conf && \
     echo "Acquire::https::Proxy \"http://$HTTP_PROXY_HOST:$HTTP_PROXY_PORT\";" >> /etc/apt/apt.conf
 
-RUN apt-get update && \
+RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
+    echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates locales tzdata sudo \
     build-essential curl git less net-tools \
-    stow tar vim unzip wget zip && \
-    apt-get autoremove -y && \
-    apt-get clean -y && \
-    rm -rf /var/lib/apt/lists/*
+    stow tar vim unzip wget zip
 
 ARG TIMEZONE=PRC
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
@@ -39,27 +41,25 @@ RUN groupadd -g 1000 vscode && \
   echo "vscode ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/vscode
 
 ARG CPP
-RUN if [ -n "$CPP" ]; \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    if [ -n "$CPP" ]; \
     then \
         apt-get update && \
         apt-get install -y --no-install-recommends \
         ccache cmake gdb gdbserver ninja-build clang-format && \
-        apt-get autoremove -y && \
-        apt-get clean -y && \
-        rm -rf /var/lib/apt/lists/* &&
         sed -i /kernel.yama.ptrace_scope/s/[0-9]$/0/g /etc/sysctl.d/10-ptrace.conf; \
     fi
 
 ARG JAVA
 ARG MAVEN_MIRROR_URL
-RUN if [ -n "$JAVA" ]; \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    if [ -n "$JAVA" ]; \
     then \
         apt-get update && \
         apt-get install -y --no-install-recommends \
         maven openjdk-8-jdk openjdk-8-source openjdk-8-doc && \
-        apt-get autoremove -y && \
-        apt-get clean -y && \
-        rm -rf /var/lib/apt/lists/* && \
         if [ -n "$MAVEN_MIRROR_URL" ]; \
         then \
           MAVEN_SETTINGS_TEMPLATE="<settings><mirrors><mirror><id>mavenmirror</id><mirrorOf>central</mirrorOf><name>MavenMirror</name><url>{{MAVEN_MIRROR_URL}}</url></mirror></mirrors><proxies><proxy><id>httpproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>http</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy><proxy><id>httpsproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>https</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy></proxies></settings>"; \
