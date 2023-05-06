@@ -116,6 +116,7 @@ antigen bundles <<eobundles
     andrewferrier/fzf-z
     djui/alias-tips
     hlissner/zsh-autopair
+    marlonrichert/zsh-autocomplete@main
     zsh-users/zsh-completions
     zsh-users/zsh-autosuggestions
     zsh-users/zsh-history-substring-search
