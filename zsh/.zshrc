@@ -142,4 +142,8 @@ zle -N self-insert url-quote-magic
 zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
 # }}}
 
+# PS1 {{{
+command -v starship &> /dev/null && eval "$(starship init zsh)"
+# }}}
+
 # vim: foldmethod=marker

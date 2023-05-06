@@ -38,7 +38,9 @@ if [ -f /usr/share/git/completion/git-prompt.sh ]; then
     GIT_PS1_SHOWUPSTREAM="auto"
     PS1='\n[\[\e[36;1m\]\u\[\e[0m\]@\[\e[32;1m\]\h\[\e[0m\]: \[\e[31;1m\]\w\[\e[34;1m\] $(__git_ps1 "(%s $(git_since_last_commit))")\[\e[0m\]]\n\$'
 fi
-#}}}
+
+command -v starship &> /dev/null && eval "$(starship init bash)"
+# }}}
 
 # self-defined functions {{{
 function man {
@@ -51,6 +53,6 @@ function man {
         LESS_TERMCAP_us=$'\E[04;38;5;146m' \
         man "$@"
 }
-#}}}
+# }}}
 
 # vim: foldmethod=marker
