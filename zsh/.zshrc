@@ -5,6 +5,8 @@
 [[ -d $HOME/.zsh/cache ]] || mkdir -p "$HOME/.zsh/cache" && export ZSH_CACHE_DIR=$HOME/.zsh/cache
 # }}}
 
+command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
+
 #if brew list | grep coreutils > /dev/null ; then
 #  PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
 #  MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"

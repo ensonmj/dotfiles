@@ -15,6 +15,8 @@ export HISTCONTROL=ignoreboth
 if [ -d $HOME/.nvm ]; then
     source $HOME/.nvm/bash_completion
 fi
+
+command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
 # }}}
 
 # PS1 {{{

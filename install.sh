@@ -12,6 +12,6 @@ cargo install --locked just
 cargo install --locked miniserve
 cargo install --locked procs
 cargo install --locked ripgrep
-#cargo install --locked starship # need to config shell and nerd fonts
+cargo install --locked starship # need to config shell and nerd fonts
 cargo install --locked tokei
-# cargo install --locked zoxide # need to config shell
+cargo install --locked zoxide # need to config shell
