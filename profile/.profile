@@ -1,3 +1,6 @@
+#!/bin/bash
+# ^ For shellcheck's happiness
+
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
@@ -24,13 +27,13 @@ alias lla='ls -al'
 alias grep="grep --color=auto"
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 #alias tmux='tmux -2'
-alias payu="PACMAN=pacmatic nice packer -Syu"
 # }}}
 
 # Environment {{{
 # GDK_BACKEND=wayland
 # CLUTTER_BACKEND=wayland
 # SDL_VIDEODRIVER=wayland
+
 #performance acceleration for sort etc.
 #export LC_ALL=C
 #zsh PROMPT can be disrupted by "LC_ALL=C"
@@ -38,7 +41,6 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LESSCHARSET=utf-8
 export EDITOR=vim
-export PATH=$PATH:.
 unset SSH_ASKPASS
 # enable public access for X11, this should just set on ssh client side {{{
 # export DISPLAY=$(ip route list default | awk '{print $3}'):0
@@ -53,13 +55,29 @@ unset SSH_ASKPASS
 [[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
 [[ -d /snap/bin ]] && export PATH="$PATH:/snap/bin"
 
-#pandoc
-[[ -d $HOME/.cabal/bin ]] && export PATH="$PATH:$HOME/.cabal/bin"
+[[ -d $HOME/.cabal/bin ]] && export PATH="$PATH:$HOME/.cabal/bin" #pandoc
+export PATH=.:$PATH
+
+#tmux
+if [ -z "$TMUX" ]; then
+    #run this outside of tmux!
+    if [ -n "$DISPLAY" ]; then
+        for name in `tmux ls -F '#{session_name}' 2>/dev/null`; do
+            tmux setenv -g -t $name DISPLAY $DISPLAY #set display for all sessions
+        done
+    fi
+else
+    #inside tmux!
+    export TERM=screen-256color
+fi
 # }}}
 
 # Load scripts {{{
 #dircolors
 [[ -f $HOME/.dircolors ]] && eval `dircolors $HOME/.dircolors`
+
+#tmuxinator
+[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
 #rust
 if [ -d $HOME/.cargo ]; then
@@ -76,7 +94,6 @@ fi
 #nvm
 if [ -d $HOME/.nvm ]; then
     source $HOME/.nvm/nvm.sh
-    #source $HOME/.nvm/bash_completion
 
     #nvm doesn't seem to set $NODE_PATH automatically
     NP=$(which node)
@@ -88,28 +105,38 @@ fi
 #rbenv
 if [ -d $HOME/.rbenv ]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
-    source $HOME/.rbenv/completions/rbenv.bash
     eval "$(rbenv init -)"
 fi
 
-#tmux
-if [ -z "$TMUX" ]; then
-    #run this outside of tmux!
-    if [ -n "$DISPLAY" ]; then
-        for name in `tmux ls -F '#{session_name}' 2>/dev/null`; do
-            tmux setenv -g -t $name DISPLAY $DISPLAY #set display for all sessions
-        done
-    fi
-else
-    #inside tmux!
-    export TERM=screen-256color
-fi
-
-#tmuxinator
-[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 # }}}
 
 # self-defined functions {{{
+function ostype() {
+  case "$OSTYPE" in
+    solaris)       echo "SOLARIS" ;;
+    darwin*)       echo "OSX" ;;
+    linux*)        echo "LINUX" ;;
+    bsd*)          echo "BSD" ;;
+    msys|cygwin)   echo "WINDOWS" ;;
+    *)             echo "unknown: $OSTYPE" ;;
+  esac
+}
+
+# Safely remove the given entry from $PATH
+# https://unix.stackexchange.com/a/253760/143394
+function remove_from_PATH() {
+  while case $PATH in
+        "$1") unset PATH; false;;
+        "$1:"*) PATH=${PATH#"$1:"};;
+        *":$1") PATH=${PATH%":$1"};;
+        *":$1:"*) PATH=${PATH%%":$1:"*}:${PATH#*":$1:"};;
+        *) false;;
+    esac
+  do
+    :
+  done
+}
+
 # https://gist.github.com/yougg/5d2b3353fc5e197a0917aae0b3287d64
 function proxy() {
     local PROTO="${1:-socks5}" # socks5(local DNS), socks5h(remote DNS), http, https

@@ -2,22 +2,26 @@
 # https://gist.github.com/matthewjberger/7dd7e079f282f8138a9dc3b045ebefa0
 
 declare -a fonts=(
-    BitstreamVeraSansMono
+    #BitstreamVeraSansMono
     CodeNewRoman
     DroidSansMono
     FiraCode
     FiraMono
-    Go-Mono
-    Hack
-    Hermit
+    #Go-Mono
+    #Hack
+    #Hermit
     JetBrainsMono
+    LiberationMono
     Meslo
+    Monoid
+    Mononoki
     Noto
-    Overpass
-    ProggyClean
+    #Overpass
+    #ProggyClean
     RobotoMono
     SourceCodePro
     SpaceMono
+    Terminus
     Ubuntu
     UbuntuMono
 )

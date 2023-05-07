@@ -2,21 +2,18 @@
 [[ $- != *i* ]] && return
 
 # Environment {{{
-[[ -e ~/.profile ]] && source ~/.profile
-# }}}
-
 #for pkgfile "command not found" hook
 source /etc/profile
+
+[[ -f ~/.profile ]] && source ~/.profile
+# }}}
 
 # Environment && Init scripts {{{
 #disable logging duplicated or blank command: ignoredups & ignorespace
 export HISTCONTROL=ignoreboth
 
-if [ -d $HOME/.nvm ]; then
-    source $HOME/.nvm/bash_completion
-fi
-
-command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
+[[ -f $HOME/.nvm/bash_completion ]] && source $HOME/.nvm/bash_completion
+[[ -f $HOME/.rbenv/completions/rbenv.bash ]] && source $HOME/.rbenv/completions/rbenv.bash
 # }}}
 
 # PS1 {{{
@@ -45,7 +42,7 @@ command -v starship &> /dev/null && eval "$(starship init bash)"
 # }}}
 
 # self-defined functions {{{
-function man {
+function man() {
     env LESS_TERMCAP_mb=$'\E[01;31m' \
         LESS_TERMCAP_md=$'\E[01;38;5;74m' \
         LESS_TERMCAP_me=$'\E[0m' \
@@ -55,6 +52,40 @@ function man {
         LESS_TERMCAP_us=$'\E[04;38;5;146m' \
         man "$@"
 }
+
+function colors() {
+    for x in {0..8}; do for i in {30..37}; do for a in {40..47}; do echo -ne "\e[$x;$i;$a""m\\\e[$x;$i;$a""m\e[0;37;40m "; done; echo; done; done; echo ""
+}
+
+function colors2() {
+    local fgc bgc vals seq0
+
+    # shellcheck disable=SC2016
+    printf 'Color escapes are %s\n' '\e[${value};...;${value}m'
+    printf 'Values 30..37 are \e[33mforeground colors\e[m\n'
+    printf 'Values 40..47 are \e[43mbackground colors\e[m\n'
+    printf 'Value  1 gives a  \e[1mbold-faced look\e[m\n'
+    printf '%s\n\n' 'printf "\e[m" resets'
+
+    # foreground colors
+    for fgc in $(seq 30 37); do
+        # background colors
+        for bgc in $(seq 40 47); do
+            fgc=${fgc#37} # white
+            bgc=${bgc#40} # black
+
+            vals="${fgc:+$fgc;}${bgc}"
+            vals=${vals%%;}
+
+            seq0="${vals:+\e[${vals}m}"
+            printf "  %-9s" "${seq0:-(default)}"
+            printf " %sTEXT\\e[m" "${seq0}"
+            printf ' \e[%s1mBOLD\e[m' "${vals:+${vals+$vals;}}"
+        done
+        echo; echo
+    done
+}
+
 # }}}
 
 # vim: foldmethod=marker
