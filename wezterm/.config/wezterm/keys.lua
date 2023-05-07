@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
-function keyBind()
-  keys = {
+
+  return {
     { key = "z", mods = "ALT", action = wezterm.action.ShowLauncher },
     { -- 清屏
       key = "k",
@@ -72,5 +72,3 @@ function keyBind()
       }),
     },
   }
-  return keys
-end
