@@ -38,6 +38,7 @@ config.scrollback_lines = 99999
 -- config.disable_default_key_bindings = false
 -- Allow using ^ with single key press.
 config.use_dead_keys = false
+config.leader = { key="a", mods="CTRL" }
 config.keys = require("keys")
 config.mouse_bindings = require("mouse")
 config.launch_menu = require("launch_menu")
