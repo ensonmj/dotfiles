@@ -17,7 +17,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 end
 
 config.color_scheme = "Dracula (Official)"
-config.font = wezterm.font_with_fallback({ "FiraMono Nerd Font Mono", "monospace", monospace })
+config.font = wezterm.font_with_fallback{ "FiraMono Nerd Font Mono" }
 config.font_size = 11 
 -- config.line_height = 0.9
 -- config.cell_width = 0.9
