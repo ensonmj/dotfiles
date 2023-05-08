@@ -13,7 +13,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
   })
 elseif wezterm.target_triple == "x86_64-apple-darwin" then
   table.insert(launch_menu, {
-    label = "Zsh-NewWindow",
+    label = "zsh",
     args = { "/bin/zsh", "-l" },
   })
 elseif wezterm.target_triple == "aarch64-apple-darwin" then

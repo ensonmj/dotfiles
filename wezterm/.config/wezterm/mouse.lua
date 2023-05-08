@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 
-return { -- Paste on right-click
+return { 
+  -- Paste on right-click
   {
     event = {
       Down = {
@@ -12,7 +13,8 @@ return { -- Paste on right-click
     action = wezterm.action({
       PasteFrom = "Clipboard",
     }),
-  }, -- Change the default click behavior so that it only selects
+  }, 
+  -- Change the default click behavior so that it only selects
   -- text and doesn't open hyperlinks
   {
     event = {
@@ -25,7 +27,8 @@ return { -- Paste on right-click
     action = wezterm.action({
       CompleteSelection = "PrimarySelection",
     }),
-  }, -- CTRL-Click open hyperlinks
+  },
+  -- CTRL-Click open hyperlinks
   {
     event = {
       Up = {
@@ -33,7 +36,7 @@ return { -- Paste on right-click
         button = "Left",
       },
     },
-    mods = "CMD",
+    mods = "CTRL",
     action = "OpenLinkAtMouseCursor",
   }
 }

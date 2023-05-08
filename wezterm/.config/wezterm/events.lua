@@ -35,7 +35,7 @@ wezterm.on(
   
     local process = basename(pane.foreground_process_name)
     
-    return index .. process .. "@" .. basename(cwd)
+    return index .. process .. "@" .. basename(cwd) .. " "
   end
 )
 
