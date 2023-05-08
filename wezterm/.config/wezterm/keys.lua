@@ -27,14 +27,4 @@ return {
   { key = "9", mods = "LEADER",       action = wezterm.action{ActivateTab=8}},
   { key = "&", mods = "LEADER|SHIFT", action = wezterm.action{CloseCurrentTab={confirm=true}}},
   { key = "x", mods = "LEADER",       action = wezterm.action{CloseCurrentPane={confirm=true}}},
-
-  -- 搜索
-  {
-    key = "f",
-    mods = "LEADER|CTRL",
-    action = wezterm.action.Search({
-      CaseInSensitiveString = "", -- 大小写不敏感
-      -- CaseSensitiveString = ''-- 大小写敏感
-    }),
-  },
 }

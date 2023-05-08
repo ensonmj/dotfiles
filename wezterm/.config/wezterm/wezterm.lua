@@ -35,7 +35,7 @@ config.hide_tab_bar_if_only_one_tab = true
 
 -- Keys
 -- config.disable_default_key_binding = true
--- config.use_dead_keys = false -- Allow using ^ with single key press.
+config.use_dead_keys = false -- Allow using ^ with single key press.
 config.leader = { key="a", mods="CTRL" }
 config.keys = require("keys")
 

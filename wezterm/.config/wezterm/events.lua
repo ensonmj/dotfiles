@@ -42,13 +42,15 @@ wezterm.on(
 wezterm.on(
   "update-right-status",
   function(window)
+    -- show which key table is active in the status area
+    local name = window:active_key_table()
+    if name then
+      name = 'TABLE: ' .. name
+    end
+
+    -- show date and time
     local date = wezterm.strftime("%Y-%m-%d %H:%M:%S ")
-    window:set_right_status(
-      wezterm.format(
-        {
-          { Text = date }
-        }
-      )
-    )
+
+    window:set_right_status(name or date)
   end
 )
