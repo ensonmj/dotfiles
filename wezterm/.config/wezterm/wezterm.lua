@@ -37,9 +37,9 @@ config.inactive_pane_hsb = {
 }
 
 -- Tab bar
--- config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
+config.hide_tab_bar_if_only_one_tab = true
 
 -- Keys
 -- config.disable_default_key_bindings = false
