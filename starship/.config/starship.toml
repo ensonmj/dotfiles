@@ -76,9 +76,10 @@ time_format = "%R" # Hour:Minute Format
 style = "bg:#1d2230"
 format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
 
-# Replace the '❯' symbol in the prompt with '➜'
+# Replace the '❯' symbol in the prompt
 [character]
 success_symbol = '[➜](bold green)'
+error_symbol = '[✗](bold red)'
 
 [cmd_duration]
 min_time = 0
