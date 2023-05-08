@@ -51,5 +51,9 @@ config.keys = require("keys")
 -- Mouse
 config.mouse_bindings = require("mouse")
 
+if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+  config.default_prog = { "wsl.exe" }
+end
+
 -- and finally, return the configuration to wezterm
 return config
