@@ -11,14 +11,12 @@ then
     echo "https_proxy=$HTTP_PROXY" >> ~/.wgetrc
 fi
 
-[[ -d ~/.dotfiles ]] || git clone https://github.com/ensonmj/dotfiles .dotfiles
-pushd ~/.dotfiles
-stow -S zsh
-stow -S profile
-stow -S bash
-popd
+curl -s "https://get.sdkman.io" | bash
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# sed -i -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/g' $HOME/.sdkman/etc/config
+sdk install sbt
 
-echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
+echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> ~/.bashrc
 echo "export PATH=$JAVA_HOME/bin:$PATH" >> ~/.bashrc
 if [ -n "$HTTP_PROXY_HOST" -a -n "$HTTP_PROXY_PORT" ]
 then
@@ -27,34 +25,21 @@ then
     # metal should start after this done
     mkdir -p ~/.bloop && cat << EOF > ~/.bloop/bloop.json
 {
-    "javaHome":"/usr/lib/jvm/java-8-openjdk-amd64",
-    "javaOptions":["-Dhttp.proxyHost=$HTTP_PROXY_HOST", "-Dhttp.proxyPort=$HTTP_PROXY_PORT", "-Dhttps.proxyHost=$HTTP_PROXY_HOST", "-Dhttps.proxyPort=$HTTP_PROXY_PORT"]
+    "javaHome":"/usr/lib/jvm/java-11-openjdk-amd64",
+    "javaOptions":["-Xss4m", "-Dfile.encoding=UTF-8", "-Dmaven.multiModuleProjectDirectory=/workspaces/gluten", "-Dhttp.proxyHost=$HTTP_PROXY_HOST", "-Dhttp.proxyPort=$HTTP_PROXY_PORT", "-Dhttps.proxyHost=$HTTP_PROXY_HOST", "-Dhttps.proxyPort=$HTTP_PROXY_PORT"]
 }
 EOF
-    # mvn clean generate-sources ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut
-    # kill -9 `jps | awk '{print $1}'`
+    # mvn generate-sources ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut
+    # kill -9 `jps | grep -v Jps | awk '{print $1}'`
 fi
-
-sudo apt update
-sudo apt install -y zsh
-
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
-source ~/.cargo/env
-# cargo install sccache
-cargo install fd-find
-cargo install ripgrep
-cargo install just
-
-curl -s "https://get.sdkman.io" | bash
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-# sed -i -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/g' $HOME/.sdkman/etc/config
-sdk install sbt
 
 # for gluten
 sudo apt install -y libiberty-dev libdwarf-dev libre2-dev \
     libz-dev libssl-dev libboost-all-dev \
     libcurl4-openssl-dev libjemalloc-dev
 
+# folly cmake bug workaround
+sudo mkdir -p /include
 # big storage
 [[ -d ./storage ]] || ln -s /storage storage
 # dependencies

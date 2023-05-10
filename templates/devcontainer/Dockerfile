@@ -27,7 +27,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get install -y --no-install-recommends \
     ca-certificates locales tzdata sudo \
     build-essential curl git less net-tools \
-    stow tar vim unzip wget zip
+    stow tar vim unzip wget zip jq
 
 ARG TIMEZONE=PRC
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
@@ -59,7 +59,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     then \
         apt-get update && \
         apt-get install -y --no-install-recommends \
-        maven openjdk-8-jdk openjdk-8-source openjdk-8-doc && \
+        maven openjdk-8-jdk openjdk-8-source openjdk-8-doc \
+        openjdk-11-jdk openjdk-11-source openjdk-11-doc && \
         if [ -n "$MAVEN_MIRROR_URL" ]; \
         then \
           MAVEN_SETTINGS_TEMPLATE="<settings><mirrors><mirror><id>mavenmirror</id><mirrorOf>central</mirrorOf><name>MavenMirror</name><url>{{MAVEN_MIRROR_URL}}</url></mirror></mirrors><proxies><proxy><id>httpproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>http</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy><proxy><id>httpsproxy</id><active>{{MAVEN_PROXY_ENABLE}}</active><protocol>https</protocol><host>{{MAVEN_PROXY_HOST}}</host><port>{{MAVEN_PROXY_PORT}}</port></proxy></proxies></settings>"; \

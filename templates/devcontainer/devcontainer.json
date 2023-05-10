@@ -66,97 +66,42 @@
 		// Configure properties specific to VS Code.
 		"vscode": {
 			"settings": {
-				"editor.minimap.enabled": false,
 				"http.proxySupport": "on",
 				"dotfiles.repository": "https://github.com/ensonmj/dotfiles",
-				"dotfiles.targetPath": "~/.dotfiles"
-				// "dotfiles.installCommand": "~/.dotfiles/install.sh",
-				// "cmake.configureOnOpen": false,
+				"dotfiles.targetPath": "~/.dotfiles",
+				"dotfiles.installCommand": "~/.dotfiles/install.sh",
+				"editor.minimap.enabled": false,
+				"files.watcherExclude": {
+					"**/build-*/**": true,
+					"**/_build/**": true,
+					"**/target": true
+				},
+				"search.exclude": {
+					"backends-clickhouse": true
+				},
+				"git.ignoreLimitWarning": true,
+				"debug.focusEditorOnBreak": true,
+				"clangd.arguments": [
+					"--compile-commands-dir=${workspaceFolder}",
+					"--completion-style=detailed",
+					"--header-insertion=never"
+				],
+				// "clang-tidy.buildPath": "./build-Release/cpp",
+				"cmake.configureOnOpen": false,
 				// "cmake.configureArgs": [
 				// 	"-Wno-dev"
 				// ],
 				// "cmake.generator": "Unix Makefiles",
 				// "cmake.configureSettings": {
 				// 	"CMAKE_EXPORT_COMPILE_COMMANDS": true,
-				// 	// "DCMAKE_BUILD_TYPE": "${buildType}"
-				// 	"ENABLE_FOLLY": "OFF",
-				// 	"ENABLE_JIT_DEBUG": "OFF",
-				// 	"ENABLE_PERF_JIT_LISTENER": "OFF",
-				// 	"ENABLE_INTEL_JIT_LISTENER": "OFF",
-				// 	"PREFER_STATIC_LIBS": "OFF",
-				// 	"VELOX_ENABLE_SUBSTRAIT": "ON",
-				// 	"VELOX_ENABLE_PARQUET": "ON"
+				// 	"DCMAKE_BUILD_TYPE": "${buildType}"
 				// },
-				// "testMate.cpp.debug.configTemplate": {
-				// 	"type": "cppvsdbg",
-				// 	"linux": {
-				// 		"type": "cppdbg",
-				// 		"MIMode": "gdb",
-				// 		"setupCommands": [
-				// 			{
-				// 				"description": "Enable pretty-printing for gdb",
-				// 				"text": "-enable-pretty-printing",
-				// 				"ignoreFailures": true
-				// 			},
-				// 			{
-				// 				"description": "Auto load symbols when loading an .so file",
-				// 				"text": "set auto-solib-add",
-				// 				"ignoreFailures": false
-				// 			},
-				// 			{
-				// 				"description": "ptype obj",
-				// 				"text": "set print object on",
-				// 				"ignoreFailures": false
-				// 			}
-				// 		]
-				// 	},
-				// 	"darwin": {
-				// 		"type": "cppdbg",
-				// 		"MIMode": "lldb"
-				// 	},
-				// 	"win32": {
-				// 		"type": "cppvsdbg"
-				// 	},
-				// 	"program": "${exec}",
-				// 	"args": "${argsArray}",
-				// 	"cwd": "${cwd}",
-				// 	"env": "${envObj}",
-				// 	"environment": "${envObjArray}",
-				// 	"sourceFileMap": "${sourceFileMapObj}"
-				// },
-				// "githubPullRequests.ignoredPullRequestBranches": [
-				// 	"main"
-				// ],
-				// "search.exclude": {
-				// 	// "**/presto": true
-				// },
-				// "files.exclude": {
-				// 	// "**/presto": true
-				// },
-				// "files.watcherExclude": {
-				// 	// "**/build-*/**": true,
-				// },
-				// "C_Cpp.files.exclude": {
-				// 	// "**/presto": true,
-				// 	// "**/.vscode": true
-				// },
-				// "C_Cpp.codeAnalysis.exclude": {
-				// 	// "**/presto": true
-				// },
-				// "debug.focusEditorOnBreak": true,
-				// "git.ignoreLimitWarning": true,
-				// "clangd.arguments": [
-				// 	"--compile-commands-dir=${workspaceFolder}/build-Release/cpp",
-				// 	"--completion-style=detailed",
-				// 	"--header-insertion=never"
-				// ],
-				// "clang-tidy.buildPath": "./build-Release/cpp",
+				"java.format.enabled": false,
 				// "java.project.resourceFilters": [
 				//     "node_modules",
 				//     ".git",
 				// ],
-				// "java.format.enabled": false,
-				// "xml.format.enabled": false
+				"xml.format.enabled": false
 			},
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
