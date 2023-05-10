@@ -79,6 +79,14 @@ fi
 #tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
+#homebrew
+[[ -d $HOME/.linuxbrew ]] && eval "$($HOME/.linuxbrew/bin/brew shellenv)"
+[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if command -v brew &> /dev/null && brew list | grep coreutils > /dev/null ; then
+    PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+    MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"
+fi
+
 #rust
 if [ -d $HOME/.cargo ]; then
     export PATH="$HOME/.cargo/bin:$PATH"
