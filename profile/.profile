@@ -48,6 +48,11 @@ unset SSH_ASKPASS
 # export DISPLAY=$(host `hostname` | grep -oP '(\s)\d+(\.\d+){3}' | tail -1 | awk '{ print $NF }' | tr -d '\r'):0
 # export LIBGL_ALWAYS_INDIRECT=1
 # }}}
+export HTTP_PROXY_HOST=child-prc.intel.com
+export HTTP_PROXY_PORT=913
+export STORAGE=/mnt/pmem0/majian/gluten
+export http_proxy=http://child-prc.intel.com:913
+export https_proxy=http://child-prc.intel.com:913
 
 # set PATH so it includes user's private bin if it exists
 [[ -d $HOME/bin ]] && export PATH="$HOME/bin:$PATH"
@@ -88,10 +93,7 @@ if command -v brew &> /dev/null && brew list | grep coreutils > /dev/null ; then
 fi
 
 #rust
-if [ -d $HOME/.cargo ]; then
-    export PATH="$HOME/.cargo/bin:$PATH"
-    source $HOME/.cargo/env
-fi
+[[ -d $HOME/.cargo ]] && source $HOME/.cargo/env
 
 #golang
 if [ -d $HOME/go ]; then
@@ -133,16 +135,16 @@ function ostype() {
 # Safely remove the given entry from $PATH
 # https://unix.stackexchange.com/a/253760/143394
 function remove_from_PATH() {
-  while case $PATH in
-        "$1") unset PATH; false;;
-        "$1:"*) PATH=${PATH#"$1:"};;
-        *":$1") PATH=${PATH%":$1"};;
-        *":$1:"*) PATH=${PATH%%":$1:"*}:${PATH#*":$1:"};;
-        *) false;;
-    esac
-  do
-    :
-  done
+    while case $PATH in
+            "$1") unset PATH; false;;
+            "$1:"*) PATH=${PATH#"$1:"};;
+            *":$1") PATH=${PATH%":$1"};;
+            *":$1:"*) PATH=${PATH%%":$1:"*}:${PATH#*":$1:"};;
+            *) false;;
+        esac
+    do
+        :
+    done
 }
 
 # https://gist.github.com/yougg/5d2b3353fc5e197a0917aae0b3287d64
