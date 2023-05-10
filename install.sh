@@ -44,12 +44,13 @@ case $OS in
     pacman -Q stow &> /dev/null || yes | sudo pacman -S stow ;;
 esac
 
-# Stow packages
+# Stow packages {{{
 stow -v stow # Setup stow itself
 
 # Install **ALL** configs except **templates**
 # Assume that there are no newlines in directory names
 find -L . -maxdepth 1 -type d ! \( -name templates -o -name '.*' \) -print | sed 's/^.\///' | xargs -t -n1 -- stow -v --target="$HOME"
+# }}}
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
 source ~/.cargo/env
@@ -66,3 +67,6 @@ cargo install --locked ripgrep
 cargo install --locked starship # need to config shell and nerd fonts
 cargo install --locked tokei
 cargo install --locked zoxide # need to config shell
+
+# homebrew
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
