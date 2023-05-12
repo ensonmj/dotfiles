@@ -12,10 +12,14 @@ $include /etc/inputrc
 #"\C-l": clear-screen
 #$endif
 
+TAB: menu-complete
 set completion-ignore-case on
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
+set menu-complete-display-prefix on
 set visible-stats on
+set colored-completion-prefix on
+set colored-stats on
 
 #Macros
 #Ctrl-Alt-L append "| less" to the command and run it

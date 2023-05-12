@@ -20,13 +20,29 @@
 #fi
 
 # Alias {{{
-alias ls='ls -F --color=auto --show-control-chars'
+# enable color support of ls and also add handy aliases
+if command -v dircolors &> /dev/null ; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+alias ls='ls -F --show-control-chars'
 alias la='ls -a'
 alias ll='ls -l'
 alias lla='ls -al'
-alias grep="grep --color=auto"
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 #alias tmux='tmux -2'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
 # }}}
 
 # Environment {{{
@@ -42,6 +58,8 @@ export LANG=en_US.UTF-8
 export LESSCHARSET=utf-8
 export EDITOR=vim
 unset SSH_ASKPASS
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 # enable public access for X11, this should just set on ssh client side {{{
 # export DISPLAY=$(ip route list default | awk '{print $3}'):0
 # export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
@@ -78,9 +96,6 @@ fi
 # }}}
 
 # Load scripts {{{
-#dircolors
-[[ -f $HOME/.dircolors ]] && eval `dircolors $HOME/.dircolors`
-
 #tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
