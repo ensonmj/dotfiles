@@ -1,12 +1,20 @@
 {
-    // A dirty file is automatically saved when the window loses focus
-    "files.autoSave": "onFocusChange",
     "editor.detectIndentation": false,
     "editor.formatOnSave": false,
-    // Controls the font size in pixels.
+    "editor.lineNumbers": "relative",
+    "editor.suggestSelection": "first",
     "editor.fontSize": 16,
     // The number of spaces a tab is equal to. This setting is overridden based on the file contents when `editor.detectIndentation` is on.
     "editor.tabSize": 4,
+    "editor.matchBrackets": false,
+    "editor.scrollBeyondLastLine": false,
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": true,
+        "strings": true
+    },
+    // A dirty file is automatically saved when the window loses focus
+    "files.autoSave": "onFocusChange",
     // Configure glob patterns for excluding files and folders. For example, the files explorer decides which files and folders to show or hide based on this setting. Read more about glob patterns [here](https://code.visualstudio.com/docs/editor/codebasics#_advanced-search-options).
     "files.exclude": {
         "**/.git": true,
@@ -14,12 +22,17 @@
         "**/.hg": true,
         "**/.DS_Store": true
     },
-    "editor.quickSuggestions": {
-        "other": true,
-        "comments": true,
-        "strings": true
+    "files.watcherExclude": {
+        "**/target": true
+    },
+    "search.exclude": {
+        //"storage": true
     },
     "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "workbench.iconTheme": "vscode-icons",
+    // fix explorer navigation issue, Refs: https://github.com/microsoft/vscode/issues/66995 
+    "workbench.list.automaticKeyboardNavigation": false
     // "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\cmd.exe",
     // disable multi-cursor mode
     "html.mirrorCursorOnMatchingTag": false,
@@ -35,7 +48,6 @@
     "bracket-pair-colorizer-2.forceUniqueOpeningColor": true,
     "bracket-pair-colorizer-2.forceIterationColorCycle": true,
     "bracket-pair-colorizer-2.colorMode": "Consecutive",
-    "editor.matchBrackets": false,
     "bracket-pair-colorizer-2.highlightActiveScope": true,
     "bracket-pair-colorizer-2.activeScopeCSS": [
         "borderStyle : solid",
@@ -78,7 +90,6 @@
     ],
     "todohighlight.maxFilesForSearch": 5120,
     "todohighlight.toggleURI": false,
-    //vscode-icons
     // auto close tag
     "auto-close-tag.enableAutoCloseTag": true,
     "auto-close-tag.enableAutoCloseSelfClosingTag": true,
@@ -101,9 +112,7 @@
         "cfml",
         "HTML (Eex)"
     ],
-    "window.zoomLevel": 0,
     "prettier.singleQuote": true,
-    "explorer.confirmDelete": false,
     "[html]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
@@ -120,19 +129,55 @@
     "[vue]": {
         "editor.defaultFormatter": "octref.vetur"
     },
-    "workbench.iconTheme": "vscode-icons",
     "vetur.format.defaultFormatterOptions": {
         "prettier": {
             "semi": true,
             "singleQuote": true
         }
     },
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}",
+        "--completion-style=detailed",
+        "--header-insertion=never"
+    ],
+    "cmake.configureOnOpen": false,
+    "cmake.skipConfigureIfCachePresent": true,
+    "cmake.autoSelectActiveFolder": true,
+    // "cmake.generator": "Unix Makefiles",
+    // "cmake.sourceDirectory": "${workspaceFolder}/cpp",
+    "cmake.sourceDirectory": [
+        "${workspaceFolder}/cpp"
+    ],
+    "cmake.buildDirectory": "${sourceDirectory}/_build/debug",
+    "testExplorer.useNativeTesting": true,
+    "testMate.cpp.test.advancedExecutables": [
+        {
+            "pattern": "${workspaceFolder}/cpp/_build/**/*{test,Test,TEST}*"
+        }
+    ],
+    "java.format.enabled": false,
+    "java.eclipse.downloadSources": true,
+    "java.format.comments.enabled": false,
+    "java.format.onType.enabled": true,
+    "java.maven.downloadSources": true,
+    "maven.executable.options": "s",
+    "metals.serverProperties": [
+        "-Dhttp.proxyHost=$HTTP_PROXY_HOST",
+        "-Dhttp.proxyPort=$HTTP_PROXY_PORT",
+        "-Dhttps.proxyHost=$HTTP_PROXY_HOST",
+        "-Dhttps.proxyPort=$HTTP_PROXY_PORT"
+    ],
+    "metals.coursierMirror": "https://repo.huaweicloud.com/repository/maven/",
+    "metals.mavenScript": "${workspaceFolder}/bloop-mvn.sh", // "mvn -Pxxx -Pyyy $@"
+    "metals.javaHome": "/usr/lib/jvm/java-11-openjdk-amd64",
+    "metals.testUserInterface": "Test Explorer",
+    "metals.ammoniteJvmProperties": [
+        "-Xms1G",
+        "-Xmx8G"
+    ],
     "python.languageServer": "Microsoft",
     "vsicons.dontShowNewVersionMessage": true,
-    "editor.lineNumbers": "relative",
-    "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "java.configuration.checkProjectSettingsExclusions": false,
     // vscode-neovim
     // Windows
     "vscode-neovim.neovimExecutablePaths.win32": "D:\\Program Files (x86)\\Neovim\\bin\\nvim.exe",
@@ -141,7 +186,6 @@
     "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
     // Mac
     "vscode-neovim.neovimExecutablePaths.darwin": "/usr/local/bin/nvim",
-    "editor.scrollBeyondLastLine": false,
     // which key
     "whichkey.sortOrder": "alphabetically",
     "whichkey.delay": 0,
@@ -671,6 +715,4 @@
             ],
         },
     ],
-    // fix explorer navigation issue, Refs: https://github.com/microsoft/vscode/issues/66995 
-    "workbench.list.automaticKeyboardNavigation": false
 }
