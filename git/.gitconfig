@@ -10,6 +10,7 @@
 	co = checkout
 	ci = commit
 	st = status
+	sp = ! git stash save && git pull --rebase && git stash pop
 	br = branch
 	hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short --all
 	type = cat-file -t
