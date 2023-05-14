@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
 
-return { 
+return {
   -- Paste on right-click
   {
     event = {
@@ -13,7 +13,7 @@ return {
     action = wezterm.action({
       PasteFrom = "Clipboard",
     }),
-  }, 
+  },
   -- Change the default click behavior so that it only selects
   -- text and doesn't open hyperlinks
   {
@@ -38,5 +38,5 @@ return {
     },
     mods = "CTRL",
     action = "OpenLinkAtMouseCursor",
-  }
+  },
 }

@@ -2,7 +2,12 @@ local wezterm = require("wezterm")
 
 local launch_menu = {}
 
-if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
+  table.insert(launch_menu, {
+    label = "zsh",
+    args = { "/bin/zsh", "-l" },
+  })
+elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
   table.insert(launch_menu, {
     label = "PowerShell",
     args = { "powershell.exe", "-NoLogo" },
