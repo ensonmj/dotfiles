@@ -6,26 +6,106 @@ wezterm.on("gui-startup", function(cmd)
   window:gui_window():maximize()
 end)
 
+-- Equivalent to POSIX basename(3)
+-- Given "/foo/bar" returns "bar"
+-- Given "c:\\foo\\bar" returns "bar"
 local function basename(s)
   return string.gsub(s, "(.*[/\\])(.*)", "%2")
 end
 
--- change the title of tab to current working directory.
--- ref:
--- https://wezfurlong.org/wezterm/config/lua/window-events/format-tab-title.html#format-tab-title
--- https://wezfurlong.org/wezterm/config/lua/PaneInformation.html
--- https://wezfurlong.org/wezterm/config/lua/pane/get_current_working_dir.html
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-  local pane = tab.active_pane
+  local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
+  local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
+  local SUB_IDX = {
+    "₁",
+    "₂",
+    "₃",
+    "₄",
+    "₅",
+    "₆",
+    "₇",
+    "₈",
+    "₉",
+    "₁₀",
+    "₁₁",
+    "₁₂",
+    "₁₃",
+    "₁₄",
+    "₁₅",
+    "₁₆",
+    "₁₇",
+    "₁₈",
+    "₁₉",
+    "₂₀",
+  }
+  local SUP_IDX = {
+    "¹",
+    "²",
+    "³",
+    "⁴",
+    "⁵",
+    "⁶",
+    "⁷",
+    "⁸",
+    "⁹",
+    "¹⁰",
+    "¹¹",
+    "¹²",
+    "¹³",
+    "¹⁴",
+    "¹⁵",
+    "¹⁶",
+    "¹⁷",
+    "¹⁸",
+    "¹⁹",
+    "²⁰",
+  }
 
-  local index = ""
-  if #tabs > 1 then
-    index = string.format(" %d:", tab.tab_index + 1)
+  local left_arrow = SOLID_LEFT_ARROW
+  if tab.tab_index == 0 then
+    left_arrow = ""
+  end
+  local right_arrow = SOLID_RIGHT_ARROW
+  if tab.tab_index == #tabs - 1 then
+    right_arrow = ""
   end
 
-  local process = basename(pane.foreground_process_name)
+  local tid = SUB_IDX[tab.tab_index + 1]
+  local pid = SUP_IDX[tab.active_pane.pane_index + 1]
 
-  return index .. process .. " "
+  local process_name = tab.active_pane.foreground_process_name
+  local exec_name = basename(process_name):gsub("%.exe$", "")
+  local title = " " .. exec_name .. " "
+
+  local background = "#4E4E4E"
+  local foreground = "#1C1B19"
+  if tab.is_active then
+    background = "#FBB829"
+    foreground = "#1C1B19"
+  elseif hover then
+    background = "#FF8700"
+    foreground = "#1C1B19"
+  end
+  local edge_foreground = background
+  local edge_background = "#121212"
+  local dim_foreground = "#3A3A3A"
+
+  return {
+    { Attribute = { Intensity = "Bold" } },
+    { Background = { Color = edge_background } },
+    { Foreground = { Color = edge_foreground } },
+    { Text = left_arrow },
+    { Background = { Color = background } },
+    { Foreground = { Color = foreground } },
+    { Text = tid },
+    { Text = title },
+    { Foreground = { Color = dim_foreground } },
+    { Text = pid },
+    { Background = { Color = edge_background } },
+    { Foreground = { Color = edge_foreground } },
+    { Text = right_arrow },
+    { Attribute = { Intensity = "Normal" } },
+  }
 end)
 
 wezterm.on("update-right-status", function(window, pane)
@@ -54,7 +134,6 @@ wezterm.on("update-right-status", function(window, pane)
       -- shorten the path by using ~ as $HOME.
       local cwd = string.gsub(cwd, home_dir, "~")
 
-      -- table.insert(cells, cwd:sub(2))
       table.insert(cells, cwd)
     end
   end
@@ -69,8 +148,6 @@ wezterm.on("update-right-status", function(window, pane)
     "#7c5295",
     "#b491c8",
   }
-  -- local SOLID_LEFT_ARROW = utf8.char(0xff0b2)
-  -- local SOLID_RIGHT_ARROW = utf8.char(0xff0b0)
   -- The filled in variant of the < symbol
   local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
   -- The filled in variant of the > symbol
