@@ -12,12 +12,20 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 end
 
 config.color_scheme = "Dracula (Official)"
--- https://wezfurlong.org/wezterm/config/lua/wezterm/font_with_fallback.html#manual-fallback-scaling
-config.font = wezterm.font({ family = "Sarasa Term SC Nerd Font", scale = 1.2 })
-config.font_size = 11
-config.freetype_load_target = "HorizontalLcd"
 -- config.line_height = 1.1
 -- config.cell_width = 0.9
+config.font_size = 11
+-- https://wezfurlong.org/wezterm/config/lua/wezterm/font_with_fallback.html#manual-fallback-scaling
+config.font = wezterm.font({ family = "Sarasa Term SC Nerd Font", scale = 1.2 })
+config.warn_about_missing_glyphs = false
+-- config.freetype_load_flags = "NO_HINTING"
+config.freetype_load_target = "Light"
+config.freetype_render_target = "HorizontalLcd"
+config.foreground_text_hsb = {
+    hue = 1.0,
+    saturation = 1.0,
+    brightness = 0.9,  -- default is 1.0
+}
 config.initial_rows = 40
 config.initial_cols = 120
 config.scrollback_lines = 99999
