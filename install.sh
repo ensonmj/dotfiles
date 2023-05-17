@@ -49,7 +49,23 @@ stow -v stow # Setup stow itself
 
 # Install **ALL** configs except **templates**
 # Assume that there are no newlines in directory names
-find -L . -maxdepth 1 -type d ! \( -name templates -o -name '.*' \) -print | sed 's/^.\///' | xargs -t -n1 -- stow -v --target="$HOME"
+# find -L . -maxdepth 1 -type d ! \( -name templates -o -name '.*' \) -print | sed 's/^.\///' | xargs -t -n1 -- stow -v --target="$HOME"
+
+# Just install some configs
+declare -a confs=(
+    dircolors
+    starship
+    readline
+    profile
+    bash
+    zsh
+    vim
+    nvim
+    wezterm
+)
+for conf in "${confs[@]}"; do
+    stow -S "$conf"
+done
 # }}}
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
