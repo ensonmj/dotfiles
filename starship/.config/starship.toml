@@ -77,8 +77,9 @@ Windows = ""
 
 [hostname]
 ssh_only = false
+ssh_symbol = " "
 style = "bg:#a3aed2 fg:#090c0c"
-format = '[$ssh_symbol$hostname ]($style)'
+format = '[ $hostname$ssh_symbol ]($style)'
 
 [directory]
 style = "fg:#e3e5e5 bg:#769ff0"
