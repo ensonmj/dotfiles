@@ -21,18 +21,18 @@ RUN test -n "$HTTP_PROXY_HOST" && test -n "$HTTP_PROXY_PORT" && \
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
     echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+    
+# timezone, locale and sudo
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-    ca-certificates locales tzdata sudo \
-    build-essential curl git less net-tools \
-    stow tar vim unzip wget zip jq
+    apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates tzdata locales sudo
 
 ARG TIMEZONE=PRC
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
     echo $TIMEZONE > /etc/timezone && \
     dpkg-reconfigure -f noninteractive tzdata
+
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
 
@@ -40,13 +40,19 @@ RUN groupadd -g 1000 vscode && \
   useradd -u 1000 -m -g vscode -s /bin/bash vscode && \
   echo "vscode ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/vscode
 
+# common softwares
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl git jq less net-tools stow tar unzip vim \
+    wget zip zsh
+
 ARG CPP
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     if [ -n "$CPP" ]; \
     then \
-        apt-get update && \
-        apt-get install -y --no-install-recommends \
+        apt-get update && apt-get install -y --no-install-recommends \
         ccache cmake gdb gdbserver ninja-build clang-format && \
         sed -i /kernel.yama.ptrace_scope/s/[0-9]$/0/g /etc/sysctl.d/10-ptrace.conf; \
     fi
@@ -57,8 +63,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     if [ -n "$JAVA" ]; \
     then \
-        apt-get update && \
-        apt-get install -y --no-install-recommends \
+        apt-get update && apt-get install -y --no-install-recommends \
         maven openjdk-8-jdk openjdk-8-source openjdk-8-doc \
         openjdk-11-jdk openjdk-11-source openjdk-11-doc && \
         if [ -n "$MAVEN_MIRROR_URL" ]; \

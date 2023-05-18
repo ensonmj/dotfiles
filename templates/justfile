@@ -4,8 +4,135 @@
 
 # alias b := build
 
+# maven option
+# -e Detailed exception
+# -U forced update
+# -DskipTests does not execute test cases, but compiles test case classes to generate corresponding class files under target/test classes.
+# -Dmaven.test.skip=true, do not execute test cases or compile test case classes.Using maven. test. skip not only skips running unit tests, but also skips compiling test code.
+
 default:
     @just --justfile {{justfile()}} --list
 
-hello NAME:
-    @echo "Hello, {{NAME}}"
+init:
+    #spark 3.2.2
+    git clone --depth 1 --branch v3.2.2 https://github.com/apache/spark.git spark322
+    pushd spark322
+    ./build/mvn -Pyarn -DskipTests clean install
+    popd
+
+    # spark 3.3.0
+    # git clone --depth 1 --branch v3.3.0 https://github.com/apache/spark.git spark330
+    # pushd spark330
+    # ./build/mvn -Pyarn -DskipTests clean install
+    # popd
+
+    # spark-sql-perf
+    git clone --depth 1 https://github.com/databricks/spark-sql-perf.git
+    pushd spark-sql-perf
+    sbt +package
+    popd
+
+    # tpch-dbgen
+    git clone https://github.com/databricks/tpch-dbgen
+    pushd tpch-dbgen
+    git checkout 0469309147b42abac8857fa61b4cf69a6d3128a8
+    make clean && make
+    popd
+
+    # tpcds-kit
+    git clone https://github.com/databricks/tpcds-kit
+    pushd tpcds-kit/tools
+    sudo apt-get -y install gcc make flex bison byacc git
+    make clean && make
+    popd
+
+build-arrow TYPE="Release" TEST="OFF" CACHE="OFF":
+    # https://stackoverflow.com/questions/61267495/exception-in-thread-main-java-lang-nosuchmethoderror-java-nio-bytebuffer-flip
+    # https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html
+    # maybe should use java8
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 ./ep/build-arrow/src/build_arrow.sh --build_type={{TYPE}} --build_tests={{TEST}} --build_benchmarks={{TEST}} --enable_ep_cache={{CACHE}}
+    # ./ep/build-arrow/src/build_arrow.sh --build_type={{TYPE}} --build_tests={{TEST}} --build_benchmarks={{TEST}} --enable_ep_cache={{CACHE}}
+
+build-velox TYPE="Release" TEST="OFF" CACHE="OFF":
+    ./ep/build-velox/src/build_velox.sh --enable_s3=OFF --enable_hdfs=OFF --build_type={{TYPE}} --build_benchmarks={{TEST}} --enable_ep_cache={{CACHE}}
+
+build-velox-target TARGET TYPE="Debug":
+    cmake --build ep/build-velox/build/velox_ep/_build/{{lowercase(TYPE)}} --target {{TARGET}}
+
+build-gluten TYPE="Release" TEST="OFF":
+    cmake -DBUILD_VELOX_BACKEND=ON -DCMAKE_BUILD_TYPE={{TYPE}} -DBUILD_TESTS={{TEST}} -DBUILD_BENCHMARKS={{TEST}} -DBUILD_JEMALLOC=OFF -DENABLE_HBM=OFF -DENABLE_QAT=OFF -DENABLE_IAA=OFF -DENABLE_S3=OFF -DENABLE_HDFS=OFF -S cpp/ -B cpp/_build/{{lowercase(TYPE)}}
+    cmake --build cpp/_build/{{lowercase(TYPE)}} -j
+    # for java backends-velox resource
+    rm -rf cpp/build
+    cd cpp && ln -s _build/{{lowercase(TYPE)}} build && cd -
+
+build-cpp TYPE="Release" TEST="OFF":
+    # arrow
+    ./ep/build-arrow/src/get_arrow.sh --enable_custom_codec=OFF
+    just build-arrow "{{TYPE}}" "{{TEST}}" "OFF"
+    # velox
+    ./ep/build-velox/src/get_velox.sh --enable_hdfs=OFF --build_protobuf=ON --enable_s3=OFF
+    just build-velox "{{TYPE}}" "{{TEST}}" "OFF"
+    # gluten
+    just build-gluten "{{TYPE}}" "{{TEST}}"
+
+merge-compile-cmds:
+    cp cpp/build/compile_commands.json .
+    jq -s '.[0] + .[1]' /workspaces/gluten/cpp/build/compile_commands.json /workspaces/gluten/ep/build-velox/build/velox_ep/_build/debug/compile_commands.json > compile_commands.json
+    jq -s '.[0] + .[1]' /workspaces/gluten/cpp/build/compile_commands.json /workspaces/gluten/ep/build-arrow/build/arrow_ep/cpp/build/compile_commands.json > compile_commands.json
+
+force-download:
+    mvn dependency:purge-local-repository clean install -Pbackends-velox -Pspark-3.2 -Pspark-ut -DskipTests
+
+clear-lastupdate:
+    fd lastUpdated ~/.m2 -x rm
+
+build-java VERSION="3.2":
+    mvn clean install -Pspark-{{VERSION}} -Pbackends-velox -Pspark-ut -DskipTests
+
+bloop:
+    rm -rf .bloop .metals ~/.cache/coursier ~/.cache/metals
+    # https://scalacenter.github.io/bloop/docs/build-tools/maven
+    mvn generate-sources ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut -DskipTests
+    # mvn -U dependency:purge-local-repository clean install ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut -DskipTest
+    just kill-java
+
+kill-java:
+    kill -9 `jps | grep -v Jps | awk '{print $1}'`
+
+test-tpch:
+    cd /workspaces/gluten/tools/gluten-it
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean package -Pspark-3.2
+    /usr/bin/jvm-8-java-8-openjdk-amd64/bin/java -Xmx5G -XX:ErrorFile=/var/log/java/hs_err_pid%p.log -cp target/gluten-it-1.0-SNAPSHOT-jar-with-dependencies.jar io.glutenproject.integration.tpc.Tpc --preset=velox --benchmark-type=h --error-on-memleak --disable-aqe --off-heap-size=20g -s=1.0 --cpus=16 --iterations=1
+    cd -
+
+test-tpcds:
+    cd /workspaces/gluten/tools/gluten-it
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean package -Pspark-3.2
+    /usr/bin/jvm-8-java-8-openjdk-amd64/bin/java -Xmx5G -XX:ErrorFile=/var/log/java/hs_err_pid%p.log -cp target/gluten-it-1.0-SNAPSHOT-jar-with-dependencies.jar io.glutenproject.integration.tpc.Tpc --preset=velox --benchmark-type=ds --error-on-memleak --off-heap-size=8g -s=0.1 --cpus=16 --iterations=1
+    cd -
+
+ut:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToExclude=org.apache.spark.tags.ExtendedSQLTest
+ut-slow:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToInclude=org.apache.spark.tags.ExtendedSQLTest
+ut33:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -Pspark-3.3 -Pbackends-velox -Pspark-ut
+
+test NAME:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn -q test -T 200 -Pspark-3.2 -Pspark-ut -Pbackends-velox -Dorg.slf4j.simpleLogger.defaultLogLevel=warn -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -Dtests='{{NAME}}'
+
+gdb-attach:
+    #!/bin/bash
+    PID=`jps -l | grep ScalaTestRunner | awk '{print $1}'`
+    sudo gdb -ex "handle SIGSEGV nostop noprint pass" \
+        -ex "b Java_io_glutenproject_vectorized_ExpressionEvaluatorJniWrapper_nativeCreateKernelWithIterator" \
+        -ex "info breakpoints" \
+        -ex "continue" \
+        /proc/$PID/exe -p $PID
+
+gdbserver-attach:
+    #!/bin/bash
+    PID=`jps -l | grep ScalaTestRunner | awk '{print $1}'`
+    sudo gdbserver --attach :2345 $PID
+
