@@ -16,14 +16,6 @@ if [ -n "$HTTP_PROXY" ]; then
     echo "https_proxy=$HTTP_PROXY" >> ~/.wgetrc
 fi
 
-if [ -d "$HOME/.dotfiles" ]; then
-    rm -f ~/.profile ~/.bashrc ~/.bash_profile ~/.zshrc
-    pushd "$HOME/.dotfiles"
-    bash install.sh
-    bash install_nerdfonts.sh
-    popd
-fi
-
 # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source ${SCRIPT_DIR}/postCreateCpp.sh

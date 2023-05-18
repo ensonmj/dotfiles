@@ -51,7 +51,6 @@
 		"type=bind,source=${localEnv:HOME},target=/home/vscode/.host",
 		// "type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
 		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
-		"type=bind,source=${localEnv:HOME}/.dotfiles,target=/home/vscode/.dotfiles",
 		"type=bind,source=${localEnv:HOME}/.dotfiles/templates/devcontainer,target=/workspaces/${localWorkspaceFolderBasename}/.devcontainer", // keep sync
 		"type=bind,source=${localEnv:HOME}/.dotfiles/templates/justfile,target=/workspaces/${localWorkspaceFolderBasename}/justfile", // keep sync
 		"type=bind,source=${localEnv:HOME}/.m2,target=/home/vscode/.m2",
@@ -69,9 +68,9 @@
 		"vscode": {
 			"settings": {
 				"http.proxySupport": "on",
-				// "dotfiles.repository": "https://github.com/ensonmj/dotfiles",
-				// "dotfiles.targetPath": "~/.dotfiles",
-				// "dotfiles.installCommand": "~/.dotfiles/install.sh",
+				"dotfiles.repository": "https://github.com/ensonmj/dotfiles",
+				"dotfiles.targetPath": "~/.dotfiles",
+				"dotfiles.installCommand": "~/.dotfiles/install.sh",
 				"editor.minimap.enabled": false,
 				"files.watcherExclude": {
 					"**/build-*/**": true,

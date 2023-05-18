@@ -9,6 +9,10 @@ export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:=$HOME/.config}
 export XDG_DATA_HOME=${XDG_DATA_HOME:=$HOME/.local/share}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:=$HOME/.cache}
 
+# https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source ${SCRIPT_DIR}/install_nerdfonts.sh
+
 # Install stow (if not already installed)
 if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
@@ -51,6 +55,11 @@ stow -v stow # Setup stow itself
 # Assume that there are no newlines in directory names
 # find -L . -maxdepth 1 -type d ! \( -name templates -o -name '.*' \) -print | sed 's/^.\///' | xargs -t -n1 -- stow -v --target="$HOME"
 
+# backup
+mv ~/.profile{,.orig}
+mv ~/.bashrc{,.orig}
+mv ~/.bash_profile{,.orig}
+mv ~/.zshrc{,.orig}
 # Just install some configs
 declare -a confs=(
     dircolors
