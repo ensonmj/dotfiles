@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -euo pipefail; shopt -s failglob # safe mode
+# set -euo pipefail; shopt -s failglob # safe mode
+# -u : cause sdkman throw "unbound variable" error
 
 # XDG - set defaults as they may not be set (eg Ubuntu 14.04 LTS)
 # See https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
@@ -83,6 +84,7 @@ source ~/.cargo/env
 cargo install --git https://github.com/mmstick/parallel
 parallel cargo install --locked ::: bat bottom erdtree git-delta hyperfine \
     just miniserve procs ripgrep sccache starship tokei zoxide
+# sccache : depends on pkg-config
 # starship : need to config shell and nerd fonts
 # zoxide : need to config shell
 
