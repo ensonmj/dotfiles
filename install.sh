@@ -73,7 +73,7 @@ source ~/.cargo/env
 # cargo install sccache
 cargo install --locked bat
 cargo install --locked bottom
-cargo install --locked delta
+cargo install --locked git-delta
 cargo install --locked fd-find
 cargo install --locked hyperfine
 cargo install --locked just
