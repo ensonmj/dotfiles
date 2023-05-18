@@ -16,6 +16,12 @@ if [ -n "$HTTP_PROXY" ]; then
     echo "https_proxy=$HTTP_PROXY" >> ~/.wgetrc
 fi
 
+# should prepare ~/.profile ~/.bashrc ~/.zshrc, postCreate*.sh will modify them
+if [ ! -d "$HOME/.dotfiles" ]; then
+    git clone https://github.com/ensonmj/dotfiles.git "$HOME/.dotfiles"
+    source $HOME/.dotfiles/install.sh
+fi
+
 # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source ${SCRIPT_DIR}/postCreateCpp.sh

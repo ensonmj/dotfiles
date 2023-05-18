@@ -49,19 +49,19 @@ case $OS in
 esac
 
 # Stow packages {{{
-stow -v stow # Setup stow itself
-
+pushd $SCRIPT_DIR
 # Install **ALL** configs except **templates**
 # Assume that there are no newlines in directory names
 # find -L . -maxdepth 1 -type d ! \( -name templates -o -name '.*' \) -print | sed 's/^.\///' | xargs -t -n1 -- stow -v --target="$HOME"
 
 # backup
-mv ~/.profile{,.orig}
-mv ~/.bashrc{,.orig}
-mv ~/.bash_profile{,.orig}
-mv ~/.zshrc{,.orig}
+[[ -f ~/.profile ]] && mv ~/.profile{,.orig}
+[[ -f ~/.bashrc ]] && mv ~/.bashrc{,.orig}
+[[ -f ~/.bash_profile ]] && mv ~/.bash_profile{,.orig}
+[[ -f ~/.zshrc ]] && mv ~/.zshrc{,.orig}
 # Just install some configs
 declare -a confs=(
+    stow
     dircolors
     starship
     readline
@@ -75,6 +75,7 @@ declare -a confs=(
 for conf in "${confs[@]}"; do
     stow -S "$conf"
 done
+popd
 # }}}
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y

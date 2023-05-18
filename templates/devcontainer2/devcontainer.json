@@ -49,11 +49,12 @@
 	"mounts": [
 		// we can't mount some file which needs to keep sync with host (eg. .Xauthority)
 		"type=bind,source=${localEnv:HOME},target=/home/vscode/.host",
-		// "type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
+		"type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
 		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
-		"type=bind,source=${localEnv:HOME}/.dotfiles/templates/devcontainer,target=/workspaces/${localWorkspaceFolderBasename}/.devcontainer", // keep sync
-		"type=bind,source=${localEnv:HOME}/.dotfiles/templates/justfile,target=/workspaces/${localWorkspaceFolderBasename}/justfile", // keep sync
+		"type=bind,source=${localEnv:HOME}/.dotfiles,target=/home/vscode/.dotfiles",
+		"type=bind,source=${localEnv:HOME}/.dotfiles/templates/devcontainer2,target=/workspaces/${localWorkspaceFolderBasename}/.devcontainer", // keep sync
 		"type=bind,source=${localEnv:HOME}/.m2,target=/home/vscode/.m2",
+		"type=bind,source=${localEnv:HOME}/.ivy2,target=/home/vscode/.ivy2",
 		"type=bind,source=${localWorkspaceFolder}/.devcontainer/sbt/repositories,target=/home/vscode/.sbt/repositories",
 		"type=bind,source=${localEnv:STORAGE},target=/storage" // big storage
 	],
