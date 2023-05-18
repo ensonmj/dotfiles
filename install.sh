@@ -70,19 +70,11 @@ done
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
 source ~/.cargo/env
-# cargo install sccache
-cargo install --locked bat
-cargo install --locked bottom
-cargo install --locked git-delta
-cargo install --locked fd-find
-cargo install --locked hyperfine
-cargo install --locked just
-cargo install --locked miniserve
-cargo install --locked procs
-cargo install --locked ripgrep
-cargo install --locked starship # need to config shell and nerd fonts
-cargo install --locked tokei
-cargo install --locked zoxide # need to config shell
+cargo install --git https://github.com/mmstick/parallel
+parallel cargo install --locked ::: bat bottom erdtree git-delta hyperfine \
+    just miniserve procs ripgrep sccache starship tokei zoxide
+# starship : need to config shell and nerd fonts
+# zoxide : need to config shell
 
 # homebrew
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
