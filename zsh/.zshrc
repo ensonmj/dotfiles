@@ -6,13 +6,9 @@
 
 # ZSH_CACHE_DIR
 [[ -d $HOME/.zsh/cache ]] || mkdir -p "$HOME/.zsh/cache" && export ZSH_CACHE_DIR=$HOME/.zsh/cache
+
+# hack sdkman installer with this line: "$HOME/.sdkman/bin/sdkman-init.sh"
 # }}}
-
-
-#if brew list | grep coreutils > /dev/null ; then
-#  PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
-#  MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"
-#fi
 
 # zplug {{{
 # export ZPLUG_HOME=$HOME/.zplug

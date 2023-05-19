@@ -108,7 +108,7 @@ if command -v brew &> /dev/null && brew list | grep coreutils > /dev/null ; then
 fi
 
 #rust
-[[ -d $HOME/.cargo ]] && source $HOME/.cargo/env
+[[ -f $HOME/.cargo/env ]] && source $HOME/.cargo/env
 
 #golang
 if [ -d $HOME/go ]; then
@@ -125,6 +125,12 @@ if [ -d $HOME/.nvm ]; then
     BP=${NP%bin/node} #this replaces the string 'bin/node'
     LP="${BP}lib/node_modules"
     export NODE_PATH="$LP"
+fi
+
+#sdkman
+if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+    export SDKMAN_DIR="$HOME/.sdkman"
+    source "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
 
 #rbenv
@@ -147,9 +153,20 @@ function ostype() {
   esac
 }
 
+function add_PATH() {
+    case ":${PATH}:" in
+        *:"$1":*)
+            ;;
+        *)
+            # Prepending path in case a system-installed needs to be overridden
+            export PATH="$1:$PATH"
+            ;;
+    esac
+}
+
 # Safely remove the given entry from $PATH
 # https://unix.stackexchange.com/a/253760/143394
-function remove_from_PATH() {
+function del_PATH() {
     while case $PATH in
             "$1") unset PATH; false;;
             "$1:"*) PATH=${PATH#"$1:"};;
