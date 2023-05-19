@@ -27,9 +27,9 @@ EOF
     # mvn generate-sources ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut
     # kill -9 `jps | grep -v Jps | awk '{print $1}'`
 fi
-echo "export MAVEN_OPTS=\"-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g $MAVEN_OPTS\"" >> ~/.bashrc
-echo "export JAVA_OPTS=\"$JAVA_OPTS\"" >> ~/.bashrc
-echo "export SBT_OPTS=\"$SBT_OPTS\"" >> ~/.bashrc
+echo "export MAVEN_OPTS=\"-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g $MAVEN_OPTS\"" >> ~/.profile
+echo "export JAVA_OPTS=\"$JAVA_OPTS\"" >> ~/.profile
+echo "export SBT_OPTS=\"$SBT_OPTS\"" >> ~/.profile
 
 # for arrow in java11
 # for java17 --add-opens=java.base/java.nio=ALL-UNNAMED 
