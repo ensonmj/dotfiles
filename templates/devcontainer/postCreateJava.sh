@@ -5,14 +5,17 @@ curl -s "https://get.sdkman.io" | bash
 # sed -i -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/g' $HOME/.sdkman/etc/config
 sdk install sbt
 
-echo 'export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"' >> ~/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.bashrc
 echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> ~/.bashrc
 if [ -n "$HTTP_PROXY_HOST" -a -n "$HTTP_PROXY_PORT" ]
 then
     # replace $HTTP_PROXY_HOST and $HTTP_PROXY_PORT only
+    MAVEN_OPTS="-Dhttp.proxyHost=$HTTP_PROXY_HOST -Dhttp.proxyPort=$HTTP_PROXY_PORT -Dhttps.proxyHost=$HTTP_PROXY_HOST -Dhttps.proxyPort=$HTTP_PROXY_PORT"
     JAVA_OPTS="-Dhttp.proxyHost=$HTTP_PROXY_HOST -Dhttp.proxyPort=$HTTP_PROXY_PORT -Dhttps.proxyHost=$HTTP_PROXY_HOST -Dhttps.proxyPort=$HTTP_PROXY_PORT"
     SBT_OPTS="-Dhttp.proxyHost=$HTTP_PROXY_HOST -Dhttp.proxyPort=$HTTP_PROXY_PORT -Dhttps.proxyHost=$HTTP_PROXY_HOST -Dhttps.proxyPort=$HTTP_PROXY_PORT"
+    sed -i "s/<active>disable</active>/<active>enable</active>/g" ~/.m2/settings.xml
+    sed -i "s/HTTP_PROXY_HOST/$HTTP_PROXY_HOST/g" ~/.m2/settings.xml
+    sed -i "s/8888/$HTTP_PROXY_PORT/g" ~/.m2/settings.xml
     # metal and bloop should use java11
     # metal should start after this done
     mkdir -p ~/.bloop && cat << EOF > ~/.bloop/bloop.json
@@ -24,6 +27,7 @@ EOF
     # mvn generate-sources ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut
     # kill -9 `jps | grep -v Jps | awk '{print $1}'`
 fi
+echo "export MAVEN_OPTS=\"-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g $MAVEN_OPTS\"" >> ~/.bashrc
 echo "export JAVA_OPTS=\"$JAVA_OPTS\"" >> ~/.bashrc
 echo "export SBT_OPTS=\"$SBT_OPTS\"" >> ~/.bashrc
 

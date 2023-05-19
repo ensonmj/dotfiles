@@ -4,12 +4,6 @@
 
 # alias b := build
 
-# maven option
-# -e Detailed exception
-# -U forced update
-# -DskipTests does not execute test cases, but compiles test case classes to generate corresponding class files under target/test classes.
-# -Dmaven.test.skip=true, do not execute test cases or compile test case classes.Using maven. test. skip not only skips running unit tests, but also skips compiling test code.
-
 default:
     @just --justfile {{justfile()}} --list
 
@@ -81,6 +75,25 @@ merge-compile-cmds:
     jq -s '.[0] + .[1]' /workspaces/gluten/cpp/build/compile_commands.json /workspaces/gluten/ep/build-velox/build/velox_ep/_build/debug/compile_commands.json > compile_commands.json
     jq -s '.[0] + .[1]' /workspaces/gluten/cpp/build/compile_commands.json /workspaces/gluten/ep/build-arrow/build/arrow_ep/cpp/build/compile_commands.json > compile_commands.json
 
+# maven option
+# -e Detailed exception
+# -o/--offline offline mode
+# -U forced update
+# -T 2c Using two threads per CPU core for parallel
+# -DskipTests does not execute test cases, but compiles test case classes to generate corresponding class files under target/test classes.
+# -Dmaven.test.skip=true, do not execute test cases or compile test case classes.Using maven. test. skip not only skips running unit tests, but also skips compiling test code.
+# -pl makes Maven build only specified modules and not the whole project.
+# -am makes Maven figure out what modules out target depends on and build them too.
+mvn MODULE PHASE="install":
+    mvn {{PHASE}} -pl {{MODULE}} -am --offline -T 2C -Pspark-3.2 -Pbackends-velox -Pspark-ut
+    
+# To see which profile will activate in a certain build, use the maven-help-plugin.
+active-profile:
+    mvn help:active-profiles -Pspark-3.2 -Pbackends-velox -Pspark-ut -Doutput=active-profile.txt
+
+effective-pom:
+    mvn help:effective-pom -Pspark-3.2 -Pbackends-velox -Pspark-ut -Doutput=effective-pom.txt
+
 force-download:
     mvn dependency:purge-local-repository clean install -Pbackends-velox -Pspark-3.2 -Pspark-ut -DskipTests
 
@@ -88,7 +101,7 @@ clear-lastupdate:
     fd lastUpdated ~/.m2 -x rm
 
 build-java VERSION="3.2":
-    mvn clean install -Pspark-{{VERSION}} -Pbackends-velox -Pspark-ut -DskipTests
+    mvn install -T 2C -Pspark-{{VERSION}} -Pbackends-velox -Pspark-ut -DskipTests
 
 bloop:
     rm -rf .bloop .metals ~/.cache/coursier ~/.cache/metals
@@ -113,11 +126,11 @@ test-tpcds:
     cd -
 
 ut:
-    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToExclude=org.apache.spark.tags.ExtendedSQLTest
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -T 2C -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToExclude=org.apache.spark.tags.ExtendedSQLTest
 ut-slow:
-    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToInclude=org.apache.spark.tags.ExtendedSQLTest
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -T 2C -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToInclude=org.apache.spark.tags.ExtendedSQLTest
 ut33:
-    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -Pspark-3.3 -Pbackends-velox -Pspark-ut
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean install -T 2C -Pspark-3.3 -Pbackends-velox -Pspark-ut
 
 test NAME:
     JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn -q test -T 200 -Pspark-3.2 -Pspark-ut -Pbackends-velox -Dorg.slf4j.simpleLogger.defaultLogLevel=warn -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -Dtests='{{NAME}}'

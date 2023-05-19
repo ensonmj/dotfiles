@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <interactiveMode>true</interactiveMode>
+  <offline>false</offline>
+  <!-- set proxy in MAVEN_OPTS -->
+  <!-- <proxies>
+    <proxy>
+      <id>httpproxy</id>
+      <active>disable</active>
+      <protocol>http</protocol>
+      <host>HTTP_PROXY_HOST</host>
+      <port>8888</port>
+    </proxy>
+    <proxy>
+      <id>httpsproxy</id>
+      <active>disable</active>
+      <protocol>https</protocol>
+      <host>HTTP_PROXY_HOST</host>
+      <port>8888</port>
+    </proxy>
+  </proxies> -->
+  <!-- 仓库的优先级：本地仓库 > settings 中的 profile > pom 中的 repository > mirror -->
+  <mirrors>
+    <!-- <mirror> -->
+      <!-- <id>aliyun-maven</id> -->
+      <!-- <name>阿里云公共仓库</name> -->
+
+      <!-- 只镜像中央仓库 -->
+      <!-- <mirrorOf>central</mirrorOf> -->
+      <!-- <url>https://maven.aliyun.com/repository/central</url> -->
+
+      <!-- 镜像所有仓库 -->
+      <!--<mirrorOf>*</mirrorOf>-->
+      <!--<url>https://maven.aliyun.com/repository/public</url>-->
+    <!-- </mirror> -->
+    <mirror>
+      <id>huaweicloud</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://mirrors.huaweicloud.com/repository/maven/</url>
+    </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <id>huaweicloud</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <!-- <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+      </properties> -->
+      <repositories>
+        <repository>
+          <id>huaweicloud</id>
+          <url>https://repo.huaweicloud.com/repository/maven/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </snapshots>
+        </repository>
+        <repository>
+          <id>spring</id>
+          <url>https://maven.aliyun.com/repository/spring</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </snapshots>
+        </repository>
+        <repository>
+          <id>maven2</id>
+          <url>https://repo1.maven.org/maven2/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>huaweicloud</activeProfile>
+  </activeProfiles>
+</settings>

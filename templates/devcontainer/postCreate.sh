@@ -16,6 +16,8 @@ if [ -n "$HTTP_PROXY" ]; then
     echo "https_proxy=$HTTP_PROXY" >> ~/.wgetrc
 fi
 
+sudo apt update && sudo apt install -y python3-neovim
+
 # should prepare ~/.profile ~/.bashrc ~/.zshrc, postCreate*.sh will modify them
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/ensonmj/dotfiles.git "$HOME/.dotfiles"
