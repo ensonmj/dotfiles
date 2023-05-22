@@ -66,11 +66,6 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 # export DISPLAY=$(host `hostname` | grep -oP '(\s)\d+(\.\d+){3}' | tail -1 | awk '{ print $NF }' | tr -d '\r'):0
 # export LIBGL_ALWAYS_INDIRECT=1
 # }}}
-export HTTP_PROXY_HOST=child-prc.intel.com
-export HTTP_PROXY_PORT=913
-export STORAGE=/mnt/pmem0/majian/gluten
-export http_proxy=http://child-prc.intel.com:913
-export https_proxy=http://child-prc.intel.com:913
 
 # set PATH so it includes user's private bin if it exists
 [[ -d $HOME/bin ]] && export PATH="$HOME/bin:$PATH"
