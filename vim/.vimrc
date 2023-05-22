@@ -63,10 +63,6 @@ set ambiwidth=double
 " View
 " ----------------------------------------------------
 "{{{
-if has('nvim')
-    set termguicolors
-endif
-
 " Height of command line.
 set cmdheight=2
 
@@ -195,7 +191,6 @@ set autowrite
 " Don't complete from other buffer.
 " set complete=.
 "set complete=.,w,b,i,t
-" ncm2 recomend
 " set completeopt=menuone,noinsert,noselect
 
 set smarttab
@@ -336,50 +331,6 @@ func! QfConvUC()
 endfunc
 " }}}
 " ====================================================
-" Ctags"{{{
-" Usage:ctags -R --c++-kinds=+p --fields=+ialS --extra=+q "$@"(文件目录)
-" --c++-kinds=+p ：为C++文件增加函数原型的标签
-" --fields=+ialS ：在标签文件中加入继承信息(i)、类成员的访问控制信息(a)
-"                  源文件包含tag(l)[用于echofunc.vim]、以及函数的指纹(S)
-" --extra=+q     ：为标签增加类修饰符。注意，如果没有此选项，将不能对类成员补全
-" map <ctrl>+F12 to generate ctags for current folder:
-map <C-F12> :!ctags -R --c-kinds=+p --c++-kinds=+p --fields=+ialS --extra=+q . <CR><CR>
-"}}}
-" ----------------------------------------------------
-" Cscope"{{{
-" 需要添加环境变量
-if has("cscope")
-    set cscopetag   " 使支持用 Ctrl+]  和 Ctrl+t 快捷键在代码间跳来跳去
-    " check cscope for definition of a symbol before checking ctags: set to 1
-    " if you want the reverse search order
-    set cscopetagorder=1
-
-    if has("vim_starting")
-        let s:cs_db = expand("$HOME/cscope.out")
-        " add any cscope database in current directory
-        if filereadable(s:cs_db)
-            cs add s:cs_db
-            " else add the database pointed to by environment variable
-        elseif $CSCOPE_DB != ""
-            cs add $CSCOPE_DB
-        endif
-        unlet s:cs_db
-    endif
-
-    " show msg when any other cscope db added
-    set cscopeverbose
-
-    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-    nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-endif
-"}}}
-" ====================================================
 " Plugins {{{
 " ----------------------------------------------------
 if has('win32') || has('win64')
@@ -392,16 +343,7 @@ if empty(glob(s:plug_dst))
     let s:plug_src = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
     execute printf('!curl -fLo %s --create-dirs %s', s:plug_dst, s:plug_src)
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-    if has('nvim')
-        silent !pip3 install --upgrade neovim
-    endif
 endif
-
-" helper function to avoid PlugClean to remove plug
-function! Cond(cond, ...)
-    let opts = get(a:000, 0, {})
-    return a:cond ? opts : extend(opts, {'on': [], 'for': []})
-endfunction
 
 call plug#begin()
 
@@ -417,23 +359,23 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 
 " Go {{{
 " vim-go {{{
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'}
-" Disable auto installation of binaries
-let g:go_disable_autoinstall = 1
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'}
+" " Disable auto installation of binaries
+" let g:go_disable_autoinstall = 1
 
-let g:go_fmt_command = "goimports"
-let g:go_fmt_fail_silently = 1
-let g:go_metalinter_autosave = 1
-let g:to_auto_type_info = 1
-let g:go_list_type = "quickfix"
+" let g:go_fmt_command = "goimports"
+" let g:go_fmt_fail_silently = 1
+" let g:go_metalinter_autosave = 1
+" let g:to_auto_type_info = 1
+" let g:go_list_type = "quickfix"
 
-" highlight
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
+" " highlight
+" let g:go_highlight_functions = 1
+" let g:go_highlight_methods = 1
+" let g:go_highlight_fields = 1
+" let g:go_highlight_types = 1
+" let g:go_highlight_operators = 1
+" let g:go_highlight_build_constraints = 1
 " }}}
 " }}}
 
@@ -449,10 +391,6 @@ Plug 'tmhedberg/SimpylFold'
 let g:SimpylFold_docstring_preview = 1
 " }}}
 Plug 'sillybun/autoformatpythonstatement', {'do': './install.sh'}
-"}}}
-
-" Ruby {{{
-Plug 'vim-ruby/vim-ruby'
 "}}}
 
 " Javascript {{{
@@ -477,7 +415,6 @@ Plug 'ap/vim-css-color'
 let g:ccsColorVimDoNotMessMyUpdatetime = 1
 " }}}
 Plug 'hail2u/vim-css3-syntax'
-Plug 'posva/vim-vue'
 "}}}
 
 " Text-object {{{
@@ -559,8 +496,6 @@ let g:echodoc_enable_at_startup = 1
 
 " Misc tools {{{
 Plug 'toupeira/vim-desertink' " colorscheme
-Plug 'joshdick/onedark.vim' " colorscheme
-Plug 'jeffkreeftmeijer/vim-dim' " colorscheme
 Plug 'liuchengxu/vim-which-key'
 Plug 'Shougo/junkfile.vim' " Create scratch files with filetype
 
@@ -571,23 +506,6 @@ Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-scripts/matchit.zip'
 Plug 'vim-scripts/a.vim'
-" tags {{{
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'skywind3000/gutentags_plus'
-Plug 'skywind3000/vim-preview'
-" enable gtags module
-let g:gutentags_modules = ['ctags', 'cscope']
-" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-let g:gutentags_project_root = ['.root', '.git', '.svn', '.hg', '.project']
-" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
-let g:gutentags_cache_dir = expand('~/.cache/tags')
-" 所生成的数据文件的名称
-" let g:gutentags_ctags_tagfile = '.tags'
-" 配置 ctags 的参数
-let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
-let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
-"}}}
 "}}}
 
 " ale linter {{{
@@ -597,105 +515,6 @@ let g:ale_echo_msg_format = '[%linter%] %code: %%s'
 let g:airline#extensions#ale#enabled = 1
 "}}}
 
-" Autocompletion {{{
-" Plug 'ervandew/supertab'
-" let g:SuperTabDefaultCompletionType = "context"
-" let g:SuperTabCrMapping = 1
-" ncm2 {{{
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc', Cond(!has('nvim'))
-Plug 'ncm2/ncm2'
-augroup MyAutoCmd
-    autocmd BufEnter  *  call ncm2#enable_for_buffer()
-
-    " enable auto complete for `<backspace>`, `<c-w>` keys.
-    " known issue https://github.com/ncm2/ncm2/issues/7
-    " autocmd TextChangedI * call ncm2#auto_trigger()
-augroup END
-
-" snippet {{{
-Plug 'honza/vim-snippets'
-Plug 'SirVer/ultisnips'
-" We don't really want UltiSnips to map these two, but there's no option for
-" that so just make it map them to a <Plug> key.
-let g:UltiSnipsExpandTrigger       = "<Plug>(ultisnips_expand_or_jump)"
-let g:UltiSnipsJumpForwardTrigger  = "<Plug>(ultisnips_expand_or_jump)"
-" Let UltiSnips bind the jump backward trigger as there's nothing special about it.
-let g:UltiSnipsJumpBackwardTrigger = "<S-Tab>"
-
-Plug 'ncm2/ncm2-ultisnips'
-"}}}
-
-" language server {{{
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'ncm2/ncm2-vim-lsp'
-" if executable('go-langserver')
-"     au User lsp_setup call lsp#register_server({
-"                 \ 'name': 'go-langserver',
-"                 \ 'cmd': {server_info->['go-langserver', '-gocodecompletion']},
-"                 \ 'whitelist': ['go'],
-"                 \ })
-" else
-"     silent !go get -u github.com/sourcegraph/go-langserver
-" endif
-" if executable('pyls')
-"     au User lsp_setup call lsp#register_server({
-"                 \ 'name': 'pyls',
-"                 \ 'cmd': {server_info->['pyls']},
-"                 \ 'whitelist': ['python'],
-"                 \ 'workspace_config': {'pyls': {'plugins': {'pydocstyle': {'enabled': v:true}}}},
-"                 \ })
-" else
-"     silent !pip install --user --upgrade python-language-server
-" endif
-" if executable('flow')
-"     au User lsp_setup call lsp#register_server({
-"                 \ 'name': 'flow',
-"                 \ 'cmd': {server_info->['flow', 'lsp']},
-"                 \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), '.flowconfig'))},
-"                 \ 'whitelist': ['javascript', 'javascript.jsx'],
-"                 \ })
-" else
-"     silent !npm install -g flow-bin
-" endif
-" if executable('css-languageserver')
-"     au User lsp_setup call lsp#register_server({
-"                 \ 'name': 'css-languageserver',
-"                 \ 'cmd': {server_info->[&shell, &shellcmdflag, 'css-languageserver --stdio']},
-"                 \ 'whitelist': ['css', 'less', 'sass'],
-"                 \ })
-" else
-"     silent !npm install -g vscode-css-languageserver-bin
-" endif
-" if executable('bash-language-server')
-"     au User lsp_setup call lsp#register_server({
-"                 \ 'name': 'bash-language-server',
-"                 \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
-"                 \ 'whitelist': ['sh'],
-"                 \ })
-" else
-"     silent !npm i -g bash-language-server
-" endif
-"}}}
-
-" source {{{
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-tmux'
-Plug 'ncm2/ncm2-path'
-Plug 'ncm2/ncm2-jedi', {'do': 'pip3 install --upgrade jedi'} "python
-Plug 'ncm2/ncm2-go', {'do': 'go get -u github.com/mdempsky/gocode'} "go
-Plug 'ncm2/ncm2-cssomni' "css
-Plug 'ncm2/ncm2-tern',  {'do': 'npm install'} "js
-Plug 'ncm2/ncm2-tagprefix'
-" }}}
-
-" subscope {{{
-Plug 'ncm2/ncm2-html-subscope'
-Plug 'ncm2/ncm2-markdown-subscope'
-"}}}
-" }}}
-
 call plug#end()
 " }}}
 " ====================================================
@@ -703,8 +522,6 @@ call plug#end()
 " ====================================================
 " colorscheme {{{
 colorscheme desertink
-" colorscheme onedark
-" colorscheme dim
 " }}}
 " ====================================================
 " Key map
@@ -716,7 +533,6 @@ let maplocalleader = ","
 " vim-which-key {{{
 " Define prefix dictionary
 " let g:which_key_map =  {}
-
 nnoremap <silent> <leader>      :<c-u>WhichKey '<Space>'<CR>
 nnoremap <silent> <localleader> :<c-u>WhichKey  ','<CR>
 " }}}
@@ -758,35 +574,6 @@ vmap <Leader>a: :Tabularize /:\zs<CR>
 " vmap <C-SPACE> <Plug>(wildfire-water)
 " " quick selection
 " nmap <Leader>s <Plug>(wildfire-quick-select)
-" }}}
-
-" NCM+UltiSnips function parameter expansion {{{
-autocmd User Ncm2PopupOpen set completeopt=noinsert,menuone,noselect
-autocmd User Ncm2PopupClose set completeopt=menuone
-
-" Try expanding snippet or jumping with UltiSnips and return <Tab> if nothing
-" worked.
-function! UltiSnipsExpandOrJumpOrTab()
-  call UltiSnips#ExpandSnippetOrJump()
-  if g:ulti_expand_or_jump_res > 0
-    return ""
-  else
-    return "\<Tab>"
-  endif
-endfunction
-
-" First try expanding with ncm2_ultisnips. This does both LSP snippets and
-" normal snippets when there's a completion popup visible.
-inoremap <silent> <expr> <Tab> ncm2_ultisnips#expand_or("\<Plug>(ultisnips_try_expand)")
-
-" If that failed, try the UltiSnips expand or jump function. This handles
-" short snippets when the completion popup isn't visible yet as well as
-" jumping forward from the insert mode. Writes <Tab> if there is no special
-" action taken.
-inoremap <silent> <Plug>(ultisnips_try_expand) <C-R>=UltiSnipsExpandOrJumpOrTab()<CR>
-
-" Select mode mapping for jumping forward with <Tab>.
-snoremap <silent> <Tab> <Esc>:call UltiSnips#ExpandSnippetOrJump()<cr>
 " }}}
 
 augroup MyAutoCmd
