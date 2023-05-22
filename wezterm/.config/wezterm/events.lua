@@ -1,10 +1,10 @@
 local wezterm = require("wezterm")
 
 -- Initial startup
-wezterm.on("gui-startup", function(cmd)
-  local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
-  window:gui_window():maximize()
-end)
+-- wezterm.on("gui-startup", function(cmd)
+--   local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
+--   window:gui_window():maximize()
+-- end)
 
 -- Equivalent to POSIX basename(3)
 -- Given "/foo/bar" returns "bar"

@@ -22,9 +22,9 @@ config.warn_about_missing_glyphs = false
 config.freetype_load_target = "Light"
 config.freetype_render_target = "HorizontalLcd"
 config.foreground_text_hsb = {
-    hue = 1.0,
-    saturation = 1.0,
-    brightness = 0.9,  -- default is 1.0
+  hue = 1.0,
+  saturation = 1.0,
+  brightness = 0.9, -- default is 1.0
 }
 config.initial_rows = 40
 config.initial_cols = 120
@@ -61,10 +61,12 @@ config.colors = {
 }
 
 -- Keys
--- config.disable_default_key_binding = true
+config.disable_default_key_bindings = true
 config.use_dead_keys = false -- Allow using ^ with single key press.
-config.leader = { key = "a", mods = "CTRL" }
-config.keys = require("keys")
+local key_tbl = require("keys")
+config.leader = key_tbl.leader
+config.keys = key_tbl.keys
+config.key_tables = key_tbl.key_tables
 
 -- Mouse
 config.mouse_bindings = require("mouse")
