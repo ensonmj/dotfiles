@@ -12,6 +12,19 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 end
 
 config.color_scheme = "Dracula (Official)"
+config.colors = {
+  selection_bg = "#FCE8C3",
+  selection_fg = "#121212",
+  tab_bar = {
+    background = "#121212",
+    active_tab = { bg_color = "#121212", fg_color = "#FCE8C3" },
+    -- inactive_tab = {bg_color = "#222222", fg_color = "#808080"},
+    -- inactive_tab_hover = {bg_color = "#EEE8D5",fg_color = "#909090", italic = false},
+    -- new_tab = {bg_color = "#121212", fg_color = "#FCE8C3", intensity = "Bold"},
+    -- new_tab_hover = {bg_color = "#1C1B19", fg_color = "#121212", intensity = "Bold"},
+  },
+}
+
 -- config.line_height = 1.1
 -- config.cell_width = 0.9
 config.font_size = 11
@@ -49,16 +62,6 @@ config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 20
-config.colors = {
-  tab_bar = {
-    background = "#121212",
-    active_tab = { bg_color = "#121212", fg_color = "#FCE8C3" },
-    -- inactive_tab = {bg_color = "#222222", fg_color = "#808080"},
-    -- inactive_tab_hover = {bg_color = "#EEE8D5",fg_color = "#909090", italic = false},
-    -- new_tab = {bg_color = "#121212", fg_color = "#FCE8C3", intensity = "Bold"},
-    -- new_tab_hover = {bg_color = "#1C1B19", fg_color = "#121212", intensity = "Bold"},
-  },
-}
 
 -- Keys
 config.disable_default_key_bindings = true
