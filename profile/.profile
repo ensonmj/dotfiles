@@ -134,6 +134,19 @@ if [ -d $HOME/.rbenv ]; then
     eval "$(rbenv init -)"
 fi
 
+#dotenv
+# https://gist.github.com/mihow/9c7f559807069a03e302605691f85572
+# /^\s*#/d removes comments (strings that start with #)
+# /^\s*$/d removes empty strings, including whitespace
+# s/\r//g remove carriage return(\r)
+# "s/'/'\\\''/g" replaces every single quote with '\'', which is a trick sequence in bash to produce a quote :)
+# "s/=\(.*\)/='\1'/g" converts every a=b into a='b'
+[ -f $HOME/.env ] && export $(echo $(cat $HOME/.env | sed \
+    -e '/^\s*#/d;/^\s*$/d' \
+    -e 's/\r//g' \
+    -e "s/'/'\\\''/g" \
+    -e "s/=\(.*\)/='\1'/g" \
+    | xargs) | envsubst)
 # }}}
 
 # self-defined functions {{{
@@ -146,6 +159,19 @@ function ostype() {
     msys|cygwin)   echo "WINDOWS" ;;
     *)             echo "unknown: $OSTYPE" ;;
   esac
+}
+
+function envdo() {
+    env $(cat .env) $@
+}
+
+function loadenv() {
+[ -f $1 ] && export $(echo $(cat $1| sed \
+    -e '/^\s*#/d;/^\s*$/d' \
+    -e 's/\r//g' \
+    -e "s/'/'\\\''/g" \
+    -e "s/=\(.*\)/='\1'/g" \
+    | xargs) | envsubst)
 }
 
 function add_PATH() {
