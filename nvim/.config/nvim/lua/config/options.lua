@@ -4,6 +4,7 @@
 
 -- Leader key
 -- vim.g.mapleader = ","
+vim.o.mouse = "a"
 
 -- Color scheme
 vim.o.termguicolors = true
@@ -50,7 +51,6 @@ vim.o.display = "lastline,uhex"
 
 -- Use vertical diff format
 vim.opt.diffopt:append("vertical")
--- }}}
 
 -- Maintain a current line at the time of movement as much as possible.
 vim.o.nostartofline = true
@@ -105,34 +105,101 @@ vim.opt.wildignore:append({ "*~", "*.swp", "*.swo", "*.tmp" })
 vim.opt.wildignore:append({ ".git", ".hg", ".svn" })
 -- " Can supplement a tag in a command-line.
 vim.o.wildoptions = "tagfile"
+-- }}}
 
-vim.o.smarttab = true
-vim.o.expandtab = true
-vim.o.textwidth = 120
-vim.o.smartindent = true
-vim.o.autoindent = true
-vim.o.cindent = true
-vim.o.shiftwidth = 4
-vim.o.softtabstop = 4
-vim.o.tabstop = 4
-
-vim.o.hlsearch = true
-vim.o.incsearch = true
+-- Search {{{
+-- Ignore the case of normal letters.
 vim.o.ignorecase = true
+-- If the search pattern contains upper case characters, override ignorecase option.
+vim.o.smartcase = true
 
-vim.o.showmatch = true
-vim.o.matchtime = 1
+-- Enable incremental search.
+vim.o.incsearch = true
+-- Enable highlight search result.
+vim.o.hlsearch = true
 
-vim.o.hidden = true
-vim.o.updatetime = 100
-vim.o.laststatus = 2
-vim.o.history = 500
-vim.o.backup = false
-vim.o.swapfile = false
-vim.o.foldenable = true
+-- Searches wrap around the end of the file.
+vim.o.wrapscan = true
+-- }}}
+
+-- Edit {{{
+-- Set to auto read when a file is changed from the outside
 vim.o.autoread = true
 vim.o.autowrite = true
-vim.o.mouse = "a"
+
+-- Don't complete from other buffer.
+vim.o.complete=.
+-- vim.o.complete=.,w,b,i,t
+-- vim.o.completeopt=menuone,noinsert,noselect
+
+vim.o.textwidth = 120
+vim.o.smarttab = true
+vim.o.expandtab = true
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.autoindent = true
+vim.o.smartindent = true
+vim.o.cindent = true
+vim.o.shiftwidth = 4
+
+-- yank to clipboard
+-- if has("clipboard")
+--     set clipboard=unnamed " copy to the system clipboard
+--
+--     if has("unnamedplus") " X11 support
+--         set clipboard+=unnamedplus
+--     endif
+-- endif
+vim.o.clipboard = "unnamed,unnamedplus"
+
+-- allow backspacing over everything in insert mode
+vim.o.backspace="indent,eol,start"
+
+-- Highlight parenthesis.
+vim.o.showmatch = true
+vim.o.matchtime = 3
+-- Highlight when CursorMoved.
+-- set cpoptions-=m
+vim.opt.cpoptions:remove("m")
+-- Highlight <>.
+vim.opt.matchpairs:append({"<",">"})
+
+-- When on a buffer becomes hidden when it is abandoned.
+vim.o.hidden = true
+
+-- 在插入模式按回车时，自动插入当前注释前导符。
+vim.opt.formatoptions:append("r")
+-- Enable multibyte format.
+vim.opt.formatoptions:append({"m", "M"})
+
+-- Ignore case on insert completion.
+vim.o.infercase = true
+
+-- Enable folding.
+vim.o.foldenable = true
+-- 设置折叠方式
+vim.o.foldmethod="indent"
+-- set foldmethod=syntax " too slow
+-- set foldmethod=marker
+-- Show folding level.
+vim.o.foldcolumn=3
+vim.o.foldlevel=99
+
+-- Set undofile
+vim.o.undofile = true
+vim.o.backup = false
+vim.o.swapfile = false
+vim.o.updatetime = 100
+
+-- " 自动向当前文件的上级查找tag文件，直到找到为止
+vim.o.tags="./.tags;,.tags"
+
+-- Set keyword help.
+-- set keywordprg=:help
+
+-- 记录的历史命令数目
+vim.o.history=1000
+-- }}}
 
 -- filetype
 local cmd = vim.cmd
@@ -149,3 +216,5 @@ cmd([[ autocmd FileType javascript,javascript.jsx,typescript setlocal tabstop=2 
 cmd([[ autocmd FileType NvimTree setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=0 ]])
 cmd([[ autocmd BufNewFile,BufRead *.proto setfiletype proto ]])
 cmd([[ autocmd FileType proto setlocal shiftwidth=4 expandtab ]])
+
+-- vim: foldmethod=marker foldlevel=0
