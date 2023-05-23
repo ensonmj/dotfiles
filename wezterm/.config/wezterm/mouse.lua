@@ -7,9 +7,7 @@ return {
   {
     event = { Up = { streak = 1, button = "Left" } },
     mods = "NONE",
-    action = act({
-      CompleteSelection = "PrimarySelection",
-    }),
+    action = act.CompleteSelection("PrimarySelection"),
   },
   -- select to copy(not wezterm copy mode), and paste if don't select anything
   {
@@ -21,7 +19,7 @@ return {
         window:perform_action(act.CopyTo("ClipboardAndPrimarySelection"), pane)
         window:perform_action(act.ClearSelection, pane)
       else
-        window:perform_action(act({ PasteFrom = "Clipboard" }), pane)
+        window:perform_action(act.PasteFrom("Clipboard"), pane)
       end
     end),
   },
@@ -29,6 +27,13 @@ return {
   {
     event = { Up = { streak = 1, button = "Left" } },
     mods = "CTRL",
-    action = "OpenLinkAtMouseCursor",
+    action = act.OpenLinkAtMouseCursor,
+  },
+  -- Disable the 'Down' event of CTRL-Click to avoid weird program behaviors
+  -- https://wezfurlong.org/wezterm/config/mouse.html?highlight=Ctrl-click#gotcha-on-binding-an-up-event-only
+  {
+    event = { Down = { streak = 1, button = "Left" } },
+    mods = "CTRL",
+    action = act.Nop,
   },
 }
