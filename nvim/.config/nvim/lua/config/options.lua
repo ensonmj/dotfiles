@@ -31,7 +31,7 @@ vim.o.cursorline = true
 -- vim.o.cmdheight = 0
 vim.opt.list = true
 vim.opt.listchars = {
-  tab = "▸\\-",
+  tab = "▸ ",
   trail = "-",
   extends = "❯",
   precedes = "❮",
@@ -128,7 +128,7 @@ vim.o.autoread = true
 vim.o.autowrite = true
 
 -- Don't complete from other buffer.
-vim.o.complete=.
+vim.o.complete = "."
 -- vim.o.complete=.,w,b,i,t
 -- vim.o.completeopt=menuone,noinsert,noselect
 
@@ -153,7 +153,7 @@ vim.o.shiftwidth = 4
 vim.o.clipboard = "unnamed,unnamedplus"
 
 -- allow backspacing over everything in insert mode
-vim.o.backspace="indent,eol,start"
+vim.o.backspace = "indent,eol,start"
 
 -- Highlight parenthesis.
 vim.o.showmatch = true
@@ -162,7 +162,7 @@ vim.o.matchtime = 3
 -- set cpoptions-=m
 vim.opt.cpoptions:remove("m")
 -- Highlight <>.
-vim.opt.matchpairs:append({"<",">"})
+vim.opt.matchpairs:append("<:>")
 
 -- When on a buffer becomes hidden when it is abandoned.
 vim.o.hidden = true
@@ -170,7 +170,7 @@ vim.o.hidden = true
 -- 在插入模式按回车时，自动插入当前注释前导符。
 vim.opt.formatoptions:append("r")
 -- Enable multibyte format.
-vim.opt.formatoptions:append({"m", "M"})
+vim.opt.formatoptions:append({ "m", "M" })
 
 -- Ignore case on insert completion.
 vim.o.infercase = true
@@ -178,12 +178,12 @@ vim.o.infercase = true
 -- Enable folding.
 vim.o.foldenable = true
 -- 设置折叠方式
-vim.o.foldmethod="indent"
+vim.o.foldmethod = "indent"
 -- set foldmethod=syntax " too slow
 -- set foldmethod=marker
 -- Show folding level.
-vim.o.foldcolumn=3
-vim.o.foldlevel=99
+vim.o.foldcolumn = "3"
+vim.o.foldlevel = 99
 
 -- Set undofile
 vim.o.undofile = true
@@ -192,13 +192,13 @@ vim.o.swapfile = false
 vim.o.updatetime = 100
 
 -- " 自动向当前文件的上级查找tag文件，直到找到为止
-vim.o.tags="./.tags;,.tags"
+vim.o.tags = "./.tags;,.tags"
 
 -- Set keyword help.
 -- set keywordprg=:help
 
 -- 记录的历史命令数目
-vim.o.history=1000
+vim.o.history = 1000
 -- }}}
 
 -- filetype
