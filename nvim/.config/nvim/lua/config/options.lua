@@ -143,14 +143,8 @@ vim.o.cindent = true
 vim.o.shiftwidth = 4
 
 -- yank to clipboard
--- if has("clipboard")
---     set clipboard=unnamed " copy to the system clipboard
---
---     if has("unnamedplus") " X11 support
---         set clipboard+=unnamedplus
---     endif
--- endif
-vim.o.clipboard = "unnamed,unnamedplus"
+-- nvim depends on external clipboard tool, such as xclip/xsel
+vim.o.clipboard = "unnamedplus"
 
 -- allow backspacing over everything in insert mode
 vim.o.backspace = "indent,eol,start"
@@ -188,6 +182,7 @@ vim.o.foldlevel = 99
 -- Set undofile
 vim.o.undofile = true
 vim.o.backup = false
+vim.o.writebackup = false
 vim.o.swapfile = false
 vim.o.updatetime = 100
 
