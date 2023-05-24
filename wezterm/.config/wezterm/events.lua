@@ -1,17 +1,11 @@
 local wezterm = require("wezterm")
+local utils = require("utils")
 
 -- Initial startup
 -- wezterm.on("gui-startup", function(cmd)
 --   local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
 --   window:gui_window():maximize()
 -- end)
-
--- Equivalent to POSIX basename(3)
--- Given "/foo/bar" returns "bar"
--- Given "c:\\foo\\bar" returns "bar"
-local function basename(s)
-  return string.gsub(s, "(.*[/\\])(.*)", "%2")
-end
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
@@ -74,7 +68,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   local pid = SUP_IDX[tab.active_pane.pane_index + 1]
 
   local process_name = tab.active_pane.foreground_process_name
-  local exec_name = basename(process_name):gsub("%.exe$", "")
+  local exec_name = utils.basename(process_name):gsub("%.exe$", "")
   local title = " " .. exec_name .. " "
 
   local background = "#4E4E4E"
@@ -118,24 +112,12 @@ wezterm.on("update-right-status", function(window, pane)
   end
 
   local cwd_uri = pane:get_current_working_dir()
-  if cwd_uri then
-    cwd_uri = cwd_uri:sub(8) -- remove "file://"
-    local slash = cwd_uri:find("/")
-    if slash then
-      hostname = cwd_uri:sub(1, slash - 1)
-      local dot = hostname:find("[.]")
-      if dot then
-        hostname = hostname:sub(1, dot - 1)
-      end
-      table.insert(cells, hostname)
-
-      cwd = cwd_uri:sub(slash)
-      local home_dir = os.getenv("HOME")
-      -- shorten the path by using ~ as $HOME.
-      local cwd = string.gsub(cwd, home_dir, "~")
-
-      table.insert(cells, cwd)
-    end
+  local hostname, cwd = utils.split_hostname_cwd(cwd_uri)
+  if hostname then
+    table.insert(cells, hostname)
+  end
+  if cwd then
+    table.insert(cells, cwd)
   end
 
   local date = wezterm.strftime("%a %b %-d %H:%M")
@@ -151,7 +133,7 @@ wezterm.on("update-right-status", function(window, pane)
   -- The filled in variant of the < symbol
   local SOLID_LEFT_ARROW = wezterm.nerdfonts.pl_right_hard_divider
   -- The filled in variant of the > symbol
-  local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
+  -- local SOLID_RIGHT_ARROW = wezterm.nerdfonts.pl_left_hard_divider
 
   local text_fg = "#c0c0c0"
   local elements = {}
@@ -160,7 +142,7 @@ wezterm.on("update-right-status", function(window, pane)
   table.insert(elements, { Foreground = { Color = "#3c1361" } })
   table.insert(elements, { Text = SOLID_LEFT_ARROW })
 
-  function push(text, is_last)
+  local function push(text, is_last)
     local cell_no = num_cells + 1
     table.insert(elements, { Foreground = { Color = text_fg } })
     table.insert(elements, { Background = { Color = COLORS[cell_no] } })
@@ -192,7 +174,7 @@ wezterm.on("open-uri", function(window, pane, uri)
   end
 end)
 
-wezterm.on("toggle-opacity", function(window, pane)
+wezterm.on("toggle-opacity", function(window)
   local overrides = window:get_config_overrides() or {}
   if not overrides.window_background_opacity then
     overrides.window_background_opacity = 0.5
