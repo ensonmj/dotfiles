@@ -26,7 +26,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates tzdata locales sudo
+    ca-certificates tzdata locales sudo zsh
 
 ARG TIMEZONE=PRC
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
@@ -37,7 +37,7 @@ RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
 
 RUN groupadd -g 1000 vscode && \
-  useradd -u 1000 -m -g vscode -s /bin/bash vscode && \
+  useradd -u 1000 -m -g vscode -s /usr/bin/zsh vscode && \
   echo "vscode ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/vscode
 
 # common softwares
@@ -45,7 +45,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends \
     build-essential curl git jq less net-tools stow tar unzip vim \
-    wget zip zsh
+    wget zip
 
 ARG CPP
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
