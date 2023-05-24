@@ -25,7 +25,7 @@ if [ ! -d "$HOME/.dotfiles" ]; then
     source $HOME/.dotfiles/install.sh
 fi
 # hack X11 forwarding
-echo "export DISPLAY=$(hostname):10" >> ~/.profile
+echo "export DISPLAY=$(hostname):10" >> ~/.env
 
 # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
