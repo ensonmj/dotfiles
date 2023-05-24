@@ -49,8 +49,8 @@
 	navigate = true # use n and N to move between diff sections
 	paging = always
 	true-color = always
-	hyperlinks = true
-	hyperlinks-file-link-format = "file-line://{path}:{line}"
+#	hyperlinks = true
+#	hyperlinks-file-link-format = "file-line://{path}:{line}"
 [delta "interactive"]
 	keep-plus-minus-markers = false
 [delta "unobtrusive-line-numbers"]
