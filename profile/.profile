@@ -142,7 +142,7 @@ fi
 [ -f $HOME/.env ] && while read -r LINE; do
     if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
         ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
-        eval "declare $ENV_VAR"
+        eval "export $ENV_VAR"
     fi
 done < $HOME/.env
 # }}}
@@ -167,7 +167,7 @@ function loadenv() {
     while read -r LINE; do
         if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
             ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
-            eval "declare $ENV_VAR"
+            eval "export $ENV_VAR"
         fi
     done < $1
 }
