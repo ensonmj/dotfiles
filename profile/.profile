@@ -241,13 +241,18 @@ function gitproxy() {
     local PORT="${3:-1080}"
     local ADDR="$PROTO://$HOST:$PORT"
 
-    # set git http(s) proxy
-    git config --global http.sslverify false
-    git config --global http.proxy "$ADDR"
-    git config --global https.proxy "$ADDR"
+    SSH_PROXY_PROTO="-X 5" # socks 5 for default
+    if [ "$PROTO" == "http" -o "$PROTO" == "https" ]; then
+        SSH_PROXY_PROTO="-X connect"
+
+        # set git http(s) proxy
+        git config --global http.sslverify false
+        git config --global http.proxy "$ADDR"
+        git config --global https.proxy "$ADDR"
+    fi
 
     # set git ssh proxy
-    local SSH_PROXY="ProxyCommand=nc -X 5 -x $HOST:$PORT %h %p"
+    local SSH_PROXY="ProxyCommand=nc $SSH_PROXY_PROTO -x $HOST:$PORT %h %p"
     git config --global core.sshCommand "ssh -o '$SSH_PROXY'"
 
     # only for 'github.com'
