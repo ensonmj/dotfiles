@@ -136,17 +136,15 @@ fi
 
 #dotenv
 # https://gist.github.com/mihow/9c7f559807069a03e302605691f85572
-# /^\s*#/d removes comments (strings that start with #)
-# /^\s*$/d removes empty strings, including whitespace
 # s/\r//g remove carriage return(\r)
 # "s/'/'\\\''/g" replaces every single quote with '\'', which is a trick sequence in bash to produce a quote :)
 # "s/=\(.*\)/='\1'/g" converts every a=b into a='b'
-[ -f $HOME/.env ] && export $(echo $(cat $HOME/.env | sed \
-    -e '/^\s*#/d;/^\s*$/d' \
-    -e 's/\r//g' \
-    -e "s/'/'\\\''/g" \
-    -e "s/=\(.*\)/='\1'/g" \
-    | xargs) | envsubst)
+[ -f $HOME/.env ] && while read -r LINE; do
+    if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
+        ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
+        eval "declare $ENV_VAR"
+    fi
+done < $HOME/.env
 # }}}
 
 # self-defined functions {{{
@@ -166,12 +164,12 @@ function envdo() {
 }
 
 function loadenv() {
-[ -f $1 ] && export $(echo $(cat $1| sed \
-    -e '/^\s*#/d;/^\s*$/d' \
-    -e 's/\r//g' \
-    -e "s/'/'\\\''/g" \
-    -e "s/=\(.*\)/='\1'/g" \
-    | xargs) | envsubst)
+    while read -r LINE; do
+        if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
+            ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
+            eval "declare $ENV_VAR"
+        fi
+    done < $1
 }
 
 function add_PATH() {
