@@ -7,7 +7,6 @@
 # ZSH_CACHE_DIR
 [[ -d $HOME/.zsh/cache ]] || mkdir -p "$HOME/.zsh/cache" && export ZSH_CACHE_DIR=$HOME/.zsh/cache
 
-# hack sdkman installer with this line: "$HOME/.sdkman/bin/sdkman-init.sh"
 # }}}
 
 # zplug {{{

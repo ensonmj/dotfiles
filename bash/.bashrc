@@ -42,7 +42,6 @@ fi
 [[ -f $HOME/.nvm/bash_completion ]] && source $HOME/.nvm/bash_completion
 [[ -f $HOME/.rbenv/completions/rbenv.bash ]] && source $HOME/.rbenv/completions/rbenv.bash
 
-# hack sdkman installer with this line: "$HOME/.sdkman/bin/sdkman-init.sh"
 # }}}
 
 # PS1 {{{

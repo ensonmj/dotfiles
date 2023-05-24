@@ -122,12 +122,6 @@ if [ -d $HOME/.nvm ]; then
     export NODE_PATH="$LP"
 fi
 
-#sdkman
-if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
-    export SDKMAN_DIR="$HOME/.sdkman"
-    source "$HOME/.sdkman/bin/sdkman-init.sh"
-fi
-
 #rbenv
 if [ -d $HOME/.rbenv ]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
