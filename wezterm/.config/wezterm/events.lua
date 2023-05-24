@@ -108,20 +108,25 @@ wezterm.on("update-right-status", function(window, pane)
   -- show which key table is active in the status area
   local name = window:active_key_table()
   if name then
-    table.insert(cells, name)
+    table.insert(cells, " " .. name)
+  end
+
+  local workspace = window:active_workspace()
+  if workspace ~= "default" then
+    table.insert(cells, " " .. workspace)
   end
 
   local cwd_uri = pane:get_current_working_dir()
   local hostname, cwd = utils.split_hostname_cwd(cwd_uri)
   if hostname then
-    table.insert(cells, hostname)
+    table.insert(cells, " " .. hostname) -- utf8.char(0xeb99)
   end
   if cwd then
-    table.insert(cells, cwd)
+    table.insert(cells, " " .. cwd)
   end
 
   local date = wezterm.strftime("%a %b %-d %H:%M")
-  table.insert(cells, date)
+  table.insert(cells, " " .. date)
 
   local COLORS = {
     "#3c1361",

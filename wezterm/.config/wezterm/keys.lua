@@ -6,14 +6,29 @@ return {
   keys = {
     -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
     { key = "a", mods = "LEADER|CTRL", action = act.SendString("\x01") },
-    { key = "Enter", mods = "ALT", action = act.ToggleFullScreen },
+    -- workspace
+    { key = "n", mods = "ALT", action = act.SwitchWorkspaceRelative(1) },
+    { key = "p", mods = "ALT", action = act.SwitchWorkspaceRelative(-1) },
+    { key = "l", mods = "ALT", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+    -- window
+    { key = "Enter", mods = "SHIFT|CTRL", action = act.ToggleFullScreen },
     { key = "p", mods = "SHIFT|CTRL", action = act.ActivateCommandPalette },
     { key = "d", mods = "SHIFT|CTRL", action = act.ShowDebugOverlay },
     { key = "l", mods = "SHIFT|CTRL", action = act.ShowLauncher },
-    { key = "=", mods = "CTRL", action = act.ResetFontSize },
     { key = "+", mods = "SHIFT|CTRL", action = act.IncreaseFontSize },
     { key = "-", mods = "CTRL", action = act.DecreaseFontSize },
-
+    { key = "=", mods = "CTRL", action = act.ResetFontSize },
+    -- tab
+    { key = "1", mods = "LEADER", action = act.ActivateTab(0) },
+    { key = "2", mods = "LEADER", action = act.ActivateTab(1) },
+    { key = "3", mods = "LEADER", action = act.ActivateTab(2) },
+    { key = "4", mods = "LEADER", action = act.ActivateTab(3) },
+    { key = "5", mods = "LEADER", action = act.ActivateTab(4) },
+    { key = "6", mods = "LEADER", action = act.ActivateTab(5) },
+    { key = "7", mods = "LEADER", action = act.ActivateTab(6) },
+    { key = "8", mods = "LEADER", action = act.ActivateTab(7) },
+    { key = "9", mods = "LEADER", action = act.ActivateTab(-1) },
+    -- pane
     { key = "-", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
     { key = "\\", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
@@ -25,18 +40,7 @@ return {
     { key = "v", mods = "LEADER", action = act.PasteFrom("Clipboard") },
     { key = "phys:Space", mods = "LEADER", action = act.QuickSelect },
 
-    { key = "1", mods = "LEADER", action = act.ActivateTab(0) },
-    { key = "2", mods = "LEADER", action = act.ActivateTab(1) },
-    { key = "3", mods = "LEADER", action = act.ActivateTab(2) },
-    { key = "4", mods = "LEADER", action = act.ActivateTab(3) },
-    { key = "5", mods = "LEADER", action = act.ActivateTab(4) },
-    { key = "6", mods = "LEADER", action = act.ActivateTab(5) },
-    { key = "7", mods = "LEADER", action = act.ActivateTab(6) },
-    { key = "8", mods = "LEADER", action = act.ActivateTab(7) },
-    { key = "9", mods = "LEADER", action = act.ActivateTab(-1) },
-
-    -- LEADER, followed by 'r' will put us in resize-pane
-    -- mode until we cancel that mode.
+    -- LEADER-'r': resize-pane mode until we cancel that mode.
     {
       key = "r",
       mods = "LEADER",
@@ -45,10 +49,7 @@ return {
         one_shot = false,
       }),
     },
-
-    -- LEADER, followed by 'w' will put us in activate-pane
-    -- mode until we press some other key or until 1 second (1000ms)
-    -- of time elapses
+    -- LEADER-'w': activate-pane mode until we press some other key or until timeout (1000ms)
     {
       key = "w",
       mods = "LEADER",
