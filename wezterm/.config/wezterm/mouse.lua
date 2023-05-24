@@ -36,4 +36,10 @@ return {
     mods = "CTRL",
     action = act.Nop,
   },
+  -- Grap the semantic zone when triple click
+  {
+    event = { Down = { streak = 3, button = "Left" } },
+    mode = "NONE",
+    action = act.SelectTextAtMouseCursor("SemanticZone"),
+  },
 }
