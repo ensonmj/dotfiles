@@ -2,7 +2,6 @@
 *.swo
 *~
 csd-wrapper/.cisco/hostscan/
-nvim/.config/nvim/lazy-lock.json
 pentadactyl/.pentadactyl/info
 ssh/.ssh/known_hosts*
 ssh/.ssh/id*

@@ -31,14 +31,14 @@ vim.o.cursorline = true
 -- vim.o.cmdheight = 0
 vim.opt.list = true
 vim.opt.listchars = {
-  tab = "▸ ",
-  trail = "-",
-  extends = "❯",
-  precedes = "❮",
-  nbsp = "␣",
-  -- extends = "»", -- RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB, UTF-8: C2 BB)
-  -- precedes = "«", -- LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB, UTF-8: C2 AB)
-  -- nbsp = "⦸ ", -- CIRCLED REVERSE SOLIDUS (U+29B8, UTF-8: E2 A6 B8)
+	tab = "▸ ",
+	trail = "-",
+	extends = "❯",
+	precedes = "❮",
+	nbsp = "␣",
+	-- extends = "»", -- RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00BB, UTF-8: C2 BB)
+	-- precedes = "«", -- LEFT-POINTING DOUBLE ANGLE QUOTATION MARK (U+00AB, UTF-8: C2 AB)
+	-- nbsp = "⦸ ", -- CIRCLED REVERSE SOLIDUS (U+29B8, UTF-8: E2 A6 B8)
 }
 
 -- conceal
