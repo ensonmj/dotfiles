@@ -1,22 +1,26 @@
 -- Autocmds are automatically loaded on the VeryLazy event
 -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 -- Add any additional autocmds here
+local autocmd = vim.api.nvim_create_autocmd
+local function augroup(name)
+  return vim.api.nvim_create_augroup("dotconfig_" .. name, { clear = true })
+end
 
 -- Fixes Autocomment
-vim.api.nvim_create_autocmd("BufEnter", {
+autocmd("BufEnter", {
   pattern = "*",
   command = "set fo-=c fo-=r fo-=o",
 })
 
 -- resize splits if window got resized
-vim.api.nvim_create_autocmd({ "VimResized" }, {
+autocmd({ "VimResized" }, {
   callback = function()
     vim.cmd("tabdo wincmd =")
   end,
 })
 
 -- show cursor line only in active window
-vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
+autocmd({ "InsertLeave", "WinEnter" }, {
   callback = function()
     local ok, cl = pcall(vim.api.nvim_win_get_var, 0, "auto-cursorline")
     if ok and cl then
@@ -25,7 +29,7 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "WinEnter" }, {
     end
   end,
 })
-vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
+autocmd({ "InsertEnter", "WinLeave" }, {
   callback = function()
     local cl = vim.wo.cursorline
     if cl then
@@ -36,8 +40,8 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
 })
 
 -- create directories when needed, when saving a file
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = vim.api.nvim_create_augroup("better_backup", { clear = true }),
+autocmd("BufWritePre", {
+  group = augroup("better_backup"),
   callback = function(event)
     local file = vim.loop.fs_realpath(event.match) or event.match
     local backup = vim.fn.fnamemodify(file, ":p:~:h")
@@ -47,7 +51,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 -- Fix conceallevel for json & help files
-vim.api.nvim_create_autocmd({ "FileType" }, {
+autocmd({ "FileType" }, {
   pattern = { "json", "jsonc" },
   callback = function()
     vim.wo.spell = false
@@ -56,7 +60,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 })
 
 -- close some filetypes with <q>
-vim.api.nvim_create_autocmd("FileType", {
+autocmd("FileType", {
   pattern = {
     "dap-float",
     "httpResult",
@@ -68,7 +72,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- close some filetypes with <q>
-vim.api.nvim_create_autocmd("FileType", {
+autocmd("FileType", {
   pattern = {
     "dap-terminal",
   },
@@ -78,7 +82,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 -- filetype
--- local ncmd = vim.api.nvim_command
+-- local cmd = vim.cmd
 -- cmd([[ autocmd FileType lua setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=120 noexpandtab]])
 -- cmd([[ autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=120 ]])
 -- cmd([[ autocmd FileType json,jsonnet setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab ]])
