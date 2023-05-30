@@ -27,4 +27,12 @@ map("n", "gc", "<Plug>VSCodeCommentary", { noremap = false })
 map("o", "gc", "<Plug>VSCodeCommentary", { noremap = false })
 map("n", "gcc", "<Plug>VSCodeCommentaryLine", { noremap = false })
 
+-- override some options
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.o.cursorcolumn = false
+    vim.o.virtualedit = "block"
+  end
+})
+
 -- vim: foldmethod=marker foldlevel=0
