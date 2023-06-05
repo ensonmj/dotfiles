@@ -82,7 +82,7 @@ popd
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y \
     --no-modify-path --default-toolchain stable --profile default
 source ~/.cargo/env
-cargo install bat bottom erdtree git-delta gitui hyperfine just \
+cargo install bat bottom dufs erdtree fd-find git-delta gitui hyperfine just \
     miniserve procs ripgrep starship tokei zoxide
 # cargo install --git https://github.com/mmstick/parallel
 # parallel cargo install --locked ::: bat bottom erdtree git-delta hyperfine \
