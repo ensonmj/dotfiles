@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     vim.o.cursorcolumn = false
     vim.o.virtualedit = "block"
-  end
+  end,
 })
 
 -- vim: foldmethod=marker foldlevel=0
