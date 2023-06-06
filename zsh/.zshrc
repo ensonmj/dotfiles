@@ -135,6 +135,11 @@ autoload -U zmv
 # \^ = ctrl
 # \^[ = esc
 
+# zsh-autocomplete
+# Make Tab go straight to the menu and cycle there
+bindkey '\t' menu-select "$terminfo[kcbt]" menu-select
+bindkey -M menuselect '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
+
 # Automatically quote globs in URL and remote references
 __remote_commands=(scp rsync wget curl)
 autoload -U url-quote-magic
