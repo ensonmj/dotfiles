@@ -2,6 +2,7 @@
 
 # set -euo pipefail; shopt -s failglob # safe mode
 # -u : cause sdkman throw "unbound variable" error
+# set -x
 
 # XDG - set defaults as they may not be set (eg Ubuntu 14.04 LTS)
 # See https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
@@ -44,7 +45,7 @@ fi
 
 case $OS in
   *Ubuntu*)
-    dpkg -s stow &> /dev/null && sudo apt-get -y install stow ;;
+    dpkg -s stow &> /dev/null || sudo apt-get -y install stow ;;
   *Arch*)
     pacman -Q stow &> /dev/null || yes | sudo pacman -S stow ;;
 esac
@@ -79,17 +80,54 @@ done
 popd
 # }}}
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y \
+echo "Start to install some command line tools, $(date)"
+if ! command -v cargo &> /dev/null; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y \
     --no-modify-path --default-toolchain stable --profile default
+fi
 source ~/.cargo/env
-cargo install bat bottom dufs erdtree fd-find git-delta gitui hyperfine just \
-    miniserve procs ripgrep starship tokei zoxide
-# cargo install --git https://github.com/mmstick/parallel
-# parallel cargo install --locked ::: bat bottom erdtree git-delta hyperfine \
-#     just miniserve procs ripgrep starship tokei zoxide
-# sccache : depends on pkg-config
-# starship : need to config shell and nerd fonts
-# zoxide : need to config shell
+# https://gist.github.com/sts10/daadbc2f403bdffad1b6d33aff016c0a
+declare -a bins=(
+    bandwhich
+    bat
+    bottom
+    broot
+    dufs
+    du-dust
+    erdtree
+    fd-find
+    git-delta
+    gitui
+    hyperfine
+    just
+    procs
+    ripgrep
+    # sccache # depends on pkg-config
+    sd
+    skim
+    starship # need to config shell and install nerd fonts
+    tealdeer
+    topgrade
+    tokei
+    xcp
+    zoxide # need to config shell
+)
+# install in parallel and wait until finish
+# https://klotzandrew.com/blog/parallel-bash-with-wait
+declare -A status
+for bin in "${bins[@]}"; do
+    cargo install "$bin" &
+    # pids+=($!)
+    status["$bin"]=$!
+done
+for bin in "${!status[@]}"; do
+    wait "${status[$bin]}"
+    status["$bin"]=$?
+done
+for bin in "${!status[@]}"; do
+    echo "install $bin exited with ${status[$bin]}"
+done
+echo "All done, $(date)"
 
 # homebrew
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
