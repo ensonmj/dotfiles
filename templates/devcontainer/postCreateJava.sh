@@ -5,8 +5,8 @@ curl -s "https://get.sdkman.io" | bash
 # sed -i -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/g' $HOME/.sdkman/etc/config
 sdk install sbt
 
-echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.env
-echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> ~/.env
+echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> ~/.env
+echo 'PATH="$JAVA_HOME/bin:$PATH"' >> ~/.env
 if [ -n "$HTTP_PROXY_HOST" -a -n "$HTTP_PROXY_PORT" ]; then
     # replace $HTTP_PROXY_HOST and $HTTP_PROXY_PORT only
     MAVEN_OPTS="-Dhttp.proxyHost=$HTTP_PROXY_HOST -Dhttp.proxyPort=$HTTP_PROXY_PORT -Dhttps.proxyHost=$HTTP_PROXY_HOST -Dhttps.proxyPort=$HTTP_PROXY_PORT"
@@ -21,9 +21,9 @@ if [ -n "$HTTP_PROXY_HOST" -a -n "$HTTP_PROXY_PORT" ]; then
 }
 EOF
 fi
-echo "export MAVEN_OPTS=\"-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g $MAVEN_OPTS\"" >> ~/.env
-echo "export JAVA_OPTS=\"$JAVA_OPTS\"" >> ~/.env
-echo "export SBT_OPTS=\"$SBT_OPTS\"" >> ~/.env
+echo "MAVEN_OPTS=\"-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g $MAVEN_OPTS\"" >> ~/.env
+echo "JAVA_OPTS=\"$JAVA_OPTS\"" >> ~/.env
+echo "SBT_OPTS=\"$SBT_OPTS\"" >> ~/.env
 
 # for arrow in java11
 # for java17 --add-opens=java.base/java.nio=ALL-UNNAMED 

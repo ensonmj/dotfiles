@@ -56,6 +56,7 @@
 		"type=bind,source=${localEnv:HOME}/.dotfiles/templates/justfile,target=/workspaces/${localWorkspaceFolderBasename}/justfile", // keep sync
 		"type=bind,source=${localEnv:HOME}/.m2,target=/home/vscode/.m2",
 		"type=bind,source=${localWorkspaceFolder}/.devcontainer/m2/settings.xml,target=/home/vscode/.m2/settings.xml",
+		"type=bind,source=${localEnv:HOME}/.sbt,target=/home/vscode/.sbt",
 		"type=bind,source=${localWorkspaceFolder}/.devcontainer/sbt/repositories,target=/home/vscode/.sbt/repositories",
 		"type=bind,source=${localEnv:STORAGE},target=/storage" // big storage
 	],

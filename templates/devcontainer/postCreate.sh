@@ -19,13 +19,16 @@ fi
 # "apt update" should ahead any "apt install" in other scripts
 sudo apt update && sudo apt install -y python3-neovim
 
+wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
+tar -xf nvim-linux64.tar.gz -C $HOME/.opt
+
 # should prepare ~/.profile ~/.bashrc ~/.zshrc, postCreate*.sh will modify them
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/ensonmj/dotfiles.git "$HOME/.dotfiles"
     source $HOME/.dotfiles/install.sh
 fi
 # hack X11 forwarding
-echo "export DISPLAY=$(hostname):10" >> ~/.env
+echo "DISPLAY=$(hostname):10" >> ~/.env
 
 # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
