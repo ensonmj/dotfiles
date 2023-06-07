@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# some tools (fd, rg) respect .gitignore, also respect .ignore
+# amend some pattern in .gitignore
+echo <<EOF >.ignore
+!build
+!*-build
+EOF
+
 # for gluten
 sudo apt update && sudo apt install -y libiberty-dev libdwarf-dev libre2-dev \
     libz-dev libssl-dev libboost-all-dev libcurl4-openssl-dev libjemalloc-dev
