@@ -96,6 +96,9 @@ fi
 #tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
 
+#nix
+[[ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]] && source $HOME/.nix-profile/etc/profile.d/nix.sh
+
 #homebrew
 [[ -d $HOME/.linuxbrew ]] && eval "$($HOME/.linuxbrew/bin/brew shellenv)"
 [[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
