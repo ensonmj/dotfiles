@@ -13,7 +13,7 @@ vim.o.encoding = "utf-8"
 vim.o.fileencoding = "utf-8"
 vim.o.fencs = "utf-8,ucs-bom,gb18030,gbk,gb2312,cp936"
 -- A fullwidth character is displayed in vim properly.
--- seems be conflicted with other plugins
+-- seems be conflicted with other plugins (ident line)
 -- vim.o.ambiwidth = "double"
 -- }}}
 
@@ -163,7 +163,7 @@ vim.o.foldmethod = "indent"
 -- Show folding level.
 vim.o.foldcolumn = "3"
 vim.o.foldlevel = 99
-vim.o.foldlevelstart = 1
+-- vim.o.foldlevelstart = 1
 
 -- Set undofile
 vim.o.undofile = true
