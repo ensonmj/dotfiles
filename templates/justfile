@@ -40,12 +40,18 @@ init:
     make clean && make
     popd
 
+update-arrow:
+    ./ep/build-arrow/src/get_arrow.sh --enable_custom_codec=OFF
+
 build-arrow TYPE="Release" TEST="OFF" CACHE="OFF":
     # https://stackoverflow.com/questions/61267495/exception-in-thread-main-java-lang-nosuchmethoderror-java-nio-bytebuffer-flip
     # https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html
     # maybe should use java8
     JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 ./ep/build-arrow/src/build_arrow.sh --build_type={{TYPE}} --build_tests={{TEST}} --build_benchmarks={{TEST}} --enable_ep_cache={{CACHE}}
     # ./ep/build-arrow/src/build_arrow.sh --build_type={{TYPE}} --build_tests={{TEST}} --build_benchmarks={{TEST}} --enable_ep_cache={{CACHE}}
+
+update-velox:
+    ./ep/build-velox/src/get_velox.sh --enable_hdfs=OFF --build_protobuf=ON --enable_s3=OFF
 
 build-velox TYPE="Release" TEST="OFF" CACHE="OFF":
     ./ep/build-velox/src/build_velox.sh --enable_s3=OFF --enable_hdfs=OFF --build_type={{TYPE}} --build_benchmarks={{TEST}} --enable_ep_cache={{CACHE}}
@@ -62,10 +68,10 @@ build-gluten TYPE="Release" TEST="OFF":
 
 build-cpp TYPE="Release" TEST="OFF":
     # arrow
-    ./ep/build-arrow/src/get_arrow.sh --enable_custom_codec=OFF
+    just update-arrow
     just build-arrow "{{TYPE}}" "{{TEST}}" "OFF"
     # velox
-    ./ep/build-velox/src/get_velox.sh --enable_hdfs=OFF --build_protobuf=ON --enable_s3=OFF
+    just update-velox
     just build-velox "{{TYPE}}" "{{TEST}}" "OFF"
     # gluten
     just build-gluten "{{TYPE}}" "{{TEST}}"
@@ -113,17 +119,61 @@ bloop:
     just kill-java
 
 kill-java:
-    kill -9 `jps | grep -v Jps | awk '{print $1}'`
+    kill -9 `jps -l | grep -v Jps | grep -v "com.intellij.idea.Main" | grep -v "jetbrains" | awk '{print $1}'`
+    
+repl:
+    #!/bin/bash
+    GLUTEN_JAR=/workspaces/gluten/package/target/gluten-velox-bundle-spark3.2_2.12-ubuntu_20.04-0.5.0-SNAPSHOT.jar
+    SPARK_HOME=/workspaces/gluten/storage/spark322
+    # https://unix.stackexchange.com/questions/88490/how-do-you-use-output-redirection-in-combination-with-here-documents-and-cat
+    # https://unix.stackexchange.com/questions/55808/make-program-first-read-from-pipe-then-from-keyboard
+        # --conf spark.sql.optimizer.excludedRules=org.apache.spark.sql.catalyst.optimizer.ConvertToLocalRelation,org.apache.spark.sql.catalyst.optimizer.ConstantFolding,org.apache.spark.sql.catalyst.optimizer.NullPropagation \
+    cat preload.sc - | ${SPARK_HOME}/bin/spark-shell \
+        --master local[2] \
+        --conf spark.driver.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.executor.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.sql.optimizer.excludedRules=org.apache.spark.sql.catalyst.optimizer.ConvertToLocalRelation,org.apache.spark.sql.catalyst.optimizer.ConstantFolding,org.apache.spark.sql.catalyst.optimizer.NullPropagation \
+        --conf spark.sql.codegen.wholeStage=false \
+        --conf spark.dirver.memory=1g \
+        --conf spark.sql.adaptive.enabled=true \
+        --conf spark.sql.shuffle.partitions=1 \
+        --conf spark.sql.files.maxPartitionBytes=1g \
+        --conf spark.memory.offHeap.enabled=true \
+        --conf spark.memory.offHeap.size=2g \
+        --conf spark.plugins=io.glutenproject.GlutenPlugin \
+        --conf spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager \
+        --conf spark.sql.autoBroadcastJoinThreshold=-1 \
+        --conf spark.sql.sources.useV1SourceList=avro \
+        --conf spark.gluten.sql.validate.failure.logLevel=WARN \
+        --conf spark.unsafe.exceptionOnMemoryLeak=true
+
+    #   --master local[2] --deploy-mode client \
+    #   --conf spark.plugins=io.glutenproject.GlutenPlugin \
+    #   --conf spark.gluten.sql.columnar.backend.lib=velox \
+    #   --conf spark.driver.extraClassPath=${GLUTEN_JAR} \
+    #   --conf spark.executor.extraClassPath=${GLUTEN_JAR} \
+    #   --conf spark.memory.offHeap.enabled=true \
+    #   --conf spark.memory.offHeap.size=2g \
+    #   --conf spark.gluten.sql.columnar.forceShuffledHashJoin=true \
+    #   --conf spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager \
+    #   --conf spark.gluten.sql.validate.failure.logLevel=WARN \
+    #   --num-executors 3 \
+    #   --executor-cores 3 \
+    #   --driver-memory 2g \
+    #   --executor-memory 2g \
+    #   --conf spark.executor.memoryOverhead=2g \
+    #   --conf spark.driver.maxResultSize=2g
+      
 
 test-tpch:
     cd /workspaces/gluten/tools/gluten-it
-    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean package -Pspark-3.2
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn package -Pspark-3.2
     /usr/bin/jvm-8-java-8-openjdk-amd64/bin/java -Xmx5G -XX:ErrorFile=/var/log/java/hs_err_pid%p.log -cp target/gluten-it-1.0-SNAPSHOT-jar-with-dependencies.jar io.glutenproject.integration.tpc.Tpc --preset=velox --benchmark-type=h --error-on-memleak --disable-aqe --off-heap-size=20g -s=1.0 --cpus=16 --iterations=1
     cd -
 
 test-tpcds:
     cd /workspaces/gluten/tools/gluten-it
-    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn clean package -Pspark-3.2
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn package -Pspark-3.2
     /usr/bin/jvm-8-java-8-openjdk-amd64/bin/java -Xmx5G -XX:ErrorFile=/var/log/java/hs_err_pid%p.log -cp target/gluten-it-1.0-SNAPSHOT-jar-with-dependencies.jar io.glutenproject.integration.tpc.Tpc --preset=velox --benchmark-type=ds --error-on-memleak --off-heap-size=8g -s=0.1 --cpus=16 --iterations=1
     cd -
 
@@ -150,4 +200,9 @@ gdbserver-attach:
     #!/bin/bash
     PID=`jps -l | grep ScalaTestRunner | awk '{print $1}'`
     sudo gdbserver --attach :2345 $PID
-
+    
+jstack CORE:
+    jstack -J-d64 $JAVA_HOME/bin/java {{CORE}}
+    
+jmap CORE:
+    jmap -J-d64 $JAVA_HOME/bin/java {{CORE}}
