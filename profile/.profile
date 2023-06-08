@@ -158,11 +158,12 @@ function ostype() {
   esac
 }
 
-function envdo() {
+# env {{{
+function env_do() {
     env $(cat .env) $@
 }
 
-function loadenv() {
+function env_load() {
     while read -r LINE; do
         if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
             ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
@@ -170,8 +171,10 @@ function loadenv() {
         fi
     done < $1
 }
+#}}}
 
-function add_PATH() {
+# path {{{
+function path_add() {
     case ":${PATH}:" in
         *:"$1":*)
             ;;
@@ -184,7 +187,7 @@ function add_PATH() {
 
 # Safely remove the given entry from $PATH
 # https://unix.stackexchange.com/a/253760/143394
-function del_PATH() {
+function path_del() {
     while case $PATH in
             "$1") unset PATH; false;;
             "$1:"*) PATH=${PATH#"$1:"};;
@@ -196,7 +199,9 @@ function del_PATH() {
         :
     done
 }
+#}}}
 
+# proxy {{{
 # https://gist.github.com/yougg/5d2b3353fc5e197a0917aae0b3287d64
 function proxy() {
     local PROTO="${1:-socks5}" # socks5(local DNS), socks5h(remote DNS), http, https
@@ -310,6 +315,7 @@ function sshproxy() {
     # connect to ssh server over proxy
     ssh -o "$SSH_PROXY" $TARGET_ADDR
 }
+# }}}
 
 function svn() {
     if [[ "$1" == "log" ]]; then
@@ -331,6 +337,14 @@ function make() {
     /usr/bin/make "$@" 2>&1 | sed -e "/[Ee]rror[: ]/ s%$pathpat%$ccred&$ccend%g" -e "/[Ww]arning[: ]/ s%$pathpat%$ccyellow&$ccend%g"
     return ${PIPESTATUS[0]}
 }
+
+# docker {{{
+function docker_attach() {
+    local CONTAINER="$1"
+    local WORKDIR="${2:-/workspaces/$CONTAINER}"
+    docker exec -itu vscode --privileged -e DISPLAY=$DISPLAY -w $WORKDIR $CONTAINER zsh
+}
+#}}}
 
 # valgrind {{{
 function vgrun() {
