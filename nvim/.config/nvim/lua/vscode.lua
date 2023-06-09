@@ -28,11 +28,17 @@ map("o", "gc", "<Plug>VSCodeCommentary", { noremap = false })
 map("n", "gcc", "<Plug>VSCodeCommentaryLine", { noremap = false })
 
 -- override some options
-vim.api.nvim_create_autocmd("VimEnter", {
+local autocmd = vim.api.nvim_create_autocmd
+autocmd("VimEnter", {
   callback = function()
     vim.o.cursorcolumn = false
     vim.o.virtualedit = "block"
   end,
+})
+
+autocmd("FileType", {
+  pattern = { "cc", "cpp" },
+  command = [[setlocal cms=//\ %s]],
 })
 
 -- vim: foldmethod=marker foldlevel=0

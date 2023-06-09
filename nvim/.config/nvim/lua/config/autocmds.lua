@@ -81,6 +81,10 @@ autocmd("FileType", {
 })
 
 -- filetype
+autocmd("FileType", {
+  pattern = { "cc", "cpp" },
+  command = [[setlocal cms=//\ %s]],
+})
 -- vim.cmd([[
 --   autocmd FileType NvimTree setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=0
 --
