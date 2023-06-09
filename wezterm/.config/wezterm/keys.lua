@@ -1,24 +1,29 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
+local M = {}
 
-return {
-  leader = { key = "a", mods = "CTRL" },
-  keys = {
+function M.setup(config)
+  config.disable_default_key_bindings = true
+  config.use_dead_keys = false -- Allow using ^ with single key press.
+  config.leader = { key = "a", mods = "CTRL" }
+  config.keys = {
     -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
     { key = "a", mods = "LEADER|CTRL", action = act.SendString("\x01") },
     -- workspace
-    { key = "n", mods = "ALT", action = act.SwitchWorkspaceRelative(1) },
-    { key = "p", mods = "ALT", action = act.SwitchWorkspaceRelative(-1) },
-    { key = "l", mods = "ALT", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+    { key = "l", mods = "SHIFT|ALT", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+    { key = "n", mods = "SHIFT|ALT", action = act.SwitchWorkspaceRelative(1) },
+    { key = "p", mods = "SHIFT|ALT", action = act.SwitchWorkspaceRelative(-1) },
     -- window
+    { key = "l", mods = "SHIFT|CTRL", action = act.ShowLauncher },
     { key = "Enter", mods = "SHIFT|CTRL", action = act.ToggleFullScreen },
     { key = "p", mods = "SHIFT|CTRL", action = act.ActivateCommandPalette },
     { key = "d", mods = "SHIFT|CTRL", action = act.ShowDebugOverlay },
-    { key = "l", mods = "SHIFT|CTRL", action = act.ShowLauncher },
     { key = "+", mods = "SHIFT|CTRL", action = act.IncreaseFontSize },
-    { key = "-", mods = "CTRL", action = act.DecreaseFontSize },
+    { key = "-", mods = "SHIFT|CTRL", action = act.DecreaseFontSize },
     { key = "=", mods = "CTRL", action = act.ResetFontSize },
     -- tab
+    { key = "t", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
+    { key = "q", mods = "LEADER", action = act.CloseCurrentTab({ confirm = true }) },
     { key = "1", mods = "LEADER", action = act.ActivateTab(0) },
     { key = "2", mods = "LEADER", action = act.ActivateTab(1) },
     { key = "3", mods = "LEADER", action = act.ActivateTab(2) },
@@ -29,17 +34,16 @@ return {
     { key = "8", mods = "LEADER", action = act.ActivateTab(7) },
     { key = "9", mods = "LEADER", action = act.ActivateTab(-1) },
     -- pane
+    { key = "x", mods = "LEADER", action = act.CloseCurrentPane({ confirm = true }) },
+    { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
     { key = "-", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
     { key = "\\", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-    { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
-    { key = "t", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
-    { key = "T", mods = "LEADER|SHIFT", action = act.CloseCurrentTab({ confirm = true }) },
-    { key = "x", mods = "LEADER", action = act.CloseCurrentPane({ confirm = true }) },
     { key = "f", mods = "LEADER", action = act.Search("CurrentSelectionOrEmptyString") },
-    { key = "c", mods = "LEADER", action = act.ActivateCopyMode },
     { key = "v", mods = "LEADER", action = act.PasteFrom("Clipboard") },
+    { key = "V", mods = "LEADER|SHIFT", action = act.PasteFrom("PrimarySelection") },
+    -- KeyTable
+    { key = "c", mods = "LEADER", action = act.ActivateCopyMode },
     { key = "phys:Space", mods = "LEADER", action = act.QuickSelect },
-
     -- LEADER-'r': resize-pane mode until we cancel that mode.
     {
       key = "r",
@@ -58,8 +62,8 @@ return {
         timeout_milliseconds = 1000,
       }),
     },
-  },
-  key_tables = {
+  }
+  config.key_tables = {
     -- Defines the keys that are active in our resize-pane mode.
     -- Since we're likely to want to make multiple adjustments,
     -- we made the activation one_shot=false. We therefore need
@@ -99,5 +103,7 @@ return {
       { key = "DownArrow", action = act.ActivatePaneDirection("Down") },
       { key = "j", action = act.ActivatePaneDirection("Down") },
     },
-  },
-}
+  }
+end
+
+return M

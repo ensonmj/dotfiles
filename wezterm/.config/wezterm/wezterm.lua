@@ -1,16 +1,10 @@
 -- Pull in the wezterm API
 local wezterm = require("wezterm")
-require("events")
 
 -- use the config_builder which will help provide clearer error messages
 local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
-if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-  config.default_domain = "WSL:Ubuntu"
-  -- config.default_prog = { "wsl.exe" }
-end
-
 config.color_scheme = "Dracula (Official)"
 config.colors = {
   selection_bg = "#FCE8C3",
@@ -43,10 +37,9 @@ config.initial_rows = 40
 config.initial_cols = 120
 config.scrollback_lines = 99999
 config.exit_behavior = "Close"
-config.launch_menu = require("launch_menu")
 
 -- Window
-config.window_decorations = "RESIZE"
+-- config.window_decorations = "RESIZE"
 config.enable_scroll_bar = true
 config.window_background_opacity = 0.94 -- 如果设置为1.0会明显卡顿
 config.text_background_opacity = 1.0
@@ -63,16 +56,18 @@ config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 20
 
+-- Events
+require("events")
 -- Keys
-config.disable_default_key_bindings = true
-config.use_dead_keys = false -- Allow using ^ with single key press.
-local key_tbl = require("keys")
-config.leader = key_tbl.leader
-config.keys = key_tbl.keys
-config.key_tables = key_tbl.key_tables
-
+require("keys").setup(config)
 -- Mouse
-config.mouse_bindings = require("mouse")
+require("mouse").setup(config)
+-- Launch Menu
+require("launch_menu").setup(config)
+-- ssh/unix domains
+require("domains").setup(config)
+-- OS platform specific
+require("platform").setup(config)
 
 -- and finally, return the configuration to wezterm
 return config
