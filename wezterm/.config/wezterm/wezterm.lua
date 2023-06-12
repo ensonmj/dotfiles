@@ -39,7 +39,7 @@ config.scrollback_lines = 99999
 config.exit_behavior = "Close"
 
 -- Window
--- config.window_decorations = "RESIZE"
+config.window_decorations = "RESIZE"
 config.enable_scroll_bar = true
 config.window_background_opacity = 0.94 -- 如果设置为1.0会明显卡顿
 config.text_background_opacity = 1.0
@@ -53,7 +53,7 @@ config.window_padding = {
 -- Tab bar
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = true
+-- config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 20
 
 -- Events
