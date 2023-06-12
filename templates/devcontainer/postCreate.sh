@@ -31,19 +31,24 @@ echo "DISPLAY=$(hostname):10" >> ~/.env
 # https://thiscute.world/posts/nixos-and-flake-basics
 # https://github.com/dustinlyons/nixos-config
 # https://www.rectcircle.cn/posts/nix-1-package-manager
-sh <(curl https://mirrors.tuna.tsinghua.edu.cn/nix/latest/install) --no-daemon --no-channel-add --no-modify-profile
-source ~/.nix-profile/etc/profile.d/nix.sh
-mkdir -p ~/.config/nix && echo 'substituters = https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store https://cache.nixos.org/' > ~/.config/nix/nix.conf
-nix-channel --add https://mirrors.tuna.tsinghua.edu.cn/nix-channels/nixpkgs-unstable nixpkgs
-# nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
-nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz home-manager
-nix-channel --update
+# sh <(curl https://mirrors.tuna.tsinghua.edu.cn/nix/latest/install) --no-daemon --no-channel-add --no-modify-profile
+# source ~/.nix-profile/etc/profile.d/nix.sh
+# mkdir -p ~/.config/nix && echo 'substituters = https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store https://cache.nixos.org/' > ~/.config/nix/nix.conf
+# nix-channel --add https://mirrors.tuna.tsinghua.edu.cn/nix-channels/nixpkgs-unstable nixpkgs
+# # nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+# nix-channel --add https://github.com/nix-community/home-manager/archive/release-23.05.tar.gz home-manager
+# nix-channel --update
+
+# nix-env -iA nixpkgs.neovim nixpkgs.wezterm
 # }}}
 
 # nvim
-nix-env -iA nixpkgs.neovim nixpkgs.wezterm
 # wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
 # tar -xf nvim-linux64.tar.gz -C $HOME/.opt
+
+# wezterm
+# curl -LO https://github.com/wez/wezterm/releases/download/20230408-112425-69ae8472/wezterm-20230408-112425-69ae8472.Ubuntu20.04.deb
+# sudo apt install -y ./wezterm-20230408-112425-69ae8472.Ubuntu20.04.deb
 
 # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
