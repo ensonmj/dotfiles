@@ -1,7 +1,10 @@
 #!/bin/bash
 
-if [ ! -f /workspaces/gluten/.clangd ]; then
-    cat << EOF > /workspaces/gluten/.clangd
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+CLANGD_CONF=${SCRIPT_DIR}/../.clangd
+if [ ! -f $CLANGD_CONF ]; then
+    cat << EOF > $CLANGD_CONF
 CompileFlags:
   Add: 
     - -ferror-limit=0

@@ -71,9 +71,6 @@
 		"vscode": {
 			"settings": {
 				"http.proxySupport": "on",
-				// "dotfiles.repository": "https://github.com/ensonmj/dotfiles",
-				// "dotfiles.targetPath": "~/.dotfiles",
-				// "dotfiles.installCommand": "~/.dotfiles/install.sh",
 				"editor.minimap.enabled": false,
 				"files.watcherExclude": {
 					"**/build-*/**": true,
@@ -81,7 +78,7 @@
 					"**/target": true
 				},
 				"search.exclude": {
-					"backends-clickhouse": true
+					"**/target": true
 				},
 				"git.ignoreLimitWarning": true,
 				"debug.focusEditorOnBreak": true,
