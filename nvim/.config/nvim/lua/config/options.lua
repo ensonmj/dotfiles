@@ -20,7 +20,6 @@ vim.o.fencs = "utf-8,ucs-bom,gb18030,gbk,gb2312,cp936"
 -- View {{{
 vim.o.termguicolors = true
 vim.o.number = true
--- vim.o.relativenumber = true
 vim.o.colorcolumn = 120
 vim.o.signcolumn = "yes:1"
 vim.o.cursorcolumn = true
