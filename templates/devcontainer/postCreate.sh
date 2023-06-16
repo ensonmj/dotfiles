@@ -47,7 +47,7 @@ echo "DISPLAY=$(hostname):10" >> ~/.env
 wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
 tar -xf nvim-linux64.tar.gz -C $HOME/.opt
 rm -f nvim-linux64.tar.gz
-apt install -y python3-neovim
+sudo apt install -y python3-neovim
 
 # wezterm
 # curl -LO https://github.com/wez/wezterm/releases/download/20230408-112425-69ae8472/wezterm-20230408-112425-69ae8472.Ubuntu20.04.deb
