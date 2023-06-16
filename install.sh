@@ -106,6 +106,7 @@ declare -a bins=(
     sd
     skim
     starship # need to config shell and install nerd fonts
+    stylua
     tealdeer
     topgrade
     tokei
