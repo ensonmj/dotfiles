@@ -2,6 +2,7 @@
 [[ $- != *i* ]] && return
 
 # Environment {{{
+emulate sh -c 'source /etc/profile'
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
 # ZSH_CACHE_DIR
