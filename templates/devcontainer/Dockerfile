@@ -44,8 +44,8 @@ RUN groupadd -g 1000 vscode && \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends \
-    build-essential curl fontconfig git jq less net-tools stow tar \
-    unzip vim wget xz-utils zip
+    build-essential curl fontconfig git jq less netcat net-tools \
+    stow tar unzip vim wget xz-utils zip
 
 ARG CPP
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
