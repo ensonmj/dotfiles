@@ -146,11 +146,9 @@ wezterm.on("update-status", function(window, pane)
 
   local hostname, cwd = utils.get_hostname_cwd(pane)
   if hostname then
-    print("hxh" .. hostname)
     table.insert(cells, "  " .. hostname) -- utf8.char(0xeb99)
   end
   if cwd then
-    print("cxx" .. cwd)
     table.insert(cells, " " .. cwd)
   end
 
