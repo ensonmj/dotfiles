@@ -21,6 +21,9 @@ end
 -- path: "file:///C:/Users/user/xxx", hostname is empty on x86_64-pc-windows-msvc
 function M.get_hostname_cwd(pane)
   local path = pane:get_current_working_dir()
+  if not path then
+    return nil, nil
+  end
 
   local uri = path:sub(8) -- remove "file://"
   local slash = uri:find("/")

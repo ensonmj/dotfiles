@@ -70,9 +70,13 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   local function get_process(tab)
     local process_name = tab.active_pane.foreground_process_name
     process_name = utils.basename(process_name):gsub("%.%w+$", "") -- remove suffix
+    if process_name == "" then
+      process_name = "remote"
+    end
 
     -- https://wezfurlong.org/wezterm/config/lua/wezterm/nerdfonts.html
     local process_icons = {
+      ["remote"] = wezterm.nerdfonts.cod_remote,
       ["zsh"] = wezterm.nerdfonts.dev_terminal,
       ["bash"] = wezterm.nerdfonts.cod_terminal_bash,
       ["wslhost"] = wezterm.nerdfonts.cod_terminal_cmd,
@@ -94,7 +98,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     }
 
     return wezterm.format({ {
-      Text = string.format("%s ", process_icons[process_name] or process_name),
+      Text = string.format("%s ", process_icons[process_name]),
     } })
   end
   local title = get_process(tab)
