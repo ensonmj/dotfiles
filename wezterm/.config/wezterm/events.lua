@@ -67,9 +67,37 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   local tid = SUB_IDX[tab.tab_index + 1]
   local pid = SUP_IDX[tab.active_pane.pane_index + 1]
 
-  local process_name = tab.active_pane.foreground_process_name
-  local exec_name = utils.basename(process_name):gsub("%.exe$", "")
-  local title = " " .. exec_name .. " "
+  local function get_process(tab)
+    local process_name = tab.active_pane.foreground_process_name
+    process_name = utils.basename(process_name):gsub("%.%w+$", "") -- remove suffix
+
+    -- https://wezfurlong.org/wezterm/config/lua/wezterm/nerdfonts.html
+    local process_icons = {
+      ["zsh"] = wezterm.nerdfonts.dev_terminal,
+      ["bash"] = wezterm.nerdfonts.cod_terminal_bash,
+      ["wslhost"] = wezterm.nerdfonts.cod_terminal_cmd,
+      ["nvim"] = wezterm.nerdfonts.custom_vim,
+      ["vim"] = wezterm.nerdfonts.dev_vim,
+      ["wget"] = wezterm.nerdfonts.mdi_arrow_down_box,
+      ["curl"] = wezterm.nerdfonts.mdi_flattr,
+      ["git"] = wezterm.nerdfonts.dev_git,
+      ["lazygit"] = wezterm.nerdfonts.dev_git,
+      ["gitui"] = wezterm.nerdfonts.dev_git,
+      ["top"] = wezterm.nerdfonts.mdi_chart_donut_variant,
+      ["htop"] = wezterm.nerdfonts.mdi_chart_donut_variant,
+      ["docker"] = wezterm.nerdfonts.linux_docker,
+      ["docker-compose"] = wezterm.nerdfonts.linux_docker,
+      ["node"] = wezterm.nerdfonts.mdi_hexagon,
+      ["cargo"] = wezterm.nerdfonts.dev_rust,
+      ["go"] = wezterm.nerdfonts.mdi_language_go,
+      ["lua"] = wezterm.nerdfonts.seti_lua,
+    }
+
+    return wezterm.format({ {
+      Text = string.format("%s ", process_icons[process_name] or process_name),
+    } })
+  end
+  local title = get_process(tab)
 
   local background = "#4E4E4E"
   local foreground = "#1C1B19"
@@ -108,25 +136,26 @@ wezterm.on("update-status", function(window, pane)
   -- show which key table is active in the status area
   local name = window:active_key_table()
   if name then
-    table.insert(cells, " " .. name)
+    table.insert(cells, "  " .. name)
   end
 
   local workspace = window:active_workspace()
   if workspace ~= "default" then
-    table.insert(cells, " " .. workspace)
+    table.insert(cells, "  " .. workspace)
   end
 
-  local cwd_uri = pane:get_current_working_dir()
-  local hostname, cwd = utils.split_hostname_cwd(cwd_uri)
+  local hostname, cwd = utils.get_hostname_cwd(pane)
   if hostname then
-    table.insert(cells, " " .. hostname) -- utf8.char(0xeb99)
+    print("hxh" .. hostname)
+    table.insert(cells, "  " .. hostname) -- utf8.char(0xeb99)
   end
   if cwd then
+    print("cxx" .. cwd)
     table.insert(cells, " " .. cwd)
   end
 
   local date = wezterm.strftime("%a %b %-d %H:%M")
-  table.insert(cells, " " .. date)
+  table.insert(cells, "  " .. date)
 
   local COLORS = {
     "#3c1361",

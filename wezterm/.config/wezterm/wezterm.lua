@@ -9,14 +9,6 @@ config.color_scheme = "Dracula (Official)"
 config.colors = {
   selection_bg = "#FCE8C3",
   selection_fg = "#121212",
-  tab_bar = {
-    background = "#121212",
-    active_tab = { bg_color = "#121212", fg_color = "#FCE8C3" },
-    -- inactive_tab = {bg_color = "#222222", fg_color = "#808080"},
-    -- inactive_tab_hover = {bg_color = "#EEE8D5",fg_color = "#909090", italic = false},
-    -- new_tab = {bg_color = "#121212", fg_color = "#FCE8C3", intensity = "Bold"},
-    -- new_tab_hover = {bg_color = "#1C1B19", fg_color = "#121212", intensity = "Bold"},
-  },
 }
 
 -- config.line_height = 1.1
@@ -39,7 +31,8 @@ config.scrollback_lines = 99999
 config.exit_behavior = "Close"
 
 -- Window
-config.window_decorations = "RESIZE"
+-- Integrated Title Bar
+config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 config.enable_scroll_bar = true
 config.window_background_opacity = 0.94 -- 如果设置为1.0会明显卡顿
 config.text_background_opacity = 1.0
@@ -51,10 +44,18 @@ config.window_padding = {
 }
 
 -- Tab bar
-config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
+-- config.tab_bar_at_bottom = true
 -- config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 20
+config.tab_bar_style = {
+  window_hide = " - ",
+  window_hide_hover = " - ",
+  window_maximize = " + ",
+  window_maximize_hover = " + ",
+  window_close = " x ",
+  window_close_hover = " x ",
+}
 
 -- Events
 require("events")

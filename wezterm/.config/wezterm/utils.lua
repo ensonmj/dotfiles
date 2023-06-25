@@ -1,3 +1,4 @@
+local wezterm = require("wezterm")
 local M = {}
 
 -- Equivalent to POSIX basename(3)
@@ -10,36 +11,32 @@ end
 -- shorten the path by using ~ as $HOME.
 function M.shorten_path(path)
   local home = os.getenv("HOME")
-  local short_path = path:gsub("^" .. home, "~")
-  if short_path == "" then
-    return path
+  if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+    home = os.getenv("USERPROFILE"):gsub("\\", "/")
   end
-  return short_path
+  return path:gsub("^" .. home, "~")
 end
 
--- path: "file://hostname/home/user/xxx"
-function M.split_hostname_cwd(path)
-  local hostname = ""
-  local cwd = ""
-  if path then
-    local uri = path:sub(8) -- remove "file://"
-    local slash = uri:find("/")
-    if slash then
-      hostname = uri:sub(1, slash - 1)
-      local dot = hostname:find("[.]")
-      if dot then
-        hostname = hostname:sub(1, dot - 1)
-      end
+-- path: "file://HOSTNAME/home/user/xxx"
+-- path: "file:///C:/Users/user/xxx", hostname is empty on x86_64-pc-windows-msvc
+function M.get_hostname_cwd(pane)
+  local path = pane:get_current_working_dir()
 
-      cwd = M.shorten_path(uri:sub(slash))
-    end
+  local uri = path:sub(8) -- remove "file://"
+  local slash = uri:find("/")
+  if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+    local cwd = M.shorten_path(uri:sub(slash + 1)) -- remove extra "/"
+    return nil, cwd
   end
+
+  local hostname = uri:sub(1, slash - 1)
+  local dot = hostname:find("[.]")
+  if dot then
+    hostname = hostname:sub(1, dot - 1)
+  end
+
+  local cwd = M.shorten_path(uri:sub(slash))
   return hostname, cwd
-end
-
-function M.exists(fname)
-  local stat = vim.loop.fs_stat(vim.fn.expand(fname))
-  return (stat and stat.type) or false
 end
 
 return M
