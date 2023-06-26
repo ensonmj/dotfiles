@@ -112,6 +112,22 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     background = "#FF8700"
     foreground = "#1C1B19"
   end
+
+  -- alert unseen output on non active tabs
+  if not tab.is_active then
+    local has_unseen_output = false
+    for _, pane in ipairs(tab.panes) do
+      if pane.has_unseen_output then
+        has_unseen_output = true
+        break
+      end
+    end
+    if has_unseen_output then
+      title = title .. wezterm.nerdfonts.seti_yml
+      background = "#FE5722"
+    end
+  end
+
   local edge_foreground = background
   local edge_background = "#121212"
   local dim_foreground = "#3A3A3A"
