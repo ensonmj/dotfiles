@@ -67,41 +67,43 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   local tid = SUB_IDX[tab.tab_index + 1]
   local pid = SUP_IDX[tab.active_pane.pane_index + 1]
 
-  local function get_icon_title(tab)
+  local function get_icon_title()
     local process_name = tab.active_pane.foreground_process_name
-    process_name = utils.basename(process_name):gsub("%.%w+$", "") -- remove suffix
-    if process_name == "" then
-      process_name = "remote"
+    -- remove suffix (wslhost.exe -> wslhost; python3.11 -> python)
+    process_name = utils.basename(process_name):gsub("%d*%.%w+$", "")
+    if not process_name or process_name == "" then
+      process_name = "unknown"
     end
 
     -- https://wezfurlong.org/wezterm/config/lua/wezterm/nerdfonts.html
     local process_icons = {
-      ["remote"] = wezterm.nerdfonts.cod_remote,
+      ["unknown"] = wezterm.nerdfonts.cod_workspace_unknown,
       ["zsh"] = wezterm.nerdfonts.dev_terminal,
       ["bash"] = wezterm.nerdfonts.cod_terminal_bash,
       ["wslhost"] = wezterm.nerdfonts.cod_terminal_cmd,
       ["nvim"] = wezterm.nerdfonts.custom_vim,
       ["vim"] = wezterm.nerdfonts.dev_vim,
-      ["wget"] = wezterm.nerdfonts.mdi_arrow_down_box,
-      ["curl"] = wezterm.nerdfonts.mdi_flattr,
-      ["git"] = wezterm.nerdfonts.dev_git,
-      ["lazygit"] = wezterm.nerdfonts.dev_git,
-      ["gitui"] = wezterm.nerdfonts.dev_git,
-      ["top"] = wezterm.nerdfonts.mdi_chart_donut_variant,
-      ["htop"] = wezterm.nerdfonts.mdi_chart_donut_variant,
+      ["wget"] = wezterm.nerdfonts.md_arrow_down_bold_box,
+      ["curl"] = wezterm.nerdfonts.md_arrow_down_bold_box_outline,
+      ["tar"] = wezterm.nerdfonts.cod_file_zip,
+      ["unzip"] = wezterm.nerdfonts.cod_file_zip,
+      ["top"] = wezterm.nerdfonts.md_chart_donut_variant,
       ["docker"] = wezterm.nerdfonts.linux_docker,
-      ["docker-compose"] = wezterm.nerdfonts.linux_docker,
-      ["node"] = wezterm.nerdfonts.mdi_hexagon,
+      ["git"] = wezterm.nerdfonts.dev_git,
       ["cargo"] = wezterm.nerdfonts.dev_rust,
-      ["go"] = wezterm.nerdfonts.mdi_language_go,
+      ["go"] = wezterm.nerdfonts.dev_go,
+      ["python"] = wezterm.nerdfonts.dev_python,
       ["lua"] = wezterm.nerdfonts.seti_lua,
+      ["node"] = wezterm.nerdfonts.dev_nodejs_small,
     }
 
-    return wezterm.format({ {
-      Text = string.format("%s ", process_icons[process_name]),
-    } })
+    return wezterm.format({
+      {
+        Text = string.format(" %s ", process_icons[process_name] or process_name),
+      },
+    })
   end
-  local title = get_icon_title(tab)
+  local title = get_icon_title()
 
   local foreground = "#1C1B19"
   local background = "#4E4E4E"
@@ -117,7 +119,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
       end
     end
     if has_unseen_output then
-      title ..= wezterm.nerdfonts.seti_yml
+      title = title .. wezterm.nerdfonts.seti_yml
       background = "#FE5722"
     elseif hover then
       background = "#FF8700"
