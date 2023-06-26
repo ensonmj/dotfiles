@@ -67,7 +67,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   local tid = SUB_IDX[tab.tab_index + 1]
   local pid = SUP_IDX[tab.active_pane.pane_index + 1]
 
-  local function get_process(tab)
+  local function get_icon_title(tab)
     local process_name = tab.active_pane.foreground_process_name
     process_name = utils.basename(process_name):gsub("%.%w+$", "") -- remove suffix
     if process_name == "" then
@@ -101,20 +101,14 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
       Text = string.format("%s ", process_icons[process_name]),
     } })
   end
-  local title = get_process(tab)
+  local title = get_icon_title(tab)
 
-  local background = "#4E4E4E"
   local foreground = "#1C1B19"
+  local background = "#4E4E4E"
   if tab.is_active then
     background = "#FBB829"
-    foreground = "#1C1B19"
-  elseif hover then
-    background = "#FF8700"
-    foreground = "#1C1B19"
-  end
-
-  -- alert unseen output on non active tabs
-  if not tab.is_active then
+  else
+    -- alert unseen output on non active tabs
     local has_unseen_output = false
     for _, pane in ipairs(tab.panes) do
       if pane.has_unseen_output then
@@ -123,8 +117,10 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
       end
     end
     if has_unseen_output then
-      title = title .. wezterm.nerdfonts.seti_yml
+      title ..= wezterm.nerdfonts.seti_yml
       background = "#FE5722"
+    elseif hover then
+      background = "#FF8700"
     end
   end
 
