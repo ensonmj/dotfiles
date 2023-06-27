@@ -1,106 +1,119 @@
 [user]
-	name = ensonmj
-	email = ensonmj@gmail.com
+    name = ensonmj
+    email = ensonmj@gmail.com
 [color]
-	diff = auto
-	status = auto
-	branch = auto
-	interactive = auto
-	ui = true
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    ui = true
 [core]
-	editer = vim
-	autocrlf = input
-	safecrlf = true
+    editer = vim
+    autocrlf = input
+    safecrlf = true
 [http]
-	sslVerify = false
+    sslVerify = false
 [pager]
-	branch = false
+    branch = false
 [pull]
-	rebase = true
+    rebase = true
 [push]
-	#https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushdefault
-	default = current
+    #https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushdefault
+    default = current
 [advice]
-	# https://git-scm.com/docs/git-config#Documentation/git-config.txt-advice
-	statusHints = false
-	detachedHead = false
+    # https://git-scm.com/docs/git-config#Documentation/git-config.txt-advice
+    statusHints = false
+    detachedHead = false
 [alias]
-	co = checkout
-	ci = commit
-	st = status
-	sp = ! git stash save && git pull --rebase && git stash pop
-	br = branch
-	hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short --all
-	type = cat-file -t
-	dump = cat-file -p
-	sed = ! git grep -z --full-name -l '.' | xargs -0 sed -i -e
+    co = checkout
+    ci = commit
+    st = status
+    sp = ! git stash save && git pull --rebase && git stash pop
+    br = branch
+    hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short --all
+    type = cat-file -t
+    dump = cat-file -p
+    sed = ! git grep -z --full-name -l '.' | xargs -0 sed -i -e
+    # https://stackoverflow.com/a/13341103
+    # https://stackoverflow.com/a/28502292
+    track = "!f() { \
+        if [ $# -eq 2 ]; then \
+            echo 'Setting tracking for branch ' $1 ' -> ' $2; \
+            git branch --set-upstream $1 $2; \
+        else \
+            echo '-- Local --'; \
+            git for-each-ref --shell --format=\"[ %(upstream:short) != '' ] && echo '%(refname:short) <--> %(upstream:short)'\" refs/heads | sh; \
+            echo '-- Remote --'; \
+            git remote -v; \
+        fi; }; \
+        f"
 
 # setup for delta
 [core]
-	pager = delta
+    pager = delta
 [interactive]
-	diffFilter = delta --color-only --features=interactive
+    diffFilter = delta --color-only --features=interactive
 [merge]
-	conflictstyle = diff3
+    conflictstyle = diff3
 [diff]
-	colorMoved = default
+    colorMoved = default
 [delta]
-	features = side-by-side defaults unobtrusive-line-numbers decorations dark
+    features = side-by-side defaults unobtrusive-line-numbers decorations dark
 [delta "defaults"]
-	navigate = true # use n and N to move between diff sections
-	paging = always
-	true-color = always
+    navigate = true # use n and N to move between diff sections
+    paging = always
+    true-color = always
 #	hyperlinks = true
 #	hyperlinks-file-link-format = "file-line://{path}:{line}"
 [delta "interactive"]
-	keep-plus-minus-markers = false
+    keep-plus-minus-markers = false
 [delta "unobtrusive-line-numbers"]
-	line-numbers = true
-	line-numbers-minus-style = red
-	line-numbers-plus-style = green
-	line-numbers-left-format = "{nm:>4}┊"
-	line-numbers-right-format = "{np:>4}┊"
-	line-numbers-left-style = red
-	line-numbers-right-style = green
+    line-numbers = true
+    line-numbers-minus-style = red
+    line-numbers-plus-style = green
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}┊"
+    line-numbers-left-style = red
+    line-numbers-right-style = green
 [delta "decorations"]
-	commit-style = yellow
-	commit-decoration-style = yellow box ul
-	file-style = bold cyan ul
-	file-decoration-style = "#434C5E" ul
-	file-decoration-style = "#84786A" ul
-	hunk-header-style = bold blue
-	hunk-header-decoration-style = blue box
+    commit-style = yellow
+    commit-decoration-style = yellow box ul
+    file-style = bold cyan ul
+    file-decoration-style = "#434C5E" ul
+    file-decoration-style = "#84786A" ul
+    hunk-header-style = bold blue
+    hunk-header-decoration-style = blue box
 [delta "dark"]
-	line-numbers-zero-style = "#75829c"
-	# File
-	file-style = "#FFFFFF" bold
-	file-added-label = [+]
-	file-copied-label = [==]
-	file-modified-label = [*]
-	file-removed-label = [-]
-	file-renamed-label = [->]
-	file-decoration-style = "#434C5E" ul
-	file-decoration-style = "#84786A" ul
-	# Diff contents
-	inline-hint-style = syntax
-	minus-style = syntax "#5A4646"
-	minus-emph-style = black red
-	minus-non-emph-style = syntax auto
-	plus-style = syntax "#415541"
-	plus-emph-style = black green
-	plus-non-emph-style = syntax auto
-	whitespace-error-style = "#FB4934" reverse
-	# Commit hash
-	commit-decoration-style = normal box
-	commit-style = "#ffffff" bold
-	# Blame
-	blame-code-style = syntax
-	blame-format = "{author:>18} ({commit:>8}) {timestamp:<13} "
-	blame-palette = "#000000" "#1d2021" "#282828" "#3c3836"
-	# Merge conflicts
-	merge-conflict-begin-symbol = ⌃
-	merge-conflict-end-symbol = ⌄
-	merge-conflict-ours-diff-header-style = "#FABD2F" bold
-	merge-conflict-theirs-diff-header-style = "#FABD2F" bold overline
-	merge-conflict-ours-diff-header-decoration-style = ''
-	merge-conflict-theirs-diff-header-decoration-style = ''
+    line-numbers-zero-style = "#75829c"
+    # File
+    file-style = "#FFFFFF" bold
+    file-added-label = [+]
+    file-copied-label = [==]
+    file-modified-label = [*]
+    file-removed-label = [-]
+    file-renamed-label = [->]
+    file-decoration-style = "#434C5E" ul
+    file-decoration-style = "#84786A" ul
+    # Diff contents
+    inline-hint-style = syntax
+    minus-style = syntax "#5A4646"
+    minus-emph-style = black red
+    minus-non-emph-style = syntax auto
+    plus-style = syntax "#415541"
+    plus-emph-style = black green
+    plus-non-emph-style = syntax auto
+    whitespace-error-style = "#FB4934" reverse
+    # Commit hash
+    commit-decoration-style = normal box
+    commit-style = "#ffffff" bold
+    # Blame
+    blame-code-style = syntax
+    blame-format = "{author:>18} ({commit:>8}) {timestamp:<13} "
+    blame-palette = "#000000" "#1d2021" "#282828" "#3c3836"
+    # Merge conflicts
+    merge-conflict-begin-symbol = ⌃
+    merge-conflict-end-symbol = ⌄
+    merge-conflict-ours-diff-header-style = "#FABD2F" bold
+    merge-conflict-theirs-diff-header-style = "#FABD2F" bold overline
+    merge-conflict-ours-diff-header-decoration-style = ''
+    merge-conflict-theirs-diff-header-decoration-style = ''
