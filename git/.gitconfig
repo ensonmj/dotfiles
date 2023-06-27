@@ -18,7 +18,7 @@
 [pull]
     rebase = true
 [push]
-    #https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushdefault
+    # https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushdefault
     default = current
 [advice]
     # https://git-scm.com/docs/git-config#Documentation/git-config.txt-advice
@@ -28,7 +28,12 @@
     co = checkout
     ci = commit
     st = status
-    sp = ! git stash save && git pull --rebase && git stash pop
+    sp = "!f() { \
+        git stash drop $(git stash list | grep -w sp | cut -d':' -f1) 2>/dev/null; \
+        git stash push -m sp && \
+        git pull --rebase && \
+        git stash pop $(git stash list | grep -w sp | cut -d':' -f1); \
+        }; f"
     br = branch
     hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short --all
     type = cat-file -t
@@ -45,8 +50,8 @@
             git for-each-ref --shell --format=\"[ %(upstream:short) != '' ] && echo '%(refname:short) <--> %(upstream:short)'\" refs/heads | sh; \
             echo '-- Remote --'; \
             git remote -v; \
-        fi; }; \
-        f"
+        fi; \
+        }; f"
 
 # setup for delta
 [core]
@@ -63,8 +68,8 @@
     navigate = true # use n and N to move between diff sections
     paging = always
     true-color = always
-#	hyperlinks = true
-#	hyperlinks-file-link-format = "file-line://{path}:{line}"
+    # hyperlinks = true
+    # hyperlinks-file-link-format = "file-line://{path}:{line}"
 [delta "interactive"]
     keep-plus-minus-markers = false
 [delta "unobtrusive-line-numbers"]
@@ -117,3 +122,5 @@
     merge-conflict-theirs-diff-header-style = "#FABD2F" bold overline
     merge-conflict-ours-diff-header-decoration-style = ''
     merge-conflict-theirs-diff-header-decoration-style = ''
+
+# vim: cms=#\ %s
