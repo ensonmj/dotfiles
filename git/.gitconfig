@@ -32,7 +32,8 @@
         git stash drop $(git stash list | grep -w sp | cut -d':' -f1) 2>/dev/null; \
         git stash push -m sp && \
         git pull --rebase && \
-        git stash pop $(git stash list | grep -w sp | cut -d':' -f1); \
+        git stash pop $(git stash list | grep -w sp | cut -d':' -f1) && \
+        git reset; \
         }; f"
     br = branch
     hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short --all
