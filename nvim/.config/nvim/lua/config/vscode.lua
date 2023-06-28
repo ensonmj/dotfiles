@@ -1,3 +1,21 @@
+-- autocmd
+local autocmd = vim.api.nvim_create_autocmd
+local function augroup(name)
+  return vim.api.nvim_create_augroup("dotconfig_" .. name, { clear = true })
+end
+
+-- override some options
+autocmd("VimEnter", {
+  group = augroup("vscode_override"),
+  callback = function()
+    -- relativenumber will corrupt vscode search highlight
+    vim.o.relativenumber = false
+    vim.o.cursorcolumn = false
+    vim.o.virtualedit = "block"
+  end,
+})
+
+-- keymaps
 local map = function(mode, key, cmd, opts)
   vim.api.nvim_set_keymap(mode, key, cmd, opts or { noremap = true, silent = true })
 end
@@ -26,19 +44,5 @@ map("x", "gc", "<Plug>VSCodeCommentary", { noremap = false })
 map("n", "gc", "<Plug>VSCodeCommentary", { noremap = false })
 map("o", "gc", "<Plug>VSCodeCommentary", { noremap = false })
 map("n", "gcc", "<Plug>VSCodeCommentaryLine", { noremap = false })
-
--- override some options
-local autocmd = vim.api.nvim_create_autocmd
-autocmd("VimEnter", {
-  callback = function()
-    vim.o.cursorcolumn = false
-    vim.o.virtualedit = "block"
-  end,
-})
-
-autocmd("FileType", {
-  pattern = { "cc", "cpp" },
-  command = [[setlocal cms=//\ %s]],
-})
 
 -- vim: foldmethod=marker foldlevel=0

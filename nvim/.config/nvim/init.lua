@@ -12,6 +12,10 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
+if vim.g.vscode then
+  require("config.vscode")
+end
+
 require("lazy").setup({
   spec = {
     -- LazyVim autoload "autocmds" | "keymaps" | "options" in config module

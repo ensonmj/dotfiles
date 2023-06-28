@@ -6,17 +6,20 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("dotconfig_" .. name, { clear = true })
 end
 
-local relativenumber_toggle_group = augroup("relativenumber_toggle")
-autocmd({ "BufEnter", "FocusGained", "InsertLeave" }, {
-  desc = "toggles relativenumber on and off based on mode",
-  group = relativenumber_toggle_group,
-  command = "set relativenumber",
-})
-autocmd({ "BufLeave", "FocusLost", "InsertEnter" }, {
-  desc = "toggles relativenumber on and off based on mode",
-  group = relativenumber_toggle_group,
-  command = "set norelativenumber",
-})
+-- relativenumber will corrupt vscode search highlight
+if not vim.g.vscode then
+  local relativenumber_toggle_group = augroup("relativenumber_toggle")
+  autocmd({ "BufEnter", "FocusGained", "InsertLeave" }, {
+    desc = "toggles relativenumber on and off based on mode",
+    group = relativenumber_toggle_group,
+    command = "set relativenumber",
+  })
+  autocmd({ "BufLeave", "FocusLost", "InsertEnter" }, {
+    desc = "toggles relativenumber on and off based on mode",
+    group = relativenumber_toggle_group,
+    command = "set norelativenumber",
+  })
+end
 
 autocmd("BufEnter", {
   desc = "fix auto comment",
