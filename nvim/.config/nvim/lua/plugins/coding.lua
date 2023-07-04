@@ -1,4 +1,17 @@
 return {
+  {
+    "esensar/nvim-dev-container",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    cond = function()
+      return (vim.fn.isdirectory(".devcontainer") ~= 0) or (vim.fn.filereadable(".devcontainer.json") ~= 0)
+    end,
+    opts = {
+      generate_commands = true,
+      container_runtime = "docker",
+    },
+  },
   -- customize nvim-cmp configs
   -- Use <tab> for completion and snippets (supertab)
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
