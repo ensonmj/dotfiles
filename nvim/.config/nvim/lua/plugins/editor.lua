@@ -74,6 +74,15 @@ return {
         group_empty_dirs = true, -- when true, empty folders will be grouped together
         hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
       },
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function(file_path)
+            --auto close
+            require("neo-tree").close_all()
+          end,
+        },
+      },
     },
   },
 
