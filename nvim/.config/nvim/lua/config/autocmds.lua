@@ -21,11 +21,6 @@ if not vim.g.vscode then
   })
 end
 
-autocmd("BufEnter", {
-  desc = "fix auto comment",
-  command = "set fo-=c fo-=r fo-=o",
-})
-
 autocmd({ "VimResized" }, {
   desc = "resize splits if window resized",
   command = "tabdo wincmd =",
