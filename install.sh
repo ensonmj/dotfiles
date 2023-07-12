@@ -45,9 +45,13 @@ fi
 
 case $OS in
   *Ubuntu*)
-    dpkg -s stow &> /dev/null || sudo apt-get -y install stow ;;
+    dpkg -s stow &> /dev/null || sudo apt-get -y install stow
+    dpkg -s cmake &> /dev/null || sudo apt-get -y install cmake
+    ;;
   *Arch*)
-    pacman -Q stow &> /dev/null || yes | sudo pacman -S stow ;;
+    pacman -Q stow &> /dev/null || yes | sudo pacman -S stow
+    pacman -Q cmake &> /dev/null || yes | sudo pacman -S cmake
+    ;;
 esac
 
 # Stow packages {{{
