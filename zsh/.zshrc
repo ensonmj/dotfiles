@@ -99,17 +99,17 @@ antigen bundles <<eobundles
     encode64
     extract
     history
-    tmux
-    tmuxinator
+    #tmux
+    #tmuxinator
     urltools
     web-search
     z
     git
     go
-    node
-    npm
-    nvm
-    pip
+    #node
+    #npm
+    #nvm
+    #pip
     sudo
     andrewferrier/fzf-z
     djui/alias-tips
