@@ -116,6 +116,9 @@ if [ -d $HOME/go ]; then
     export PATH=$PATH:$HOME/go/bin
 fi
 
+#conda
+[[ -f $HOME/.conda/etc/profile.d/conda.sh ]] && source $HOME/.conda/etc/profile.d/conda.sh
+
 #nvm
 if [ -d $HOME/.nvm ]; then
     source $HOME/.nvm/nvm.sh
