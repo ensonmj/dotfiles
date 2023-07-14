@@ -56,11 +56,14 @@ declare -a sarasa_fonts=(
 )
 for font in "${sarasa_fonts[@]}"; do
     zip_file="${font}.zip"
+    if [ -f ${zip_file} ]; then
+        continue
+    fi
     download_url="https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/download/v${sarasa_ver}/${zip_file}"
     echo "Downloading $download_url"
     wget "$download_url"
     unzip -uo "$zip_file" -d "$fonts_dir"
-    rm "$zip_file"
+    # rm "$zip_file"
 done
 
 fc-cache -fv # need fontconfig
