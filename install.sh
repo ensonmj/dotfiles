@@ -88,6 +88,11 @@ echo "Start to install some command line tools, $(date)"
 if ! command -v cargo &> /dev/null; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y \
     --no-modify-path --default-toolchain stable --profile default
+    if [ $? -ne 0 ]; then
+        RED='\033[0;31m'
+        NC='\033[0m' # No Color
+        echo -e "${RED}Install rustup failed${NC}"; exit 1
+    fi
 fi
 source ~/.cargo/env
 # https://gist.github.com/sts10/daadbc2f403bdffad1b6d33aff016c0a
