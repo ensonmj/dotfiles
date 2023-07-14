@@ -1,5 +1,29 @@
 #!/bin/bash
 
+# vscode extensions
+declare -a exts=(
+    vscjava.vscode-java-pack
+    redhat.vscode-xml
+    scala-lang.scala
+    scalameta.metals
+)
+for ext in "${exts[@]}"; do
+    code --install-extension "$ext"
+done
+
+# config
+CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
+merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
+
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends \
+    maven openjdk-8-jdk openjdk-8-source openjdk-8-doc \
+    openjdk-11-jdk openjdk-11-source openjdk-11-doc
+
+[[ -d ${WORKSPACE_DIR}/.mvn ]] || ln -s ${CUR_DIR}/mvn ${WORKSPACE_DIR}/.mvn
+ln -s ${CUR_DIR}/m2/settings.xml ${HOME}/.m2/settings.xml
+ln -s ${CUR_DIR}/sbt/repositories ${HOME}/.sbt/repositories
+
 curl -s "https://get.sdkman.io" | bash
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 # sed -i -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/g' $HOME/.sdkman/etc/config

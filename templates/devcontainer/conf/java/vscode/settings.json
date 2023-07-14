@@ -1,0 +1,23 @@
+{
+    "java.format.enabled": false,
+    "java.eclipse.downloadSources": true,
+    "java.format.comments.enabled": false,
+    "java.format.onType.enabled": true,
+    "java.maven.downloadSources": true,
+    "metals.serverProperties": [
+        "-Dhttp.proxyHost=$HTTP_PROXY_HOST",
+        "-Dhttp.proxyPort=$HTTP_PROXY_PORT",
+        "-Dhttps.proxyHost=$HTTP_PROXY_HOST",
+        "-Dhttps.proxyPort=$HTTP_PROXY_PORT",
+        "-Djdk.module.illegalAccess=permit",
+        "-Dio.netty.tryReflectionSetAccessible=true"
+    ],
+    "metals.coursierMirror": "https://repo.huaweicloud.com/repository/maven/",
+    "metals.mavenScript": "${workspaceFolder}/bloop-mvn.sh",
+    "metals.javaHome": "/usr/lib/jvm/java-11-openjdk-amd64",
+    "metals.testUserInterface": "Test Explorer",
+    "metals.ammoniteJvmProperties": [
+        "-Xms1G",
+        "-Xmx8G"
+    ]
+}

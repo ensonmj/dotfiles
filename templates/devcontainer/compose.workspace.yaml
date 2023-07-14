@@ -17,10 +17,8 @@ services:
         - HttpProxyHost=${localEnv:HTTP_PROXY_HOST}
         - HttpProxyPort=${localEnv:HTTP_PROXY_PORT}
     volumes:
-      - ${localEnv:HOME}/.gitconfig:/home/vscode/.gitconfig,
       - ${localEnv:HOME}/.ssh:/home/vscode/.ssh,
       # - ${localEnv:HOME}/.Xauthority:/home/vscode/.Xauthority,
-      - ${localWorkspaceFolder}/.devcontainer/sbt/repositories:/home/vscode/.sbt/repositories,
       - ${localEnv:STORAGE}:/storage,
     network_mode: host
     privileged: true

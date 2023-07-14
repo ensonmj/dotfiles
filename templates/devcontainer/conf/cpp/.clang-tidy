@@ -1,41 +1,24 @@
-#!/bin/bash
-
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-
-CLANGD_CONF=${SCRIPT_DIR}/../.clangd
-if [ ! -f $CLANGD_CONF ]; then
-    cat << EOF > $CLANGD_CONF
-CompileFlags:
-  Add: 
-    - -ferror-limit=0
-    - "--include-directory=/workspaces/gluten/ep/build-velox/build/velox_ep/velox/external/xxhash"
-EOF
-fi
-
-CLANG_TIDY_CONF=${SCRIPT_DIR}/../.clang-tidy
-if [ ! -f $CLANG_TIDY_CONF ]; then
-    cat << EOF > $CLANG_TIDY_CONF
 ---
 # 配置clang-tidy配置检测项，带'-'前缀的为disable对应的检测，否则为开启。这里主要是关闭一些用处不大，或者存在bug、假阳性的检查项
-# clang-tidy --list-checks -checks='*' | grep "modernize"
-# https://github.com/cpp-best-practices/gui_starter_template/blob/main/.clang-tidy
 Checks: >
   *,
   -abseil-*,
   -altera-*,
   -android-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-type-union-access,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
   -fuchsia-*,
   -google-*,
+  -hicpp-no-array-decay,
   -llvm*,
-  -modernize-use-trailing-return-type,
-  -zircon-*,
-  -readability-identity-length,
-  -readability-static-accessed-through-instance,
-  -readability-avoid-const-params-in-decls,
-  -cppcoreguidelines-non-private-member-variables-in-classes,
   -misc-non-private-member-variables-in-classes,
+  -modernize-use-trailing-return-type,
+  -modernize-use-nodiscard,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -zircon-*,
 
-# best practice from CLION
 # Checks: >
 #   -*,
 #   bugprone-assert-side-effect,
@@ -225,32 +208,30 @@ HeaderFilterRegex: '(xxx/include)*\.h$'
 # 具体一些检查项的配置参数，可以参考的：
 # https://github.com/envoyproxy/envoy/blob/main/.clang-tidy
 # https://github.com/ClickHouse/ClickHouse/blob/d1d2f2c1a4979d17b7d58f591f56346bc79278f8/.clang-tidy
-# CheckOptions:
-#   - { key: readability-identifier-naming.NamespaceCase,          value: lower_case }
-#   - { key: readability-identifier-naming.FunctionCase,           value: camelBack  }
-#   - { key: readability-identifier-naming.VariableCase,           value: camelBack  }
-#   - { key: readability-identifier-naming.ClassMemberCase,        value: camelBack  }
-#   - { key: readability-identifier-naming.ClassMemberSuffix,      value: _          }
-#   - { key: readability-identifier-naming.PrivateMemberCase,      value: camelBack  }
-#   - { key: readability-identifier-naming.PrivateMemberSuffix,    value: _          }
-#   - { key: readability-identifier-naming.ProtectedMemberCase,    value: camelBack  }
-#   - { key: readability-identifier-naming.ProtectedMemberSuffix,  value: _          }
-#   - { key: readability-identifier-naming.ParameterCase,          value: camelBack  }
-#   - { key: readability-identifier-naming.ParameterPackCase,      value: camelBack  }
-#   - { key: readability-identifier-naming.PointerParameterCase,   value: camelBack  }
-#   - { key: readability-identifier-naming.ClassCase,              value: CamelCase  }
-#   - { key: readability-identifier-naming.StructCase,             value: CamelCase  }
-#   - { key: readability-identifier-naming.TemplateParameterCase,  value: CamelCase  }
-#   - { key: readability-identifier-naming.EnumConstantCase,         value: CamelCase }
-#   - { key: readability-identifier-naming.EnumConstantPrefix,       value: k         }
-#   - { key: readability-identifier-naming.ConstexprVariableCase,    value: CamelCase }
-#   - { key: readability-identifier-naming.ConstexprVariablePrefix,  value: k         }
-#   - { key: readability-identifier-naming.GlobalConstantCase,       value: CamelCase }
-#   - { key: readability-identifier-naming.GlobalConstantPrefix,     value: k         }
-#   - { key: readability-identifier-naming.MemberConstantCase,       value: CamelCase }
-#   - { key: readability-identifier-naming.MemberConstantPrefix,     value: k         }
-#   - { key: readability-identifier-naming.StaticConstantCase,       value: CamelCase }
-#   - { key: readability-identifier-naming.StaticConstantPrefix,     value: k         }
-#   - { key: readability-identifier-naming.MacroDefinitionCase,      value: UPPER_CASE }
-EOF
-fi
+CheckOptions:
+  - { key: readability-identifier-naming.NamespaceCase,          value: lower_case }
+  - { key: readability-identifier-naming.FunctionCase,           value: camelBack  }
+  - { key: readability-identifier-naming.VariableCase,           value: camelBack  }
+  - { key: readability-identifier-naming.ClassMemberCase,        value: camelBack  }
+  - { key: readability-identifier-naming.ClassMemberSuffix,      value: _          }
+  - { key: readability-identifier-naming.PrivateMemberCase,      value: camelBack  }
+  - { key: readability-identifier-naming.PrivateMemberSuffix,    value: _          }
+  - { key: readability-identifier-naming.ProtectedMemberCase,    value: camelBack  }
+  - { key: readability-identifier-naming.ProtectedMemberSuffix,  value: _          }
+  - { key: readability-identifier-naming.ParameterCase,          value: camelBack  }
+  - { key: readability-identifier-naming.ParameterPackCase,      value: camelBack  }
+  - { key: readability-identifier-naming.PointerParameterCase,   value: camelBack  }
+  - { key: readability-identifier-naming.ClassCase,              value: CamelCase  }
+  - { key: readability-identifier-naming.StructCase,             value: CamelCase  }
+  - { key: readability-identifier-naming.TemplateParameterCase,  value: CamelCase  }
+  - { key: readability-identifier-naming.EnumConstantCase,         value: CamelCase }
+  - { key: readability-identifier-naming.EnumConstantPrefix,       value: k         }
+  - { key: readability-identifier-naming.ConstexprVariableCase,    value: CamelCase }
+  - { key: readability-identifier-naming.ConstexprVariablePrefix,  value: k         }
+  - { key: readability-identifier-naming.GlobalConstantCase,       value: CamelCase }
+  - { key: readability-identifier-naming.GlobalConstantPrefix,     value: k         }
+  - { key: readability-identifier-naming.MemberConstantCase,       value: CamelCase }
+  - { key: readability-identifier-naming.MemberConstantPrefix,     value: k         }
+  - { key: readability-identifier-naming.StaticConstantCase,       value: CamelCase }
+  - { key: readability-identifier-naming.StaticConstantPrefix,     value: k         }
+  - { key: readability-identifier-naming.MacroDefinitionCase,      value: UPPER_CASE }

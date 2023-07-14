@@ -1,0 +1,443 @@
+#!/usr/bin/env -S just --justfile
+# ^ A shebang isn't required, but allows a justfile to be executed
+#   like a script, with `./justfile test`, for example.
+
+# alias b := build
+
+default:
+    @just --justfile {{justfile()}} --list
+
+gluten-init:
+    #!/bin/bash
+    echo "SPARK_HOME=/workspaces/gluten/storage/spark322" >> ~/.env
+    echo "HADOOP_HOME=/workspaces/gluten/storage/hadoop-3.2.4" >> ~/.evn
+    echo 'PATH="$JAVA_HOME/bin:$SPARK_HOME/bin:$HADOOP_HOME/bin:$PATH"' >> ~/.env
+    echo 'PYTHONPATH=$(ZIPS=("$SPARK_HOME"/python/lib/*.zip); IFS=:; echo "${ZIPS[*]}"):$PYTHONPATH' >> ~/.env # for pyspark
+
+    # for gluten
+    sudo apt update
+    sudo apt install -y libiberty-dev libdwarf-dev libre2-dev \
+        libz-dev libssl-dev libboost-all-dev libcurl4-openssl-dev libjemalloc-dev
+
+    # folly cmake bug workaround
+    sudo mkdir -p /include
+    # dependencies
+    pushd  dev-storage
+
+    # # hadoop 3.2.4
+    # wget https://dlcdn.apache.org/hadoop/common/hadoop-3.2.4/hadoop-3.2.4.tar.gz
+    # tar -xf hadoop-3.2.4.tar.gz
+
+    #spark 3.2.2
+    git clone --depth 1 --branch v3.2.2 https://github.com/apache/spark.git spark322
+    pushd spark322
+    ./build/mvn -Pyarn -DskipTests clean install
+    popd
+
+    # spark 3.3.0
+    # git clone --depth 1 --branch v3.3.0 https://github.com/apache/spark.git spark330
+    # pushd spark330
+    # ./build/mvn -Pyarn -DskipTests clean install
+    # popd
+
+    # spark-sql-perf
+    git clone --depth 1 https://github.com/databricks/spark-sql-perf.git
+    pushd spark-sql-perf
+    sbt +package
+    popd
+
+    # tpch-dbgen
+    git clone https://github.com/databricks/tpch-dbgen
+    pushd tpch-dbgen
+    git checkout 0469309147b42abac8857fa61b4cf69a6d3128a8
+    make clean && make
+    popd
+
+    # tpcds-kit
+    git clone https://github.com/databricks/tpcds-kit
+    pushd tpcds-kit/tools
+    sudo apt-get -y install gcc make flex bison byacc git
+    make clean && make
+    popd
+    popd #dev-storage
+
+update-arrow:
+    ./ep/build-arrow/src/get_arrow.sh --enable_custom_codec=OFF
+
+build-arrow TYPE="Release" TEST="OFF" CACHE="OFF":
+    # https://stackoverflow.com/questions/61267495/exception-in-thread-main-java-lang-nosuchmethoderror-java-nio-bytebuffer-flip
+    # https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html
+    CXXFLAGS="-g" ./ep/build-arrow/src/build_arrow.sh --build_type={{TYPE}} --build_tests={{TEST}} --build_benchmarks={{TEST}} --enable_ep_cache={{CACHE}}
+
+stash-push-velox MSG="print":
+    #!/bin/bash
+    cd /workspaces/gluten/ep/build-velox/build/velox_ep
+    git checkout scripts/setup-helper-functions.sh
+    git checkout scripts/setup-ubuntu.sh
+    git stash push -m {{MSG}} velox
+    cd /workspaces/gluten
+    
+stash-pop-velox:
+    #!/bin/bash
+    cd /workspaces/gluten/ep/build-velox/build/velox_ep
+    git stash pop
+    cd /workspaces/gluten
+
+update-velox:
+    #!/bin/bash
+    just stash-push-velox
+    # git apply <<EOF
+    # diff --git a/velox/expression/ExprCompiler.cpp b/velox/expression/ExprCompiler.cpp
+    # index 91fba9605..e667aeb4e 100644
+    # --- a/velox/expression/ExprCompiler.cpp
+    # +++ b/velox/expression/ExprCompiler.cpp
+    # @@ -376,6 +376,8 @@ ExprPtr compileExpression(
+    #     memory::MemoryPool* pool,
+    #     const std::unordered_set<std::string>& flatteningCandidates,
+    #     bool enableConstantFolding) {
+    # +  std::cout << "\033[1;33m" << " compileExpression:\033[0m" << std::endl;
+    # +  std::cout << expr->toString() << std::endl;
+    # ExprPtr alreadyCompiled = getAlreadyCompiled(expr.get(), &scope->visited);
+    # if (alreadyCompiled) {
+    #     if (!alreadyCompiled->isMultiplyReferenced()) {
+    # EOF
+    ./ep/build-velox/src/get_velox.sh --enable_hdfs=OFF --build_protobuf=ON --enable_s3=OFF
+    # cd /workspaces/gluten/ep/build-velox/build/velox_ep
+    # ../../src/get_velox.sh --enable_hdfs=OFF --build_protobuf=ON --enable_s3=OFF
+    # cd /workspaces/gluten
+    just stash-pop-velox
+
+build-velox TYPE="Release" TEST="OFF" SETUP="OFF" CACHE="OFF":
+    CXXFLAGS="-g" ./ep/build-velox/src/build_velox.sh --enable_s3=OFF --enable_hdfs=OFF --build_type={{TYPE}} --build_benchmarks={{TEST}} --run_setup_script={{SETUP}} --enable_ep_cache={{CACHE}}
+
+build-velox-target TARGET TYPE="Debug":
+    cmake --build ep/build-velox/build/velox_ep/_build/{{lowercase(TYPE)}} --target {{TARGET}}
+
+# should call `clean-gluten` if `FLAGS` changed
+build-gluten TYPE="Release" TEST="OFF" FLAGS="-DGLUTEN_PRINT_DEBUG":
+    CXXFLAGS="-g {{FLAGS}}" cmake -DBUILD_VELOX_BACKEND=ON -DCMAKE_BUILD_TYPE={{TYPE}} -DBUILD_TESTS={{TEST}} -DBUILD_BENCHMARKS={{TEST}} -DBUILD_JEMALLOC=OFF -DENABLE_HBM=OFF -DENABLE_QAT=OFF -DENABLE_IAA=OFF -DENABLE_S3=OFF -DENABLE_HDFS=OFF -S cpp/ -B cpp/_build/{{lowercase(TYPE)}}
+    cmake --build cpp/_build/{{lowercase(TYPE)}} -j
+    # for java backends-velox resource
+    rm -rf cpp/build
+    cd cpp && ln -s _build/{{lowercase(TYPE)}} build && cd -
+
+clean-gluten TYPE="Release":
+    rm -rf cpp/_build/{{lowercase(TYPE)}}
+    
+build-cpp TYPE="Release" TEST="OFF":
+    # arrow
+    just update-arrow
+    just build-arrow "{{TYPE}}" "{{TEST}}" "OFF"
+    # velox
+    just update-velox
+    just build-velox "{{TYPE}}" "{{TEST}}" "ON" "OFF"
+    # gluten
+    just build-gluten "{{TYPE}}" "{{TEST}}"
+
+merge-compile-cmds TYPE="Release":
+    jq -s '[.[][]]' \
+        /workspaces/gluten/cpp/build/compile_commands.json \
+        /workspaces/gluten/ep/build-velox/build/velox_ep/_build/{{lowercase(TYPE)}}/compile_commands.json \
+        /workspaces/gluten/ep/build-arrow/build/arrow_ep/cpp/build/compile_commands.json \
+        > compile_commands.json
+
+# maven option
+# -e Detailed exception
+# -o/--offline offline mode
+# -U forced update
+# -T 2c Using two threads per CPU core for parallel
+# -DskipTests does not execute test cases, but compiles test case classes to generate corresponding class files under target/test classes.
+# -Dmaven.test.skip=true, do not execute test cases or compile test case classes.Using maven. test. skip not only skips running unit tests, but also skips compiling test code.
+# -pl makes Maven build only specified modules and not the whole project.
+# -am makes Maven figure out what modules out target depends on and build them too.
+mvn MODULE PHASE="install":
+    mvn {{PHASE}} -pl {{MODULE}} -am --offline -T 2C -Pspark-3.2 -Pbackends-velox -Pspark-ut
+    
+# To see which profile will activate in a certain build, use the maven-help-plugin.
+active-profile:
+    mvn help:active-profiles -Pspark-3.2 -Pbackends-velox -Pspark-ut -Doutput=active-profile.txt
+
+effective-pom:
+    mvn help:effective-pom -Pspark-3.2 -Pbackends-velox -Pspark-ut -Doutput=effective-pom.txt
+
+force-download:
+    mvn dependency:purge-local-repository clean install -Pbackends-velox -Pspark-3.2 -Pspark-ut -DskipTests
+
+clear-lastupdate:
+    fd lastUpdated ~/.m2 -x rm
+
+build-java VERSION="3.2":
+    mvn clean install -T 2C -Pspark-{{VERSION}} -Pbackends-velox -Pspark-ut -DskipTests
+    
+build-spark:
+    cd ./storage/spark322/ && ./build/mvn -Pyarn -Phive -Phive-thriftserver -DskipTest install && cd -
+    
+package VERSION="3.2":
+    #!/bin/bash
+    mvn package -Pbackends-velox -Prss -Pspark-{{VERSION}} -DskipTests
+    THIRDPARTY_LIB="package/target/thirdparty-lib"
+    mkdir -p $THIRDPARTY_LIB
+    cp /usr/lib/x86_64-linux-gnu/{libroken.so.18,libasn1.so.8,libboost_context.so.1.71.0,libboost_regex.so.1.71.0,libcrypto.so.1.1,libnghttp2.so.14,libnettle.so.7,libhogweed.so.5,librtmp.so.1,libssh.so.4,libssl.so.1.1,liblber-2.4.so.2,libsasl2.so.2,libwind.so.0,libheimbase.so.1,libhcrypto.so.4,libhx509.so.5,libkrb5.so.26,libheimntlm.so.0,libgssapi.so.3,libldap_r-2.4.so.2,libcurl.so.4,libdouble-conversion.so.3,libevent-2.1.so.7,libgflags.so.2.2,libunwind.so.8,libglog.so.0,libidn.so.11,libntlm.so.0,libgsasl.so.7,libicudata.so.66,libicuuc.so.66,libxml2.so.2,libre2.so.5,libsnappy.so.1,libpsl.so.5,libbrotlidec.so.1,libbrotlicommon.so.1,libthrift-0.13.0.so} $THIRDPARTY_LIB/
+    cp /usr/local/lib/{libprotobuf.so.32,libhdfs3.so.1} $THIRDPARTY_LIB/
+    cd $THIRDPARTY_LIB/
+    LINUX_OS=$(. /etc/os-release && echo ${ID})
+    VERSION=$(. /etc/os-release && echo ${VERSION_ID})
+    jar cvf gluten-thirdparty-lib-$LINUX_OS-$VERSION.jar ./
+    cd -
+
+bloop:
+    rm -rf .bloop .metals ~/.cache/coursier ~/.cache/metals
+    # https://scalacenter.github.io/bloop/docs/build-tools/maven
+    mvn generate-sources ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut -DskipTests
+    # mvn -U dependency:purge-local-repository clean install ch.epfl.scala:bloop-maven-plugin:2.0.0:bloopInstall -DdownloadSources=true -Pspark-3.2 -Pbackends-velox -Pspark-ut -DskipTest
+    just kill-java
+
+kill-java:
+    kill -9 `jps -l | grep -v Jps | grep -v "com.intellij.idea.Main" | grep -v "jetbrains" | grep -v "org.apache.hadoop.hdfs.server" | awk '{print $1}'`
+    
+sql:
+    #!/bin/bash
+    GLUTEN_JAR=/workspaces/gluten/package/target/gluten-velox-bundle-spark3.2_2.12-ubuntu_20.04-0.5.0-SNAPSHOT.jar
+    SPARK_HOME=/workspaces/gluten/storage/spark322
+    cat <<EOF > preload.sql
+    SELECT named_struct('a', 1, 'b', 2, 'c', 3);
+
+    CREATE DATABASE IF NOT EXISTS test;
+    CREATE TABLE test.tbl(
+    col_1 STRING,
+    col_2 BIGINT);
+    INSERT INTO TABLE test.tbl VALUES ('a', 1), ('b', 2), ('c', 3), ('d', 4);
+    SELECT named_struct("x", col_2) FROM test.tbl;
+    EOF
+    cat preload.sql - | ${SPARK_HOME}/bin/spark-sql \
+        --master local[2] \
+        --conf spark.driver.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.executor.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.sql.optimizer.excludedRules=org.apache.spark.sql.catalyst.optimizer.ConvertToLocalRelation,org.apache.spark.sql.catalyst.optimizer.ConstantFolding,org.apache.spark.sql.catalyst.optimizer.NullPropagation \
+        --conf spark.sql.codegen.wholeStage=false \
+        --conf spark.dirver.memory=1g \
+        --conf spark.sql.adaptive.enabled=true \
+        --conf spark.sql.shuffle.partitions=1 \
+        --conf spark.sql.files.maxPartitionBytes=1g \
+        --conf spark.memory.offHeap.enabled=true \
+        --conf spark.memory.offHeap.size=2g \
+        --conf spark.plugins=io.glutenproject.GlutenPlugin \
+        --conf spark.gluten.sql.columnar.backend.lib=velox \
+        --conf spark.gluten.sql.columnar.forceShuffledHashJoin=true \
+        --conf spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager \
+        --conf spark.sql.autoBroadcastJoinThreshold=-1 \
+        --conf spark.sql.sources.useV1SourceList=avro \
+        --conf spark.gluten.sql.validate.failure.logLevel=WARN \
+        --conf spark.unsafe.exceptionOnMemoryLeak=true
+
+workload-bd86:
+    #!/bin/bash
+    GLUTEN_JAR=/workspaces/gluten/package/target/gluten-velox-bundle-spark3.2_2.12-ubuntu_20.04-0.5.0-SNAPSHOT.jar
+    SPARK_HOME=/workspaces/gluten/storage/spark322
+    cat <<EOF > bd86.sc
+    import org.apache.spark.sql.execution.debug._
+    import scala.io.Source
+    import java.io.File
+    import java.util.Arrays
+    
+    def time[R](block: => R): R = { 
+        val t0 = System.nanoTime() 
+        val result = block    // call-by-name 
+        val t1 = System.nanoTime() 
+        println("Elapsed time: " + (t1 - t0)/1000000 + "ms") 
+        result 
+    } 
+
+    def getListOfFiles(dir: String):List[File] = {
+        val d = new File(dir)
+        if (d.exists && d.isDirectory) {
+            d.listFiles.filter(_.isFile).toList
+        } else {
+            List[File]()
+        }
+    }
+    for (f <- getListOfFiles("/workspaces/gluten/storage/SQL_Workloads/BD86/tables")) {
+        val tblDF = spark.read.parquet(f.getPath)
+        tblDF.createOrReplaceTempView(f.getName.replaceFirst(".parquet", ""))
+    }
+    val queryLists = getListOfFiles("/workspaces/gluten/storage/SQL_Workloads/BD86/queries_replaced") 
+    val sortedQueryLists = queryLists.sortBy {
+        f => f.getName match {
+        case name =>
+            var str = name
+            str = str.replaceFirst(".sql", "")
+            str = str.replaceFirst("query", "")
+            str.toDouble
+        }}
+    for {
+        f <- sortedQueryLists
+        if f.getName == "query5.sql"
+    } {
+        val query = Source.fromFile(f).mkString
+        println(Console.RED + "Query:" + f.getName + Console.RESET)
+        try {
+            // spark.sql(query).queryExecution.executedPlan
+            time{spark.sql(query).show(10)}
+            Thread.sleep(10000)
+        } catch {
+            case e: Exception => {
+                println(Console.RED + "++++++++++++++++++++++++")
+                println(e.printStackTrace)
+                println(Console.RESET)
+                // None
+            }
+        }
+    }
+    EOF
+    cat bd86.sc - | ${SPARK_HOME}/bin/spark-shell \
+        --master local[*] \
+        --conf spark.driver.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.executor.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.dirver.memory=100g \
+        --conf spark.memory.offHeap.enabled=true \
+        --conf spark.memory.offHeap.size=100g \
+        --conf spark.plugins=io.glutenproject.GlutenPlugin \
+        --conf spark.gluten.sql.columnar.backend.lib=velox \
+        --conf spark.gluten.sql.columnar.forceShuffledHashJoin=true \
+        --conf spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager \
+        --conf spark.gluten.sql.validate.failure.logLevel=WARN \
+        --conf spark.unsafe.exceptionOnMemoryLeak=true
+    
+repl:
+    #!/bin/bash
+    GLUTEN_JAR=/workspaces/gluten/package/target/gluten-velox-bundle-spark3.2_2.12-ubuntu_20.04-0.5.0-SNAPSHOT.jar
+    SPARK_HOME=/workspaces/gluten/storage/spark322
+    # https://unix.stackexchange.com/questions/88490/how-do-you-use-output-redirection-in-combination-with-here-documents-and-cat
+    # https://unix.stackexchange.com/questions/55808/make-program-first-read-from-pipe-then-from-keyboard
+    cat <<EOF > preload.sc
+    import org.apache.spark.SparkConf
+    import org.apache.spark.sql.Row
+    import org.apache.spark.sql.DataFrame
+    import org.apache.spark.sql.types.{ArrayType, BinaryType, DecimalType, DoubleType, FloatType, IntegerType, MapType, StringType, StructType, StructField, UserDefinedType}
+
+    val person3: DataFrame = Seq(
+    ("Luis", 1, 99),
+    ("Luis", 16, 99),
+    ("Luis", 16, 176),
+    ("Fernando", 32, 99),
+    ("Fernando", 32, 164),
+    ("David", 60, 99),
+    ("Amy", 24, 99)).toDF("name", "age", "height")
+
+    // StructType
+    val simpleData = Seq(Row("James ","","Smith","36636","M",3000),
+    Row("Michael ","Rose","","40288","M",4000),
+    Row("Robert ","","Williams","42114","M",4000),
+    Row("Maria ","Anne","Jones","39192","F",4000),
+    Row("Jen","Mary","Brown","","F",-1)
+    )
+
+    val simpleSchema = StructType(Array(
+        StructField("firstname",StringType,true),
+        StructField("middlename",StringType,true),
+        StructField("lastname",StringType,true),
+        StructField("id", StringType, true),
+        StructField("gender", StringType, true),
+        StructField("salary", IntegerType, true)
+    ))
+
+    val df = spark.createDataFrame(
+        spark.sparkContext.parallelize(simpleData),simpleSchema)
+    df.printSchema()
+    df.show()
+    
+    // nested StructType
+    val structureData = Seq(
+    Row(Row("James ","","Smith"),"36636","M",3100),
+    Row(Row("Michael ","Rose",""),"40288","M",4300),
+    Row(Row("Robert ","","Williams"),"42114","M",1400),
+    Row(Row("Maria ","Anne","Jones"),"39192","F",5500),
+    Row(Row("Jen","Mary","Brown"),"","F",-1)
+    )
+
+    val structureSchema = new StructType()
+        .add("name",new StructType()
+        .add("firstname",StringType)
+        .add("middlename",StringType)
+        .add("lastname",StringType))
+        .add("id",StringType)
+        .add("gender",StringType)
+        .add("salary",IntegerType)
+
+    val df2 = spark.createDataFrame(
+        spark.sparkContext.parallelize(structureData),structureSchema)
+    df2.printSchema()
+    df2.show()
+    
+    var res = spark.sql("SELECT named_struct('a', 1, 'b', 2, 'c', 3);")
+    res.show()
+    EOF
+
+    cat preload.sc - | ${SPARK_HOME}/bin/spark-shell \
+        --master local[2] \
+        --conf spark.driver.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.executor.extraClassPath=${GLUTEN_JAR} \
+        --conf spark.sql.optimizer.excludedRules=org.apache.spark.sql.catalyst.optimizer.ConvertToLocalRelation,org.apache.spark.sql.catalyst.optimizer.ConstantFolding,org.apache.spark.sql.catalyst.optimizer.NullPropagation \
+        --conf spark.sql.codegen.wholeStage=false \
+        --conf spark.dirver.memory=1g \
+        --conf spark.sql.adaptive.enabled=true \
+        --conf spark.sql.shuffle.partitions=1 \
+        --conf spark.sql.files.maxPartitionBytes=1g \
+        --conf spark.memory.offHeap.enabled=true \
+        --conf spark.memory.offHeap.size=2g \
+        --conf spark.plugins=io.glutenproject.GlutenPlugin \
+        --conf spark.gluten.sql.columnar.backend.lib=velox \
+        --conf spark.gluten.sql.columnar.forceShuffledHashJoin=true \
+        --conf spark.shuffle.manager=org.apache.spark.shuffle.sort.ColumnarShuffleManager \
+        --conf spark.sql.autoBroadcastJoinThreshold=-1 \
+        --conf spark.sql.sources.useV1SourceList=avro \
+        --conf spark.gluten.sql.validate.failure.logLevel=WARN \
+        --conf spark.unsafe.exceptionOnMemoryLeak=true
+
+test-tpch:
+    cd /workspaces/gluten/tools/gluten-it
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn package -Pspark-3.2
+    /usr/bin/jvm-8-java-8-openjdk-amd64/bin/java -Xmx5G -XX:ErrorFile=/var/log/java/hs_err_pid%p.log -cp target/gluten-it-1.0-SNAPSHOT-jar-with-dependencies.jar io.glutenproject.integration.tpc.Tpc --preset=velox --benchmark-type=h --error-on-memleak --disable-aqe --off-heap-size=20g -s=1.0 --cpus=16 --iterations=1
+    cd -
+
+test-tpcds:
+    cd /workspaces/gluten/tools/gluten-it
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn package -Pspark-3.2
+    /usr/bin/jvm-8-java-8-openjdk-amd64/bin/java -Xmx5G -XX:ErrorFile=/var/log/java/hs_err_pid%p.log -cp target/gluten-it-1.0-SNAPSHOT-jar-with-dependencies.jar io.glutenproject.integration.tpc.Tpc --preset=velox --benchmark-type=ds --error-on-memleak --off-heap-size=8g -s=0.1 --cpus=16 --iterations=1
+    cd -
+
+ut:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn test -T 2C -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToExclude=org.apache.spark.tags.ExtendedSQLTest -Dcheckstyle.skip=true -Dscalastyle.skip=true
+ut-slow:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn test -T 2C -Pspark-3.2 -Pspark-ut -Pbackends-velox -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -DtagsToInclude=org.apache.spark.tags.ExtendedSQLTest -Dcheckstyle.skip=true -Dscalastyle.skip
+ut33:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn install -T 2C -Pspark-3.3 -Pbackends-velox -Pspark-ut
+
+test NAME:
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 mvn -q test -T 200 -Pspark-3.2 -Pspark-ut -Pbackends-velox -Dorg.slf4j.simpleLogger.defaultLogLevel=warn -DargLine="-Dspark.test.home=/workspaces/gluten/storage/spark322" -Dtests='{{NAME}}'
+    
+spark-dist:
+    #!/bin/bash
+    cd storage/spark322
+    ./dev/make-distribution.sh --pip -Phive -Phive-thriftserver -Pyarn
+    cd -
+
+gdb-attach:
+    #!/bin/bash
+    PID=`jps -l | grep ScalaTestRunner | awk '{print $1}'`
+    sudo gdb -ex "handle SIGSEGV nostop noprint pass" \
+        -ex "b Java_io_glutenproject_vectorized_ExpressionEvaluatorJniWrapper_nativeCreateKernelWithIterator" \
+        -ex "info breakpoints" \
+        -ex "continue" \
+        /proc/$PID/exe -p $PID
+
+gdbserver-attach:
+    #!/bin/bash
+    PID=`jps -l | grep ScalaTestRunner | awk '{print $1}'`
+    sudo gdbserver --attach :2345 $PID
+    
+jstack CORE:
+    jstack -J-d64 $JAVA_HOME/bin/java {{CORE}}
+    
+jmap CORE:
+    jmap -J-d64 $JAVA_HOME/bin/java {{CORE}}

@@ -46,25 +46,3 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends \
     build-essential curl fontconfig git jq less netcat net-tools \
     stow tar unzip vim wget xz-utils zip
-
-ARG CPP
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    if [ "$CPP" == "ON" ]; \
-    then \
-        apt-get update && apt-get install -y --no-install-recommends \
-        ccache cmake clang-format clangd-12 gdb gdbserver ninja-build && \
-        sudo update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-12 100 && \
-        sed -i /kernel.yama.ptrace_scope/s/[0-9]$/0/g /etc/sysctl.d/10-ptrace.conf; \
-    fi
-
-ARG JAVA
-ARG MAVEN_MIRROR_URL
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    if [ "$JAVA" == "ON" ]; \
-    then \
-        apt-get update && apt-get install -y --no-install-recommends \
-        maven openjdk-8-jdk openjdk-8-source openjdk-8-doc \
-        openjdk-11-jdk openjdk-11-source openjdk-11-doc; \
-    fi

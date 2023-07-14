@@ -1,0 +1,48 @@
+{
+    // Disable formatting and intellisense engine in Microsoft C/C++ extension (provides debugging)
+    // This way you can have the other features of the extension but use clangd for LSP
+    "C_Cpp.formatting": "default",
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.checkUpdates": true,
+    "clangd.onConfigChanged": "restart",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}",
+        "--completion-style=detailed",
+        // --background-index              - Index project code in the background and persist index on disk.
+        "-background-index",
+        // --header-insertion=<value>      - Add #include directives when accepting code completions
+        //  =iwyu                          -   Include what you use. Insert the owning header for top-level symbols, unless the header is already directly included or the symbol is forward-declared
+        //  =never                         -   Never insert #include directives as part of code completion
+        "-header-insertion=iwyu",
+        // --header-insertion-decorators   - Prepend a circular dot or space before the completion label, depending on whether an include line will be inserted or not
+        "-header-insertion-decorators",
+        // --inlay-hints                   - Enable preview of InlayHints feature
+        "--inlay-hints",
+        // --function-arg-placeholders     - When disabled, completions contain only parentheses for function calls. When enabled, completions also contain placeholders for method parameters
+        "--function-arg-placeholders"
+    ],
+    "cmake.configureOnOpen": false,
+    "cmake.skipConfigureIfCachePresent": true,
+    "cmake.autoSelectActiveFolder": true,
+    // "cmake.generator": "Unix Makefiles",
+    // "cmake.sourceDirectory": "${workspaceFolder}/cpp",
+    "cmake.sourceDirectory": [
+        "${workspaceFolder}/cpp"
+    ],
+    "cmake.buildDirectory": "${sourceDirectory}/_build/${buildType}",
+    // Copy compile_commands.json from the build folder to root folder, so that clangd can use it
+    // NOTE: Alternatively, you can pass --compile-commands-dir=<string> in the "clangd.arguments" array above
+    // "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+    // Configure the environment for VCPKG and compile_commands. Disable verbose if you want less information from builds.
+    "cmake.configureSettings": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": 1
+    },
+    "testExplorer.useNativeTesting": true,
+    // don't use launch.json for testmate
+    "testMate.cpp.debug.configTemplate": "extensionOnly",
+    "testMate.cpp.test.advancedExecutables": [
+        {
+            "pattern": "${workspaceFolder}/cpp/_build/**/*{test,Test,TEST}*"
+        }
+    ]
+}
