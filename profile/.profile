@@ -164,7 +164,8 @@ function env_do() {
 }
 
 function env_load() {
-    while read -r LINE; do
+    # https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
+    while read -r LINE || [ -n "$LINE" ]; do
         if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
             ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
             eval "export $ENV_VAR"
@@ -198,6 +199,16 @@ function path_del() {
     do
         :
     done
+}
+#}}}
+
+# json {{{
+function trim_comment() {
+    sed "s|[ \t]*//.*$||" $1 | sed "/^$/d"
+}
+
+function merge_json() {
+    jq -s '[.[][]]' <(trim_comment $1) <(trim_comment $2)
 }
 #}}}
 
