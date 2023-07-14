@@ -1,5 +1,4 @@
 {
-    "http.proxySupport": "on",
     "editor.detectIndentation": false,
     "editor.formatOnSave": true,
     "editor.lineNumbers": "relative",
@@ -28,8 +27,6 @@
     "explorer.confirmDelete": false,
     "git.ignoreLimitWarning": true,
     "debug.focusEditorOnBreak": true,
-    "vscode-neovim.useWSL": true,
-    "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
     "whichkey.sortOrder": "alphabetically",
     "whichkey.delay": 0,
     "whichkey.bindings": [
