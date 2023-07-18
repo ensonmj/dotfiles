@@ -50,9 +50,8 @@
         // "type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix", // X11 forwarding
         // "type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
         "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
+        "type=bind,source=${localEnv:HOME}/.dotfiles,target=/home/vscode/.dotfiles",
         "type=bind,source=${localEnv:HOME}/.dotfiles/templates/devcontainer,target=/workspaces/${localWorkspaceFolderBasename}/.devcontainer", // keep sync
-        "type=bind,source=${localEnv:HOME}/.m2,target=/home/vscode/.m2",
-        "type=bind,source=${localEnv:HOME}/.sbt,target=/home/vscode/.sbt",
         "type=bind,source=${localEnv:STORAGE},target=/workspaces/${localWorkspaceFolderBasename}/dev-storage" // big storage
     ],
     // "dockerComposeFile": [

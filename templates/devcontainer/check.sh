@@ -8,7 +8,4 @@ test -n "$HTTP_PROXY_HOST" || (echo "HTTP_PROXY_HOST not set" && false)
 test -n "$HTTP_PROXY_PORT" || (echo "HTTP_PROXY_PORT not set" && false)
 test -n "$STORAGE" || (echo "STORAGE not set" && false)
 
-test -d "$HOME/.m2" || mkdir -p "$HOME/.m2"
-test -d "$HOME/.sbt" || mkdir -p "$HOME/.sbt"
-
 exit 0

@@ -21,6 +21,13 @@ sudo apt-get install -y --no-install-recommends \
     maven openjdk-8-jdk openjdk-8-source openjdk-8-doc \
     openjdk-11-jdk openjdk-11-source openjdk-11-doc
 
+if [ -d ${HOME}/.host ]; then
+    # use host dir as cache
+    test -d "$HOME/.host/.m2" || mkdir -p "$HOME/.host/.m2"
+    safe_link ${HOME}/.host/.m2 ${HOME}/.m2
+    test -d "$HOME/.host/.sbt" || mkdir -p "$HOME/.host/.sbt"
+    safe_link ${HOME}/.host/.sbt ${HOME}/.sbt
+fi
 safe_link ${CUR_DIR}/mvn ${WORKSPACE_DIR}/.mvn
 safe_link ${CUR_DIR}/m2/settings.xml ${HOME}/.m2/settings.xml
 safe_link ${CUR_DIR}/sbt/repositories ${HOME}/.sbt/repositories
