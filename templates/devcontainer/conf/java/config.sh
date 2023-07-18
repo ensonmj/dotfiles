@@ -13,6 +13,7 @@
 
 # config
 CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
+source ${SCRIPT_DIR}/helper.sh
 # merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
 
 sudo apt-get update
@@ -20,9 +21,9 @@ sudo apt-get install -y --no-install-recommends \
     maven openjdk-8-jdk openjdk-8-source openjdk-8-doc \
     openjdk-11-jdk openjdk-11-source openjdk-11-doc
 
-[[ -d ${WORKSPACE_DIR}/.mvn ]] || ln -s ${CUR_DIR}/mvn ${WORKSPACE_DIR}/.mvn
-ln -s ${CUR_DIR}/m2/settings.xml ${HOME}/.m2/settings.xml
-ln -s ${CUR_DIR}/sbt/repositories ${HOME}/.sbt/repositories
+safe_link ${CUR_DIR}/mvn ${WORKSPACE_DIR}/.mvn
+safe_link ${CUR_DIR}/m2/settings.xml ${HOME}/.m2/settings.xml
+safe_link ${CUR_DIR}/sbt/repositories ${HOME}/.sbt/repositories
 
 curl -s "https://get.sdkman.io" | bash
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

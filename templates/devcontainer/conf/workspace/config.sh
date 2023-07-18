@@ -19,7 +19,7 @@
 CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
 # merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
 
-[[ -f ${WORKSPACE_DIR}/justfile ]] || ln -s ${CUR_DIR}/justfile ${WORKSPACE_DIR}/justfile
+safe_link ${CUR_DIR}/justfile ${WORKSPACE_DIR}/justfile
 
 # some tools (fd, rg) respect .gitignore, also respect .ignore
 # amend some pattern in .gitignore

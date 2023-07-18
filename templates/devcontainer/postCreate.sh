@@ -6,13 +6,15 @@ export SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
 export CONF_DIR=$(cd -- "$SCRIPT_DIR/conf" &> /dev/null && pwd )
 export WORKSPACE_DIR=$(cd -- "$SCRIPT_DIR/.." &> /dev/null && pwd )
 
+source ${SCRIPT_DIR}/helper.sh
+
 # "docker run --hostname=dev" not add entry into /etc/hosts
 echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo tee -a /etc/hosts
 
 if [ -d "$HOME/.host" ]; then
     # "ssh -X" change inode of ".Xauthority", so it can't keep sync with host, then authentication will faild
     # https://medium.com/@jonsbun/why-need-to-be-careful-when-mounting-single-files-into-a-docker-container-4f929340834
-    [[ -f "$HOME/.Xauthority" ]] || ln -s "$HOME/.host/.Xauthority" "$HOME/.Xauthority"
+    safe_link ${HOME}/.host/.Xauthority ${HOME}/.Xauthority
 fi
 # hack X11 forwarding
 echo "DISPLAY=$(hostname):10" >> ~/.env
@@ -58,63 +60,17 @@ if [ ! -d "$HOME/.dotfiles" ]; then
     source $HOME/.dotfiles/install.sh
 fi
 
-function trim_comment() {
-    sed "s|[ \t]*//.*$||" $1 | sed "/^$/d"
-}
-export -f trim_comment
-function merge_json() {
-    jq -s add <(trim_comment $1) <(trim_comment $2)
-}
-export -f merge_json
-function merge_nested_arr() {
-    jq -s '[.[] | to_entries] | flatten | reduce .[] as $dot ({}; .[$dot.key] += $dot.value)' <(trim_comment $1) <(trim_comment $2)
-    # jq -s '.[0] + .[1]' <(trim_comment $1) <(trim_comment $2)
-}
-export -f merge_nested_arr
-function merge_vsconf() {
-    SRC=$1
-    TARGET=$2
-    mkdir -p ${TARGET}
-    for SRC_PATH in $SRC; do
-        if test -f ${SRC_PATH}; then
-            FILE="$(basename -- ${SRC_PATH})"
-            TARGET_PATH=${TARGET}/${FILE}
-            if [[ -f ${TARGET_PATH} ]]; then
-                TMP=${TARGET_PATH}.tmp
-                if [[ "$FILE" == "extensions.json" ]]; then
-                    merge_nested_arr ${TARGET_PATH} ${SRC_PATH} > ${TMP}
-                else
-                    merge_json ${TARGET_PATH} ${SRC_PATH} > ${TMP}
-                fi
-                rm ${TARGET_PATH}
-                mv ${TMP} ${TARGET_PATH}
-            else
-                trim_comment ${SRC_PATH} > ${TARGET_PATH}
-            fi
-        fi
-    done
-}
-export -f merge_vsconf
-
 # export PATH=`ls -t /vscode/vscode-server/bin/linux-x64/*/bin/remote-cli | head -n1`:$PATH
 # export VSCODE_IPC_HOOK_CLI=`ls -t /tmp/vscode-ipc-*.sock | head -n1`
 
-function install_conf() {
-    SRC_DIR=$1
-
-    # jq '.recommendations[]' ${SRC_DIR}/vscode/extensions.json | xargs -L 1 code --install-extension
-    merge_vsconf "${SRC_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
-    source ${SRC_DIR}/config.sh
-}
-
 # workspace common vscode conf
-install_conf "{CONF_DIR}/workspace"
+install_vsconf ${CONF_DIR}/workspace ${WORKSPACE_DIR}
 
 # program language specific conf
 while read -r LINE || [ -n "$LINE" ]; do
     if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
         LANG=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g" | awk -F"=" '{print tolower($1)}')
 
-        install_conf "${CONF_DIR}/${LANG}"
+        install_vsconf ${CONF_DIR}/${LANG} ${WORKSPACE_DIR}
     fi
 done < ${WORKSPACE_DIR}/.devcontainer.conf

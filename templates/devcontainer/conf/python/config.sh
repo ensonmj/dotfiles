@@ -12,6 +12,7 @@ set -x
 
 # config
 CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
+source ${SCRIPT_DIR}/helper.sh
 # merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
 
 CONDA_VERSION=latest
@@ -24,26 +25,7 @@ rm miniconda.sh
 find $HOME/.conda -follow -type f -name '*.a' -delete
 find $HOME/.conda -follow -type f -name '*.js.map' -delete
 
-cat << EOF > $HOME/.condarc
-changeps1: false
-ssl_verify: false
-show_channel_urls: true
-channels:
-  - defaults
-default_channels:
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
-  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
-custom_channels:
-  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  pytorch-lts: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
-  deepmodeling: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/
-EOF
+safe_link ${CUR_DIR}/.condarc ${HOME}/.condarc
 source $HOME/.conda/etc/profile.d/conda.sh
 conda clean -afy
 conda init zsh
