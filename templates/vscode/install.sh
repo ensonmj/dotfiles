@@ -1,24 +1,26 @@
 #!/bin/bash
 
+TARGET_PATH=${1:-"$HOME/.config/Code/User"}
+
 CUR_DIR=$(dirname $(realpath "${BASH_SOURCE[0]}"))
 
 # Get the options
-case $1 in
-linux)
-	TARGET_PATH=$HOME/.vscode-server/data/Machine/
-	;;
-wsl)
-	#sudo apt install --no-install-recommends wslu
-	#TARGET_PATH=$(wslpath "$(wslvar USERPROFILE)")/AppData/Roaming/Code/User
-	Please use "install.bat from cmd.exe with administrator privileges"
-	exit
-	;;
-*)
-	echo "Unknown option"
-	echo "./install.sh linux|wsl"
-	exit
-	;;
-esac
+# case $1 in
+# linux)
+# 	TARGET_PATH=$HOME/.vscode-server/data/Machine/
+# 	;;
+# wsl)
+# 	#sudo apt install --no-install-recommends wslu
+# 	#TARGET_PATH=$(wslpath "$(wslvar USERPROFILE)")/AppData/Roaming/Code/User
+# 	Please use "install.bat from cmd.exe with administrator privileges"
+# 	exit
+# 	;;
+# *)
+# 	echo "Unknown option"
+# 	echo "./install.sh linux|wsl"
+# 	exit
+# 	;;
+# esac
 
 function link() {
 	SRC=$1
