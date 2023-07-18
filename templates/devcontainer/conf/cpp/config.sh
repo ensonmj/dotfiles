@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # vscode extensions
-declare -a exts=(
-    ms-vscode.cpptools
-    ms-vscode.cmake-tools
-    xaver.clang-format
-    llvm-vs-code-extensions.vscode-clangd
-)
-for ext in "${exts[@]}"; do
-    code --install-extension "$ext"
-done
+# declare -a exts=(
+#     ms-vscode.cpptools
+#     ms-vscode.cmake-tools
+#     xaver.clang-format
+#     llvm-vs-code-extensions.vscode-clangd
+# )
+# for ext in "${exts[@]}"; do
+#     code --install-extension "$ext"
+# done
 
 # config
 CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
-merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
+# merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \

@@ -1,7 +1,22 @@
 {
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
     "http.proxySupport": "on",
+    "workbench.colorTheme": "Community Material Theme High Contrast",
+    "workbench.colorCustomizations": {
+        // "editor.selectionBackground": "#d1d1c6",
+        // "editor.selectionHighlightBackground": "#9c4490"
+        "editor.selectionBackground": "#e788ff7c", //Currently SELECTED text
+        "editor.selectionHighlightBackground": "#ff00005b", //Same content as selection
+        "editor.findMatchBackground": "#00cc44a8", //Current SEARCH MATCH
+        "editor.findMatchHighlightBackground": "#ff7b00a1", //Other SEARCH MATCHES
+        "numberedBookmarks.lineBackground": "#007700"
+    },
     "editor.detectIndentation": false,
+    "editor.wordWrap": "on",
     "editor.formatOnSave": true,
+    "editor.foldingImportsByDefault": true,
     "editor.lineNumbers": "relative",
     "editor.scrollBeyondLastLine": false,
     "editor.quickSuggestions": {
@@ -9,7 +24,9 @@
         "comments": true,
         "strings": true
     },
+    "editor.inlayHints.enabled": "on",
     "editor.minimap.enabled": false,
+    "editor.fontFamily": "'Sarasa Term SC Nerd Font', 'FiraMono Nerd Font Mono', Consolas, 'Courier New', monospace",
     "files.autoSave": "onFocusChange",
     "files.exclude": {
         "**/.git": true,
@@ -28,8 +45,15 @@
     "explorer.confirmDelete": false,
     "git.ignoreLimitWarning": true,
     "debug.focusEditorOnBreak": true,
+    "remote.SSH.suppressWindowsSshWarning": true,
+    "remote.SSH.path": "C:\\Users\\majian\\ssh.bat",
+    "remote.SSH.configFile": "\\\\wsl$\\Ubuntu\\home\\dev\\.ssh\\config",
+    "terminal.integrated.scrollback": 10000,
+    "terminal.integrated.shellIntegration.history": 10000,
+    "vscode-neovim.mouseSelectionStartVisualMode": true,
     "vscode-neovim.useWSL": true,
     "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
+    "vscode-neovim.neovimInitVimPaths.linux": "~/.config/nvim/init.lua",
     "whichkey.sortOrder": "alphabetically",
     "whichkey.delay": 0,
     "whichkey.bindings": [

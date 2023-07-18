@@ -28,6 +28,7 @@ sudo apt update
 sudo apt install -y linux-tools-common linux-tools-generic linux-tools-`uname -r`
 # nvim
 wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
+mkdir -p $HOME/.opt
 tar -xf nvim-linux64.tar.gz -C $HOME/.opt
 rm -f nvim-linux64.tar.gz
 sudo apt install -y python3-neovim
@@ -65,20 +66,26 @@ function merge_json() {
     jq -s add <(trim_comment $1) <(trim_comment $2)
 }
 export -f merge_json
+function merge_nested_arr() {
+    jq -s '[.[] | to_entries] | flatten | reduce .[] as $dot ({}; .[$dot.key] += $dot.value)' <(trim_comment $1) <(trim_comment $2)
+    # jq -s '.[0] + .[1]' <(trim_comment $1) <(trim_comment $2)
+}
+export -f merge_nested_arr
 function merge_vsconf() {
     SRC=$1
     TARGET=$2
     mkdir -p ${TARGET}
-    for SRC_PATH in $SRC
-    do
-        if test -f ${SRC_PATH}
-        then
+    for SRC_PATH in $SRC; do
+        if test -f ${SRC_PATH}; then
             FILE="$(basename -- ${SRC_PATH})"
             TARGET_PATH=${TARGET}/${FILE}
-            if [[ -f ${TARGET_PATH} ]]
-            then
+            if [[ -f ${TARGET_PATH} ]]; then
                 TMP=${TARGET_PATH}.tmp
-                merge_json ${TARGET_PATH} ${SRC_PATH} > ${TMP}
+                if [[ "$FILE" == "extensions.json" ]]; then
+                    merge_nested_arr ${TARGET_PATH} ${SRC_PATH} > ${TMP}
+                else
+                    merge_json ${TARGET_PATH} ${SRC_PATH} > ${TMP}
+                fi
                 rm ${TARGET_PATH}
                 mv ${TMP} ${TARGET_PATH}
             else
@@ -89,22 +96,25 @@ function merge_vsconf() {
 }
 export -f merge_vsconf
 
-# load language specific extension and config
-# https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
-function env_load() {
-    while read -r LINE || [ -n "$LINE" ]; do
-        if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
-            ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
-            eval "export $ENV_VAR"
-        fi
-    done < $1
+# export PATH=`ls -t /vscode/vscode-server/bin/linux-x64/*/bin/remote-cli | head -n1`:$PATH
+# export VSCODE_IPC_HOOK_CLI=`ls -t /tmp/vscode-ipc-*.sock | head -n1`
+
+function install_conf() {
+    SRC_DIR=$1
+
+    # jq '.recommendations[]' ${SRC_DIR}/vscode/extensions.json | xargs -L 1 code --install-extension
+    merge_vsconf "${SRC_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
+    source ${SRC_DIR}/config.sh
 }
-[[ -f ${WORKSPACE_DIR}/.devcontainer.conf ]] && env_load ${WORKSPACE_DIR}/.devcontainer.conf
 
 # workspace common vscode conf
-merge_vsconf "${CONF_DIR}/workspace/vscode/*" "${WORKSPACE_DIR}/.vscode"
-[[ "$CPP" == "ON" ]] && source ${CONF_DIR}/cpp/config.sh
-[[ "$JAVA" == "ON" ]] && source ${CONF_DIR}/java/config.sh
-[[ "$PYTHON" == "ON" ]] && source ${CONF_DIR}/python/config.sh
-# workspace other config
-source ${CONF_DIR}/workspace/config.sh
+install_conf "{CONF_DIR}/workspace"
+
+# program language specific conf
+while read -r LINE || [ -n "$LINE" ]; do
+    if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
+        LANG=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g" | awk -F"=" '{print tolower($1)}')
+
+        install_conf "${CONF_DIR}/${LANG}"
+    fi
+done < ${WORKSPACE_DIR}/.devcontainer.conf

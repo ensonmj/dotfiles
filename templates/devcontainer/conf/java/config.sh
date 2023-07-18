@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # vscode extensions
-declare -a exts=(
-    vscjava.vscode-java-pack
-    redhat.vscode-xml
-    scala-lang.scala
-    scalameta.metals
-)
-for ext in "${exts[@]}"; do
-    code --install-extension "$ext"
-done
+# declare -a exts=(
+#     vscjava.vscode-java-pack
+#     redhat.vscode-xml
+#     scala-lang.scala
+#     scalameta.metals
+# )
+# for ext in "${exts[@]}"; do
+#     code --install-extension "$ext"
+# done
 
 # config
 CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
-merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
+# merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends \

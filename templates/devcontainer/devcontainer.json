@@ -69,29 +69,7 @@
             },
             // common extensions you want installed when the container is created.
             "extensions": [
-                "MS-CEINTL.vscode-language-pack-zh-hans",
-                "mutantdino.resourcemonitor",
-                "yzhang.markdown-all-in-one",
-                "ryu1kn.partial-diff",
-                "iliazeus.vscode-ansi",
-                "Gruntfuggly.todo-tree",
-                "eamodio.gitlens",
-                "mhutchie.git-graph",
-                "GitHub.vscode-pull-request-github"
-                // cpp
-                // "ms-vscode.cpptools",
-                // "ms-vscode.cmake-tools",
-                // "xaver.clang-format",
-                // "llvm-vs-code-extensions.vscode-clangd",
-                // java, scala
-                // "vscjava.vscode-java-pack",
-                // "redhat.vscode-xml",
-                // "DotJoshJohnson.xml",
-                // "scala-lang.scala",
-                // "scalameta.metals",
-                // python
-                // "ms-python.python",
-                // "ms-python.vscode-pylance"
+                "MS-CEINTL.vscode-language-pack-zh-hans"
             ]
         }
     }

@@ -1,0 +1,13 @@
+{
+    // See http://go.microsoft.com/fwlink/?LinkId=827846
+    // for the documentation about the extensions.json format
+    "recommendations": [
+        "Equinusocio.vsc-community-material-theme",
+        "johnpapa.vscode-peacock",
+        "asvetliakov.vscode-neovim",
+        "VSpaceCode.whichkey",
+        "ms-vscode-remote.vscode-remote-extensionpack",
+        "ms-vscode.remote-explorer",
+        "usernamehw.errorlens"
+    ]
+}

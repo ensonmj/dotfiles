@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "mutantdino.resourcemonitor",
+        "yzhang.markdown-all-in-one",
+        "ryu1kn.partial-diff",
+        "iliazeus.vscode-ansi",
+        "Gruntfuggly.todo-tree",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "GitHub.vscode-pull-request-github"
+    ]
+}

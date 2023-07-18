@@ -2,17 +2,17 @@
 set -x
 
 # vscode extensions
-declare -a exts=(
-    ms-python.python
-    ms-python.vscode-pylance
-)
-for ext in "${exts[@]}"; do
-    code --install-extension "$ext"
-done
+# declare -a exts=(
+#     ms-python.python
+#     ms-python.vscode-pylance
+# )
+# for ext in "${exts[@]}"; do
+#     code --install-extension "$ext"
+# done
 
 # config
 CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
-merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
+# merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
 
 CONDA_VERSION=latest
 #MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh"
