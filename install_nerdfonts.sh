@@ -2,8 +2,8 @@
 # https://gist.github.com/matthewjberger/7dd7e079f282f8138a9dc3b045ebefa0
 
 fonts_dir="${HOME}/.local/share/fonts"
-if [[ ! -d "$fonts_dir" ]]; then
-    mkdir -p "$fonts_dir"
+if [[ ! -d "${fonts_dir}" ]]; then
+    mkdir -p "${fonts_dir}"
 fi
 
 #nerd_ver='3.0.0'
@@ -56,13 +56,14 @@ declare -a sarasa_fonts=(
 )
 for font in "${sarasa_fonts[@]}"; do
     zip_file="${font}.zip"
-    if [ -f ${zip_file} ]; then
+    zip_path="${fonts_dir}/${zip_file}"
+    if [ -f ${zip_path} ]; then
         continue
     fi
     download_url="https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/download/v${sarasa_ver}/${zip_file}"
-    echo "Downloading $download_url"
-    wget "$download_url"
-    unzip -uo "$zip_file" -d "$fonts_dir"
+    echo "Downloading ${download_url}"
+    wget "${download_url}" -O "${zip_path}"
+    unzip -uo "${zip_path}" -d "${fonts_dir}"
     # rm "$zip_file"
 done
 

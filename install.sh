@@ -95,6 +95,9 @@ if ! command -v cargo &> /dev/null; then
     fi
 fi
 source ~/.cargo/env
+curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+# cargo install cargo-binstall
+# cargo install cargo-quickinstall
 # https://gist.github.com/sts10/daadbc2f403bdffad1b6d33aff016c0a
 declare -a bins=(
     bandwhich
@@ -126,7 +129,8 @@ declare -a bins=(
 # https://klotzandrew.com/blog/parallel-bash-with-wait
 declare -A status
 for bin in "${bins[@]}"; do
-    cargo install "$bin" &
+    #cargo quickinstall "$bin" &
+    cargo binstall --no-confirm --no-symlinks "$bin" &
     # pids+=($!)
     status["$bin"]=$!
 done
