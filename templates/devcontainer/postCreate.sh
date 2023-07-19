@@ -58,10 +58,7 @@ sudo apt install -y python3-neovim
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/ensonmj/dotfiles.git "$HOME/.dotfiles"
 fi
-source $HOME/.dotfiles/install.sh
-
-# export PATH=`ls -t /vscode/vscode-server/bin/linux-x64/*/bin/remote-cli | head -n1`:$PATH
-# export VSCODE_IPC_HOOK_CLI=`ls -t /tmp/vscode-ipc-*.sock | head -n1`
+#source $HOME/.dotfiles/install.sh
 
 # workspace common vscode conf
 install_vsconf ${CONF_DIR}/workspace ${WORKSPACE_DIR}

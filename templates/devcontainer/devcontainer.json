@@ -71,5 +71,6 @@
                 "MS-CEINTL.vscode-language-pack-zh-hans"
             ]
         }
-    }
+    },
+    "postStartCommand": "bash .devcontainer/postStart.sh"
 }
