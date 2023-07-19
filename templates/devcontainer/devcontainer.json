@@ -6,21 +6,21 @@
         "args": {
             "TIMEZONE": "PRC",
             "HTTP_PROXY_HOST": "${localEnv:HTTP_PROXY_HOST}",
-            "HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}",
-            "http_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
-            "https_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
-            "HTTP_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
-            "HTTPS_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}"
+            "HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}"
+            // "http_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+            // "https_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+            // "HTTP_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+            // "HTTPS_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}"
         }
     },
     "containerEnv": {
         // "DISPLAY": "${localEnv:DISPLAY}",
         "HTTP_PROXY_HOST": "${localEnv:HTTP_PROXY_HOST}",
-        "HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}",
-        "http_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
-        "HTTP_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
-        "https_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
-        "HTTPS_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}"
+        "HTTP_PROXY_PORT": "${localEnv:HTTP_PROXY_PORT}"
+        // "http_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+        // "HTTP_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+        // "https_proxy": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}",
+        // "HTTPS_PROXY": "http://${localEnv:HTTP_PROXY_HOST}:${localEnv:HTTP_PROXY_PORT}"
     },
     "privileged": true,
     "capAdd": [
@@ -37,22 +37,22 @@
     "remoteUser": "vscode", // https://aka.ms/vscode-remote/containers/non-root
     "remoteEnv": {
         // "DISPLAY": "${containerEnv:DISPLAY}",
-        "http_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
-        "HTTP_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
-        "https_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
-        "HTTPS_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}"
+        // "http_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
+        // "HTTP_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
+        // "https_proxy": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}",
+        // "HTTPS_PROXY": "http://${containerEnv:HTTP_PROXY_HOST}:${containerEnv:HTTP_PROXY_PORT}"
     },
     // "workspaceMount": "type=bind,src=${localWorkspaceFolder},dst=/home/vscode/${localWorkspaceFolderBasename}",
     // "workspaceFolder": "/home/vscode/${localWorkspaceFolderBasename}",
     "mounts": [
-        // we can't mount some file which needs to keep sync with host (eg. .Xauthority)
-        "type=bind,source=${localEnv:HOME},target=/home/vscode/.host",
-        // "type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix", // X11 forwarding
         // "type=bind,source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig",
         "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh",
         "type=bind,source=${localEnv:HOME}/.dotfiles,target=/home/vscode/.dotfiles",
         "type=bind,source=${localEnv:HOME}/.dotfiles/templates/devcontainer,target=/workspaces/${localWorkspaceFolderBasename}/.devcontainer", // keep sync
-        "type=bind,source=${localEnv:STORAGE},target=/workspaces/${localWorkspaceFolderBasename}/dev-storage" // big storage
+        // "type=bind,source=${localEnv:STORAGE},target=/workspaces/${localWorkspaceFolderBasename}/dev-storage", // big storage
+        // we can't mount some file which needs to keep sync with host (eg. .Xauthority)
+        // "type=bind,source=/tmp/.X11-unix,target=/tmp/.X11-unix", // X11 forwarding
+        "type=bind,source=${localEnv:HOME},target=/home/vscode/.host"
     ],
     // "dockerComposeFile": [
     //     // The order of the files is important since later files override previous ones
