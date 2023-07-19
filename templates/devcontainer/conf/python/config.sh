@@ -18,7 +18,7 @@ source ${SCRIPT_DIR}/helper.sh
 CONDA_VERSION=latest
 #MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh"
 MINICONDA_URL="https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh"
-wget "${MINICONDA_URL}" -O miniconda.sh -q
+wget "${MINICONDA_URL}" -O miniconda.sh
 bash miniconda.sh -ub -p $HOME/.conda
 rm miniconda.sh
 # curl -sSf ${MINICONDA_URL} | bash -s -- -b -p $HOME/miniconda

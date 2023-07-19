@@ -26,8 +26,8 @@ fi
 
 # "apt update" should ahead any "apt install" in other scripts
 sudo apt update
-# for perf tool
-sudo apt install -y linux-tools-common linux-tools-generic linux-tools-`uname -r`
+# for perf tool, `uname -r` not work when host is not ubuntu
+sudo apt install -y linux-tools-common linux-tools-generic #linux-tools-`uname -r`
 # nvim
 wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
 mkdir -p $HOME/.opt
@@ -57,8 +57,8 @@ sudo apt install -y python3-neovim
 # should prepare ~/.profile ~/.bashrc ~/.zshrc, postCreate*.sh will modify them
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/ensonmj/dotfiles.git "$HOME/.dotfiles"
-    source $HOME/.dotfiles/install.sh
 fi
+source $HOME/.dotfiles/install.sh
 
 # export PATH=`ls -t /vscode/vscode-server/bin/linux-x64/*/bin/remote-cli | head -n1`:$PATH
 # export VSCODE_IPC_HOOK_CLI=`ls -t /tmp/vscode-ipc-*.sock | head -n1`
