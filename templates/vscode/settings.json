@@ -3,7 +3,7 @@
         "asvetliakov.vscode-neovim": 1
     },
     "http.proxySupport": "on",
-    "workbench.colorTheme": "Community Material Theme Darker High Contrast",
+    "workbench.colorTheme": "Community Material Theme High Contrast",
     "workbench.colorCustomizations": {
         // "editor.selectionBackground": "#d1d1c6",
         // "editor.selectionHighlightBackground": "#9c4490"
@@ -27,6 +27,7 @@
     "editor.inlayHints.enabled": "on",
     "editor.minimap.enabled": false,
     "editor.fontFamily": "'Sarasa Term SC Nerd Font', 'FiraMono Nerd Font Mono', Consolas, 'Courier New', monospace",
+    "editor.fontSize": 16,
     "files.autoSave": "onFocusChange",
     "files.exclude": {
         "**/.git": true,
@@ -45,17 +46,20 @@
     "explorer.confirmDelete": false,
     "git.ignoreLimitWarning": true,
     "debug.focusEditorOnBreak": true,
+    "debug.console.fontSize": 16,
     "remote.SSH.suppressWindowsSshWarning": true,
     "remote.SSH.path": "C:\\Users\\majian\\ssh.bat",
     "remote.SSH.configFile": "\\\\wsl$\\Ubuntu\\home\\dev\\.ssh\\config",
+    "terminal.integrated.fontSize": 16,
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.shellIntegration.history": 10000,
+    "interactiveSession.editor.fontSize": 16,
     "vscode-neovim.mouseSelectionStartVisualMode": true,
     "vscode-neovim.useWSL": true,
     "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
     "vscode-neovim.neovimInitVimPaths.linux": "~/.config/nvim/init.lua",
-    "whichkey.sortOrder": "alphabetically",
     "whichkey.delay": 0,
+    "whichkey.sortOrder": "alphabetically",
     "whichkey.bindings": [
         {
             "key": ">",
