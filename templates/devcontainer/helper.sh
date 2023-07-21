@@ -4,7 +4,10 @@ RED="\033[1;31m"
 NC="\033[0m"
 
 function trim_comment() {
-    sed "s|[ \t]*//.*$||" $1 | sed "/^$/d"
+    # can trim "//xxx" in "http://xxx"
+    # "s|^[ \t]*//.*$||" all comment line
+    # "s|[ \t]+//.*$||" comment at the end of line
+    sed -e "s|^[ \t]*//.*$||" -e "s|[ \t]+//.*$||" $1 | sed "/^$/d"
 }
 
 function merge_json() {
@@ -30,6 +33,11 @@ function merge_vsconf() {
                     merge_nested_arr ${TARGET_PATH} ${SRC_PATH} > ${TMP}
                 else
                     merge_json ${TARGET_PATH} ${SRC_PATH} > ${TMP}
+                fi
+                if [[ $? != 0 ]]; then
+                    echo -e "${RED}Failed to merge ${SRC_PATH} > ${TARGET_PATH}${NC}"
+                    rm ${TMP}
+                    continue
                 fi
                 rm ${TARGET_PATH}
                 mv ${TMP} ${TARGET_PATH}
