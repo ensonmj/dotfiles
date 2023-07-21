@@ -22,44 +22,44 @@ gluten-init:
     # folly cmake bug workaround
     sudo mkdir -p /include
     # dependencies
-    pushd  dev-storage
-
-    # # hadoop 3.2.4
-    # wget https://dlcdn.apache.org/hadoop/common/hadoop-3.2.4/hadoop-3.2.4.tar.gz
-    # tar -xf hadoop-3.2.4.tar.gz
-
-    #spark 3.2.2
-    git clone --depth 1 --branch v3.2.2 https://github.com/apache/spark.git spark322
-    pushd spark322
-    ./build/mvn -Pyarn -DskipTests clean install
-    popd
-
-    # spark 3.3.0
-    # git clone --depth 1 --branch v3.3.0 https://github.com/apache/spark.git spark330
-    # pushd spark330
+    # pushd  dev-storage
+    #
+    # # # hadoop 3.2.4
+    # # wget https://dlcdn.apache.org/hadoop/common/hadoop-3.2.4/hadoop-3.2.4.tar.gz
+    # # tar -xf hadoop-3.2.4.tar.gz
+    #
+    # #spark 3.2.2
+    # git clone --depth 1 --branch v3.2.2 https://github.com/apache/spark.git spark322
+    # pushd spark322
     # ./build/mvn -Pyarn -DskipTests clean install
     # popd
-
-    # spark-sql-perf
-    git clone --depth 1 https://github.com/databricks/spark-sql-perf.git
-    pushd spark-sql-perf
-    sbt +package
-    popd
-
-    # tpch-dbgen
-    git clone https://github.com/databricks/tpch-dbgen
-    pushd tpch-dbgen
-    git checkout 0469309147b42abac8857fa61b4cf69a6d3128a8
-    make clean && make
-    popd
-
-    # tpcds-kit
-    git clone https://github.com/databricks/tpcds-kit
-    pushd tpcds-kit/tools
-    sudo apt-get -y install gcc make flex bison byacc git
-    make clean && make
-    popd
-    popd #dev-storage
+    #
+    # # spark 3.3.0
+    # # git clone --depth 1 --branch v3.3.0 https://github.com/apache/spark.git spark330
+    # # pushd spark330
+    # # ./build/mvn -Pyarn -DskipTests clean install
+    # # popd
+    #
+    # # spark-sql-perf
+    # git clone --depth 1 https://github.com/databricks/spark-sql-perf.git
+    # pushd spark-sql-perf
+    # sbt +package
+    # popd
+    #
+    # # tpch-dbgen
+    # git clone https://github.com/databricks/tpch-dbgen
+    # pushd tpch-dbgen
+    # git checkout 0469309147b42abac8857fa61b4cf69a6d3128a8
+    # make clean && make
+    # popd
+    #
+    # # tpcds-kit
+    # git clone https://github.com/databricks/tpcds-kit
+    # pushd tpcds-kit/tools
+    # sudo apt-get -y install gcc make flex bison byacc git
+    # make clean && make
+    # popd
+    # popd #dev-storage
 
 update-arrow:
     ./ep/build-arrow/src/get_arrow.sh --enable_custom_codec=OFF
@@ -102,9 +102,6 @@ update-velox:
     #     if (!alreadyCompiled->isMultiplyReferenced()) {
     # EOF
     ./ep/build-velox/src/get_velox.sh --enable_hdfs=OFF --build_protobuf=ON --enable_s3=OFF
-    # cd /workspaces/gluten/ep/build-velox/build/velox_ep
-    # ../../src/get_velox.sh --enable_hdfs=OFF --build_protobuf=ON --enable_s3=OFF
-    # cd /workspaces/gluten
     just stash-pop-velox
 
 build-velox TYPE="Release" TEST="OFF" SETUP="OFF" CACHE="OFF":
