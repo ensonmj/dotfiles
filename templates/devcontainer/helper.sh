@@ -6,8 +6,8 @@ NC="\033[0m"
 function trim_comment() {
     # can trim "//xxx" in "http://xxx"
     # "s|^[ \t]*//.*$||" all comment line
-    # "s|[ \t]+//.*$||" comment at the end of line
-    sed -e "s|^[ \t]*//.*$||" -e "s|[ \t]+//.*$||" $1 | sed "/^$/d"
+    # "s|[ \t]\+//.*$||" comment at the end of line
+    sed -e "s|^[ \t]*//.*$||" -e "s|[ \t]\+//.*$||" $1 | sed "/^$/d"
 }
 
 function merge_json() {
