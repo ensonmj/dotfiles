@@ -15,6 +15,11 @@ CUR_DIR=$(dirname "${BASH_SOURCE[0]}")
 source ${SCRIPT_DIR}/helper.sh
 # merge_vsconf "${CUR_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
 
+# pip
+mkdir -p $HOME/.pip
+safe_link ${CUR_DIR}/pip.conf $HOME/.pip/pip.conf
+
+# miniconda
 CONDA_VERSION=latest
 #MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh"
 MINICONDA_URL="https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-${CONDA_VERSION}-Linux-x86_64.sh"
