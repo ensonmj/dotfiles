@@ -34,9 +34,9 @@ gluten-init:
     # ./build/mvn -Pyarn -DskipTests clean install
     # popd
     #
-    # # spark 3.3.0
-    # # git clone --depth 1 --branch v3.3.0 https://github.com/apache/spark.git spark330
-    # # pushd spark330
+    # # spark 3.3.1
+    # # git clone --depth 1 --branch v3.3.1 https://github.com/apache/spark.git spark331
+    # # pushd spark331
     # # ./build/mvn -Pyarn -DskipTests clean install
     # # popd
     #

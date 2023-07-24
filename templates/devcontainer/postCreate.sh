@@ -58,7 +58,7 @@ sudo apt install -y python3-neovim
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone https://github.com/ensonmj/dotfiles.git "$HOME/.dotfiles"
 fi
-#source $HOME/.dotfiles/install.sh
+source $HOME/.dotfiles/install.sh
 
 # workspace common vscode conf
 install_vsconf ${CONF_DIR}/workspace ${WORKSPACE_DIR}
