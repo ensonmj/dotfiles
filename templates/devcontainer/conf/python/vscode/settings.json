@@ -1,3 +1,18 @@
 {
-    "python.languageServer": "Pylance"
+    "python.languageServer": "Pylance",
+    // "python.analysis.extraPaths": [
+    //     "app"
+    // ],
+    "python.defaultInterpreterPath": "/home/vscode/.conda/envs/jupyter/bin/python",
+    "python.formatting.autopep8Path": "/home/vscode/.conda/envs/jupyter/bin/autopep8",
+    "python.formatting.blackPath": "/home/vscode/.conda/envs/jupyter/bin/black",
+    "python.formatting.yapfPath": "/home/vscode/.conda/envs/jupyter/bin/yapf",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.banditPath": "/home/vscode/.conda/envs/jupyter/bin/bandit",
+    "python.linting.flake8Path": "/home/vscode/.conda/envs/jupyter/bin/flake8",
+    "python.linting.mypyPath": "/home/vscode/.conda/envs/jupyter/bin/mypy",
+    "python.linting.pycodestylePath": "/home/vscode/.conda/envs/jupyter/bin/pycodestyle",
+    "python.linting.pydocstylePath": "/home/vscode/.conda/envs/jupyter/bin/pydocstyle",
+    "python.linting.pylintPath": "/home/vscode/.conda/envs/jupyter/bin/pylint"
 }

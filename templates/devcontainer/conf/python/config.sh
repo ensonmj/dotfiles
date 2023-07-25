@@ -37,6 +37,7 @@ conda init zsh
 
 conda create -y -n jupyter python=3.8 # 创建jupyter环境
 conda activate jupyter # 进入该环境
+pip install pylint flake8 autopep8 black yapf mypy pydocstyle pycodestyle bandit pipenv virtualenv
 conda install -y jupyter notebook # 安装Jupyter包
 conda install -y nb_conda_kernels
 conda install -y ipykernel
