@@ -3,8 +3,10 @@
         "asvetliakov.vscode-neovim": 1
     },
     "http.proxySupport": "on",
-    "workbench.colorTheme": "Community Material Theme High Contrast",
+    "workbench.colorTheme": "Gruvbox Material Dark",
     "workbench.colorCustomizations": {
+        // "editorInlayHint.foreground": "#fff",
+        // "editorInlayHint.background": "#535252",
         // "editor.selectionBackground": "#d1d1c6",
         // "editor.selectionHighlightBackground": "#9c4490"
         "editor.selectionBackground": "#e788ff7c", //Currently SELECTED text
@@ -47,9 +49,11 @@
     "git.ignoreLimitWarning": true,
     "debug.focusEditorOnBreak": true,
     "debug.console.fontSize": 16,
-    "remote.SSH.suppressWindowsSshWarning": true,
+    "security.restrictUNCAccess": false,
     "remote.SSH.path": "C:\\Users\\majian\\ssh.bat",
     "remote.SSH.configFile": "\\\\wsl$\\Ubuntu\\home\\dev\\.ssh\\config",
+    "remote.SSH.suppressWindowsSshWarning": true,
+    "remote.restoreForwardedPorts": false,
     "terminal.integrated.fontSize": 16,
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.shellIntegration.history": 10000,

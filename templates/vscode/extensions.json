@@ -1,11 +1,17 @@
 {
     "recommendations": [
-        "Equinusocio.vsc-community-material-theme",
+        // "Equinusocio.vsc-material-theme",
+        // "equinusocio.vsc-material-theme-icons",
+        "sainnhe.gruvbox-material",
         "johnpapa.vscode-peacock",
         "asvetliakov.vscode-neovim",
         "VSpaceCode.whichkey",
         "ms-vscode-remote.vscode-remote-extensionpack",
         "ms-vscode.remote-explorer",
-        "usernamehw.errorlens"
+        "usernamehw.errorlens",
+        // the above extensions must be installed on local
+        "yzhang.markdown-all-in-one",
+        // "SimonSiefke.svg-preview",
+        "eamodio.gitlens"
     ]
 }
