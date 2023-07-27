@@ -55,10 +55,11 @@ sudo apt install -y python3-neovim
 # }}}
 
 # should prepare ~/.profile ~/.bashrc ~/.zshrc, postCreate*.sh will modify them
-if [ ! -d "$HOME/.dotfiles" ]; then
-    git clone https://github.com/ensonmj/dotfiles.git "$HOME/.dotfiles"
+if [ ! -d "${HOME}/.dotfiles" ]; then
+    git clone https://github.com/ensonmj/dotfiles.git "${HOME}/.dotfiles"
 fi
-source $HOME/.dotfiles/install.sh
+bash ${HOME}/.dotfiles/install_nerdfonts.sh
+bash ${HOME}/.dotfiles/install_conf.sh
 
 # workspace common vscode conf
 install_vsconf ${CONF_DIR}/workspace ${WORKSPACE_DIR}
@@ -71,3 +72,5 @@ while read -r LINE || [ -n "$LINE" ]; do
         install_vsconf ${CONF_DIR}/${LANG} ${WORKSPACE_DIR}
     fi
 done < ${WORKSPACE_DIR}/.devcontainer.conf
+
+bash ${HOME}/.dotfiles/install_tools.sh
