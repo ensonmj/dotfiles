@@ -54,11 +54,10 @@ sudo apt install -y python3-neovim
 # nix-env -iA nixpkgs.neovim nixpkgs.wezterm
 # }}}
 
-# should prepare ~/.profile ~/.bashrc ~/.zshrc, postCreate*.sh will modify them
+# should prepare ~/.profile ~/.bashrc ~/.zshrc, install_vsconf will modify them
 if [ ! -d "${HOME}/.dotfiles" ]; then
     git clone https://github.com/ensonmj/dotfiles.git "${HOME}/.dotfiles"
 fi
-bash ${HOME}/.dotfiles/install_nerdfonts.sh
 bash ${HOME}/.dotfiles/install_conf.sh
 
 # workspace common vscode conf
@@ -73,4 +72,5 @@ while read -r LINE || [ -n "$LINE" ]; do
     fi
 done < ${WORKSPACE_DIR}/.devcontainer.conf
 
+bash ${HOME}/.dotfiles/install_nerdfonts.sh
 bash ${HOME}/.dotfiles/install_tools.sh

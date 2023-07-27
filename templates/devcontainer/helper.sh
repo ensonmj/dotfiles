@@ -52,9 +52,10 @@ function install_vsconf() {
     SRC_DIR=$1
     WORKSPACE_DIR=$2
 
+    # config.sh can modify vscode config, eg. replace env variable
+    source ${SRC_DIR}/config.sh
     # jq '.recommendations[]' ${SRC_DIR}/vscode/extensions.json | xargs -L 1 code --install-extension
     merge_vsconf "${SRC_DIR}/vscode/*" "${WORKSPACE_DIR}/.vscode"
-    source ${SRC_DIR}/config.sh
 }
 
 
