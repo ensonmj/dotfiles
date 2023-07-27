@@ -3,6 +3,7 @@
         "ms-vscode.cpptools",
         "ms-vscode.cmake-tools",
         "xaver.clang-format",
-        "llvm-vs-code-extensions.vscode-clangd"
+        "llvm-vs-code-extensions.vscode-clangd",
+        "matepek.vscode-catch2-test-adapter"
     ]
 }
