@@ -28,14 +28,20 @@
     co = checkout
     ci = commit
     st = status
-    sp = "!f() { \
+    spr = "!f() { \
         git stash drop $(git stash list | grep -w sp | cut -d':' -f1) 2>/dev/null; \
         git stash push -m sp && \
         git pull --rebase && \
         (git stash pop $(git stash list | grep -w sp | cut -d':' -f1); git reset); \
         }; f"
+    sri = "!f() { \
+        git stash drop $(git stash list | grep -w sri | cut -d':' -f1) 2>/dev/null; \
+        git stash push -m sri && \
+        git rebase -i $@ && \
+        (git stash pop $(git stash list | grep -w sri | cut -d':' -f1); git reset); \
+        }; f"
     br = branch
-    hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short --all
+    hist = log --pretty=format:'%C(auto)%h %ad | %s%d [%an]' --graph --date=short
     type = cat-file -t
     dump = cat-file -p
     sed = ! git grep -z --full-name -l '.' | xargs -0 sed -i -e
