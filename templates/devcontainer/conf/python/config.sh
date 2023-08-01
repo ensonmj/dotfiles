@@ -55,3 +55,6 @@ jupyter nbextensions_configurator enable --user
 # Code prettify：PEP8规范优化代码
 # Codefolding：代码折叠——折叠不需要展示的代码
 # Highlighter：Markdown文本高亮
+
+# for rst
+pip install esbonio
