@@ -328,6 +328,11 @@ function sshproxy() {
 }
 # }}}
 
+# pfwd server port
+function pfwd() {
+    ssh -fNT -L 127.0.0.1:$2:127.0.0.1:$2 $1 && echo "Port forward to http://127.0.0.1:$2"
+}
+
 function svn() {
     if [[ "$1" == "log" ]]; then
         # -FX tell `less` to quit if entire file fits on the first screen, not to switch to the alternate screen
