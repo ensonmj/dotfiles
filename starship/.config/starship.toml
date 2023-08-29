@@ -8,6 +8,7 @@ format = """
 [░▒▓](#a3aed2)\
 $os\
 $hostname\
+$container\
 [](bg:#769ff0 fg:#a3aed2)\
 $directory\
 [](fg:#769ff0 bg:#394260)\
@@ -30,7 +31,6 @@ right_format = """
 $cmd_duration\
 [](fg:#5e81ac)\
 """
-
 [os]
 disabled = false
 style = "bg:#a3aed2 fg:#090c0c"
@@ -81,6 +81,10 @@ ssh_only = false
 ssh_symbol = " "
 style = "bg:#a3aed2 fg:#090c0c"
 format = '[ $hostname$ssh_symbol ]($style)'
+[container]
+symbol = " "
+style = "bg:#a3aed2 fg:#090c0c"
+format = '[$symbol]($style)'
 
 [directory]
 style = "fg:#e3e5e5 bg:#769ff0"
@@ -130,7 +134,7 @@ format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
 [time]
 disabled = false
-time_format = "%R" # Hour:Minute Format
+time_format = "%R"                                      # Hour:Minute Format
 style = "bg:#1d2230"
 format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
 
