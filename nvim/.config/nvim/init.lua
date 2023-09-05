@@ -12,6 +12,15 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
+-- workaround for lsp performance
+-- https://github.com/neovim/neovim/issues/23725#issuecomment-1561364086
+local ok, wf = pcall(require, "vim.lsp._watchfiles")
+if ok then
+  wf._watchfunc = function()
+    return function() end
+  end
+end
+
 if vim.g.vscode then
   require("config.vscode")
 end
