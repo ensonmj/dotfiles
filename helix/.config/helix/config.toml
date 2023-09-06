@@ -3,14 +3,19 @@ theme = "onedark"
 [editor]
 auto-save = true
 true-color = true
+cursorline = true
+cursorcolumn = true
 color-modes = true
 bufferline = "multiple"
-soft-wrap.enable = true
 line-number = "relative"
-text-width = 120
 rulers = [80, 120]
-gutters = ["diagnostics", "line-numbers", "spacer", "diff"]
-middle-click-paste = true
+text-width = 120
+
+[editor.soft-wrap]
+enable = true
+#max-wrap = 25 # increase value to reduce forced mid-word wrapping
+#max-indent-retain = 0
+#wrap-indicator = "↪"  # set wrap-indicator to "" to hide it
 
 [editor.whitespace.render]
 nbsp = "all"
@@ -20,8 +25,8 @@ nbsp = "⍽"
 #newline = "⏎"
 #newline = "¬"
 #space = "·"
-tab = "→"
-tabpad = "·"
+tab = "▸" # "→"
+tabpad = " " #"·" # Tabs will look like "→···" (depending on tab width)
 
 [editor.cursor-shape]
 insert = "bar"
@@ -30,9 +35,8 @@ select = "block"
 
 [editor.indent-guides]
 render = true
-character = "╎"
-#character = "┊"
-skip-levels = 1
+character = "╎" # Some characters that work well: "▏", "┆", "┊", "⸽"
+skip-levels = 0
 
 [editor.statusline]
 left = ["mode", "spinner"]
@@ -45,5 +49,3 @@ hidden = false
 [editor.lsp]
 display-messages = true
 display-inlay-hints = true
-auto-signature-help = true
-display-signature-help-docs = true
