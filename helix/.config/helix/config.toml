@@ -3,6 +3,8 @@ theme = "onedark"
 [editor]
 auto-save = true
 true-color = true
+color-modes = true
+bufferline = "multiple"
 soft-wrap.enable = true
 line-number = "relative"
 text-width = 120
@@ -36,7 +38,6 @@ skip-levels = 1
 left = ["mode", "spinner"]
 center = ["file-name"]
 right = ["diagnostics", "version-control", "selections", "position", "file-encoding", "file-line-ending", "file-type"]
-separator = "│"
 
 [editor.file-picker]
 hidden = false
