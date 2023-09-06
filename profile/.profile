@@ -71,7 +71,7 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 [[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
 if [ -d $HOME/.opt ]; then
     for SUB in $HOME/.opt/*; do
-        [[ -d $SUB/bin ]] && export PATH="$SUB/bin:$PATH"
+        [[ -d $SUB/bin ]] && export PATH="$SUB/bin:$PATH" || export PATH="$SUB:$PATH"
     done
 fi
 [[ -d /snap/bin ]] && export PATH="$PATH:/snap/bin"
