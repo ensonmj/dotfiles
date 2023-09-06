@@ -1,0 +1,48 @@
+theme = "onedark"
+
+[editor]
+auto-save = true
+true-color = true
+soft-wrap.enable = true
+line-number = "relative"
+text-width = 120
+rulers = [80, 120]
+gutters = ["diagnostics", "line-numbers", "spacer", "diff"]
+middle-click-paste = true
+
+[editor.whitespace.render]
+nbsp = "all"
+tab = "all"
+[editor.whitespace.characters]
+nbsp = "⍽"
+#newline = "⏎"
+#newline = "¬"
+#space = "·"
+tab = "→"
+tabpad = "·"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "block"
+
+[editor.indent-guides]
+render = true
+character = "╎"
+#character = "┊"
+skip-levels = 1
+
+[editor.statusline]
+left = ["mode", "spinner"]
+center = ["file-name"]
+right = ["diagnostics", "version-control", "selections", "position", "file-encoding", "file-line-ending", "file-type"]
+separator = "│"
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+auto-signature-help = true
+display-signature-help-docs = true
