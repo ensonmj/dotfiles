@@ -16,6 +16,7 @@ $git_branch\
 $git_status\
 [](fg:#394260 bg:#212736)\
 $conda\
+$python\
 $nodejs\
 $rust\
 $golang\
@@ -111,6 +112,11 @@ symbol = "🅒"
 style = "bg:#212736"
 format = '[[ $symbol ($environment) ](fg:#769ff0 bg:#212736)]($style)'
 #ignore_base = false
+
+[python]
+symbol = "🐍 "
+style = "bg:#212736"
+format = '[[ ${symbol}${pyenv_prefix}(${version})(\($virtualenv\))](fg:#769ff0 bg:#212736)]($style)'
 
 [nodejs]
 symbol = ""
