@@ -7,146 +7,156 @@ local utils = require("utils")
 --   window:gui_window():maximize()
 -- end)
 
-wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-  local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
-  local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
-  local SUB_IDX = {
-    "₁",
-    "₂",
-    "₃",
-    "₄",
-    "₅",
-    "₆",
-    "₇",
-    "₈",
-    "₉",
-    "₁₀",
-    "₁₁",
-    "₁₂",
-    "₁₃",
-    "₁₄",
-    "₁₅",
-    "₁₆",
-    "₁₇",
-    "₁₈",
-    "₁₉",
-    "₂₀",
-  }
-  local SUP_IDX = {
-    "¹",
-    "²",
-    "³",
-    "⁴",
-    "⁵",
-    "⁶",
-    "⁷",
-    "⁸",
-    "⁹",
-    "¹⁰",
-    "¹¹",
-    "¹²",
-    "¹³",
-    "¹⁴",
-    "¹⁵",
-    "¹⁶",
-    "¹⁷",
-    "¹⁸",
-    "¹⁹",
-    "²⁰",
-  }
-
-  local left_arrow = SOLID_LEFT_ARROW
-  if tab.tab_index == 0 then
-    left_arrow = ""
-  end
-  local right_arrow = SOLID_RIGHT_ARROW
-  if tab.tab_index == #tabs - 1 then
-    right_arrow = ""
-  end
-
-  local tid = SUB_IDX[tab.tab_index + 1]
-  local pid = SUP_IDX[tab.active_pane.pane_index + 1]
-
-  local function get_icon_title()
-    local process_name = tab.active_pane.foreground_process_name
-    -- remove suffix (wslhost.exe -> wslhost; python3.11 -> python)
-    process_name = utils.basename(process_name):gsub("%d*%.%w+$", "")
-    if not process_name or process_name == "" then
-      process_name = "unknown"
-    end
-
-    -- https://wezfurlong.org/wezterm/config/lua/wezterm/nerdfonts.html
-    local process_icons = {
-      ["unknown"] = wezterm.nerdfonts.cod_workspace_unknown,
-      ["zsh"] = wezterm.nerdfonts.dev_terminal,
-      ["bash"] = wezterm.nerdfonts.cod_terminal_bash,
-      ["wslhost"] = wezterm.nerdfonts.cod_terminal_cmd,
-      ["nvim"] = wezterm.nerdfonts.custom_vim,
-      ["vim"] = wezterm.nerdfonts.dev_vim,
-      ["wget"] = wezterm.nerdfonts.md_arrow_down_bold_box,
-      ["curl"] = wezterm.nerdfonts.md_arrow_down_bold_box_outline,
-      ["tar"] = wezterm.nerdfonts.cod_file_zip,
-      ["unzip"] = wezterm.nerdfonts.cod_file_zip,
-      ["top"] = wezterm.nerdfonts.md_chart_donut_variant,
-      ["docker"] = wezterm.nerdfonts.linux_docker,
-      ["git"] = wezterm.nerdfonts.dev_git,
-      ["cargo"] = wezterm.nerdfonts.dev_rust,
-      ["go"] = wezterm.nerdfonts.dev_go,
-      ["python"] = wezterm.nerdfonts.dev_python,
-      ["lua"] = wezterm.nerdfonts.seti_lua,
-      ["node"] = wezterm.nerdfonts.dev_nodejs_small,
-    }
-
-    return wezterm.format({
-      {
-        Text = string.format(" %s ", process_icons[process_name] or process_name),
-      },
-    })
-  end
-  local title = get_icon_title()
-
-  local foreground = "#1C1B19"
-  local background = "#4E4E4E"
-  if tab.is_active then
-    background = "#FBB829"
-  else
-    -- alert unseen output on non active tabs
-    local has_unseen_output = false
-    for _, pane in ipairs(tab.panes) do
-      if pane.has_unseen_output then
-        has_unseen_output = true
-        break
-      end
-    end
-    if has_unseen_output then
-      title = title .. wezterm.nerdfonts.seti_yml
-      background = "#FE5722"
-    elseif hover then
-      background = "#FF8700"
-    end
-  end
-
-  local edge_foreground = background
-  local edge_background = "#121212"
-  local dim_foreground = "#3A3A3A"
-
-  return {
-    { Attribute = { Intensity = "Bold" } },
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
-    { Text = left_arrow },
-    { Background = { Color = background } },
-    { Foreground = { Color = foreground } },
-    { Text = tid },
-    { Text = title },
-    { Foreground = { Color = dim_foreground } },
-    { Text = pid },
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
-    { Text = right_arrow },
-    { Attribute = { Intensity = "Normal" } },
-  }
-end)
+-- wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+--   local SOLID_LEFT_ARROW = utf8.char(0xe0ba)
+--   local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
+--   local SUB_IDX = {
+--     "₁",
+--     "₂",
+--     "₃",
+--     "₄",
+--     "₅",
+--     "₆",
+--     "₇",
+--     "₈",
+--     "₉",
+--     "₁₀",
+--     "₁₁",
+--     "₁₂",
+--     "₁₃",
+--     "₁₄",
+--     "₁₅",
+--     "₁₆",
+--     "₁₇",
+--     "₁₈",
+--     "₁₉",
+--     "₂₀",
+--   }
+--   local SUP_IDX = {
+--     "¹",
+--     "²",
+--     "³",
+--     "⁴",
+--     "⁵",
+--     "⁶",
+--     "⁷",
+--     "⁸",
+--     "⁹",
+--     "¹⁰",
+--     "¹¹",
+--     "¹²",
+--     "¹³",
+--     "¹⁴",
+--     "¹⁵",
+--     "¹⁶",
+--     "¹⁷",
+--     "¹⁸",
+--     "¹⁹",
+--     "²⁰",
+--   }
+--
+--   local left_arrow = SOLID_LEFT_ARROW
+--   if tab.tab_index == 0 then
+--     left_arrow = ""
+--   end
+--   local right_arrow = SOLID_RIGHT_ARROW
+--   if tab.tab_index == #tabs - 1 then
+--     right_arrow = ""
+--   end
+--
+--   local tid = SUB_IDX[tab.tab_index + 1]
+--   local pid = SUP_IDX[tab.active_pane.pane_index + 1]
+--
+--   local function get_icon_title()
+--     if pcall(function()
+--       tab:get_title()
+--     end) then
+--       return wezterm.format({
+--         {
+--           Text = string.format(" %s ", tab:get_title()),
+--         },
+--       })
+--     end
+--
+--     local process_name = tab.active_pane.foreground_process_name
+--     -- remove suffix (wslhost.exe -> wslhost; python3.11 -> python)
+--     process_name = utils.basename(process_name):gsub("%d*%.%w+$", "")
+--     if not process_name or process_name == "" then
+--       process_name = "unknown"
+--     end
+--
+--     -- https://wezfurlong.org/wezterm/config/lua/wezterm/nerdfonts.html
+--     local process_icons = {
+--       ["unknown"] = wezterm.nerdfonts.cod_workspace_unknown,
+--       ["zsh"] = wezterm.nerdfonts.dev_terminal,
+--       ["bash"] = wezterm.nerdfonts.cod_terminal_bash,
+--       ["wslhost"] = wezterm.nerdfonts.cod_terminal_cmd,
+--       ["nvim"] = wezterm.nerdfonts.custom_vim,
+--       ["vim"] = wezterm.nerdfonts.dev_vim,
+--       ["wget"] = wezterm.nerdfonts.md_arrow_down_bold_box,
+--       ["curl"] = wezterm.nerdfonts.md_arrow_down_bold_box_outline,
+--       ["tar"] = wezterm.nerdfonts.cod_file_zip,
+--       ["unzip"] = wezterm.nerdfonts.cod_file_zip,
+--       ["top"] = wezterm.nerdfonts.md_chart_donut_variant,
+--       ["docker"] = wezterm.nerdfonts.linux_docker,
+--       ["git"] = wezterm.nerdfonts.dev_git,
+--       ["cargo"] = wezterm.nerdfonts.dev_rust,
+--       ["go"] = wezterm.nerdfonts.dev_go,
+--       ["python"] = wezterm.nerdfonts.dev_python,
+--       ["lua"] = wezterm.nerdfonts.seti_lua,
+--       ["node"] = wezterm.nerdfonts.dev_nodejs_small,
+--     }
+--
+--     return wezterm.format({
+--       {
+--         Text = string.format(" %s ", process_icons[process_name] or process_name),
+--       },
+--     })
+--   end
+--   local title = get_icon_title()
+--
+--   local foreground = "#1C1B19"
+--   local background = "#4E4E4E"
+--   if tab.is_active then
+--     background = "#FBB829"
+--   else
+--     -- alert unseen output on non active tabs
+--     local has_unseen_output = false
+--     for _, pane in ipairs(tab.panes) do
+--       if pane.has_unseen_output then
+--         has_unseen_output = true
+--         break
+--       end
+--     end
+--     if has_unseen_output then
+--       title = title .. wezterm.nerdfonts.seti_yml
+--       background = "#FE5722"
+--     elseif hover then
+--       background = "#FF8700"
+--     end
+--   end
+--
+--   local edge_foreground = background
+--   local edge_background = "#121212"
+--   local dim_foreground = "#3A3A3A"
+--
+--   return {
+--     { Attribute = { Intensity = "Bold" } },
+--     { Background = { Color = edge_background } },
+--     { Foreground = { Color = edge_foreground } },
+--     { Text = left_arrow },
+--     { Background = { Color = background } },
+--     { Foreground = { Color = foreground } },
+--     { Text = tid },
+--     { Text = title },
+--     { Foreground = { Color = dim_foreground } },
+--     { Text = pid },
+--     { Background = { Color = edge_background } },
+--     { Foreground = { Color = edge_foreground } },
+--     { Text = right_arrow },
+--     { Attribute = { Intensity = "Normal" } },
+--   }
+-- end)
 
 wezterm.on("update-status", function(window, pane)
   local cells = {}
