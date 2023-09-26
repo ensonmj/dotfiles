@@ -151,5 +151,6 @@ zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le 
 # PS1 {{{
 command -v starship &> /dev/null && eval "$(starship init zsh)"
 # }}}
+command -v zellij &> /dev/null && eval "$(zellij setup --generate-completion zsh | grep "^function")"
 
 # vim: foldmethod=marker

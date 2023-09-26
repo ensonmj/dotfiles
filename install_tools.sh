@@ -20,34 +20,36 @@ curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-
 # cargo install cargo-quickinstall
 # https://gist.github.com/sts10/daadbc2f403bdffad1b6d33aff016c0a
 declare -a bins=(
-	fd-find
-	git-delta
-	ripgrep
-	starship # need to config shell and install nerd fonts
-	zoxide # need to config shell
+	fd-find   # find
+	git-delta # diff
+	ripgrep   # ag, ack
+	starship  # need to config shell and install nerd fonts
+	zoxide    # cd, need to config shell
 )
 cargo binstall --no-confirm --no-symlinks "${bins[@]}"
 
 declare -a tools=(
 	bandwhich
-	bat
-	bottom
+	bat    # cat
+	bottom # top, htop
 	broot
 	dufs
-	du-dust
+	du-dust # du
 	erdtree
-	gitui
+	exa   # ls
+	gitui # git, lazygit
 	hyperfine
 	just
-	procs
+	procs # ps
 	# sccache # depends on pkg-config
-	sd
-	skim
+	sd   # sed
+	skim # fzf
 	stylua
-	tealdeer
+	tealdeer # tldr
 	topgrade
 	tokei
-	xcp
+	xcp    # cp
+	zellij # tmux, screen
 )
 
 declare -A status
