@@ -38,6 +38,8 @@ alias ll='ls -l'
 alias lla='ls -al'
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 #alias tmux='tmux -2'
+alias zj='zellij'
+command -v hx &> /dev/null || alias hx='helix'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
