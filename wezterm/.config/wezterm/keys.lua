@@ -9,15 +9,17 @@ function M.setup(config)
   config.keys = {
     -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
     { key = "a", mods = "LEADER|CTRL", action = act.SendString("\x01") },
-    -- workspace
-    { key = "l", mods = "SHIFT|ALT", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
-    { key = "n", mods = "SHIFT|ALT", action = act.SwitchWorkspaceRelative(1) },
-    { key = "p", mods = "SHIFT|ALT", action = act.SwitchWorkspaceRelative(-1) },
-    -- window
-    { key = "l", mods = "SHIFT|CTRL", action = act.ShowLauncher },
-    { key = "Enter", mods = "SHIFT|CTRL", action = act.ToggleFullScreen },
-    { key = "p", mods = "SHIFT|CTRL", action = act.ActivateCommandPalette },
+    -- debug
     { key = "d", mods = "SHIFT|CTRL", action = act.ShowDebugOverlay },
+    -- launch menu
+    { key = "l", mods = "SHIFT|CTRL", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES|DOMAINS" }) },
+    -- command palette
+    { key = "p", mods = "SHIFT|CTRL", action = act.ActivateCommandPalette },
+    -- workspace
+    { key = "<", mods = "SHIFT|CTRL", action = act.SwitchWorkspaceRelative(-1) },
+    { key = ">", mods = "SHIFT|CTRL", action = act.SwitchWorkspaceRelative(1) },
+    -- window
+    { key = "Enter", mods = "SHIFT|CTRL", action = act.ToggleFullScreen },
     { key = "+", mods = "SHIFT|CTRL", action = act.IncreaseFontSize },
     { key = "-", mods = "SHIFT|CTRL", action = act.DecreaseFontSize },
     { key = "=", mods = "CTRL", action = act.ResetFontSize },
@@ -31,8 +33,6 @@ function M.setup(config)
         description = "Enter new name for tab",
         action = wezterm.action_callback(function(window, pane, line)
           -- line will be `nil` if they hit escape without entering anything
-          -- An empty string if they just hit enter
-          -- Or the actual line of text they wrote
           if line then
             window:active_tab():set_title(line)
           end
