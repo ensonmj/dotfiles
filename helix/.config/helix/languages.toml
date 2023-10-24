@@ -1,0 +1,33 @@
+# [[language]]
+# name = "cpp"
+# language-server = { command = "clangd", args = [
+#     # for performance
+#     "-j=8",
+#     "--malloc-trim",
+#     "--pch-storage=memory",
+#     "--background-index",
+#     # "--compile-commands-dir=${workspaceFolder}",
+#     "--inlay-hints",
+#     "--completion-style=detailed",
+#     # --header-insertion=<value>      - Add #include directives when accepting code completions
+#     #  =iwyu                          -   Include what you use. Insert the owning header for top-level symbols, unless the header is already directly included or the symbol is forward-declared
+#     #  =never                         -   Never insert #include directives as part of code completion
+#     "--header-insertion=never",
+#     # Prepend a circular dot or space before the completion label, depending on whether an include line will be inserted or not
+#     "--header-insertion-decorators",
+#     # When disabled, completions contain only parentheses for function calls. When enabled, completions also contain placeholders for method parameters
+#     "--function-arg-placeholders",
+# ] }
+
+# [[language]]
+# name = "python"
+# roots = [
+#     "pyproject.toml",
+#     "setup.py",
+#     "Poetry.lock",
+#     "pyrightconfig.json",
+#     ".git",
+# ]
+# language-server = { command = "pyright-langserver", args = ["--stdio"] }
+# auto-format = true
+# formatter = { command = 'black', args = ["--quiet", "-"] }
