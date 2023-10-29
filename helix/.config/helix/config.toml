@@ -49,3 +49,7 @@ hidden = false
 [editor.lsp]
 display-messages = true
 display-inlay-hints = true
+
+[keys.normal.space]
+o = ":pipe-to wezterm cli split-pane -- helix-live-grep"
+l = ":pipe-to helix-debug-print"

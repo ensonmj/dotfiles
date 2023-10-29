@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# https://gitlab.com/obxhdx/dotfiles/-/blob/main/config/bin/helix-debug-print
+
+read_selection() {
+  cat | tr -d ' \n'
+}
+
+get_pane_text() {
+  wezterm cli get-text
+}
+
+extract_file_path() {
+  echo "$1" | rg -oP 'NOR\s+.*?\K([^\s]*\.[^\s]*)'
+}
+
+extract_file_extension() {
+  echo "${1##*.}"
+}
+
+generate_debug_print() {
+  local extension=$1
+  local selection=$2
+
+  case "$extension" in
+  "js" | "jsx" | "ts" | "tsx")
+    echo "console.log('==> $selection', $selection)"
+    ;;
+  "py")
+    echo "print(f'==> $selection: {$selection}')"
+    ;;
+  "sh" | "bash" | "ksh" | "zsh" | "fish")
+    echo "echo \"==> $selection: \$$selection\""
+    ;;
+  "rb")
+    echo "puts \"==> $selection: #{$selection}\""
+    ;;
+  "kt" | "kts")
+    echo "println(\"==> $selection: \${$selection}\")"
+    ;;
+  "php")
+    echo "echo \"==> $selection: \$$selection\";"
+    ;;
+  "rs")
+    echo "println!(\"==> $selection: {}\", $selection);"
+    ;;
+  "lua")
+    echo "print(\"==> $selection: \" .. $selection)"
+    ;;
+  *)
+    echo "echo \"==> $selection: \$$selection\""
+    ;;
+  esac
+}
+
+start_insert_mode_on_next_line() {
+  wezterm cli send-text --no-paste "o"
+}
+
+write_text() {
+  wezterm cli send-text "$1"
+}
+
+leave_insert_mode() {
+  printf "\033" | wezterm cli send-text --no-paste
+}
+
+pane_text=$(get_pane_text)
+file_path=$(extract_file_path "$pane_text")
+extension=$(extract_file_extension "$file_path")
+
+selection=$(read_selection)
+debug_print=$(generate_debug_print "$extension" "$selection")
+
+start_insert_mode_on_next_line
+write_text "$debug_print"
+leave_insert_mode
+
+# TODO
+# - Support multiple selections (no idea how, don't even know if possible)
