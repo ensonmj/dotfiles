@@ -39,7 +39,7 @@ declare -a tools=(
 	exa   # ls
 	gitui # git, lazygit
 	hyperfine
-	just
+	just  # make
 	procs # ps
 	# sccache # depends on pkg-config
 	sd   # sed
@@ -49,6 +49,7 @@ declare -a tools=(
 	topgrade
 	tokei
 	xcp    # cp
+	yazi   # ranger
 	zellij # tmux, screen
 )
 
