@@ -223,15 +223,29 @@ wezterm.on("update-status", function(window, pane)
 end)
 
 wezterm.on("open-uri", function(window, pane, uri)
+  wezterm.log_info("open-uri: " .. uri)
   local start, match_end = uri:find("file://")
   if start == 1 then
     local file = uri:sub(match_end + 1)
-    window:perform_action(
-      wezterm.action({ SpawnCommandInNewWindow = { args = { "bash", "-c", "nvim " .. file } } }),
-      pane
-    )
+
+    local direction = "Left"
+    local editor_pane = pane:tab():get_pane_direction(direction)
+    if editor_pane == nil then
+      -- local command = { args = { "bash", "-c", "nvim " .. file } }
+      local command = { args = { "helix", file } } -- for helix
+      local action = wezterm.action({ SplitPane = { direction = direction, command = command } })
+      window:perform_action(action, pane)
+    else
+      local command = ":open " .. file .. "\r\n" -- for helix
+      local action = wezterm.action.SendString(command)
+      window:perform_action(action, editor_pane)
+    end
+    -- prevent the default action from opening in a browser
     return false
   end
+  -- otherwise, by not specifying a return value, we allow later
+  -- handlers and ultimately the default action to caused the
+  -- URI to be opened in the browser
 end)
 
 wezterm.on("toggle-opacity", function(window)

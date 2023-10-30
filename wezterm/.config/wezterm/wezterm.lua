@@ -4,6 +4,10 @@ local wezterm = require("wezterm")
 -- use the config_builder which will help provide clearer error messages
 local config = wezterm.config_builder()
 
+-- config.set_environment_variables = {
+--   PATH = os.getenv('PATH')
+-- }
+
 -- This is where you actually apply your config choices
 config.color_scheme = "Dracula (Official)"
 config.colors = {
@@ -69,6 +73,8 @@ require("launch_menu").setup(config)
 require("domains").setup(config)
 -- OS platform specific
 require("platform").setup(config)
+-- hyperlink
+require("hyperlink").setup(config)
 
 -- and finally, return the configuration to wezterm
 return config

@@ -56,9 +56,26 @@ function M.setup(config)
     { key = "f", mods = "LEADER", action = act.Search("CurrentSelectionOrEmptyString") },
     { key = "v", mods = "LEADER", action = act.PasteFrom("Clipboard") },
     { key = "V", mods = "LEADER|SHIFT", action = act.PasteFrom("PrimarySelection") },
+    -- Quick select path
+    { key = "S", mods = "SHIFT|CTRL", action = act.QuickSelect },
+    -- Open browser with quickselect https://github.com/wez/wezterm/issues/1362#issuecomment-1000457693
+    {
+      key = "O",
+      mods = "SHIFT|CTRL",
+      action = act.QuickSelectArgs({
+        label = "OPEN URL",
+        patterns = {
+          "https?://\\S+",
+        },
+        action = wezterm.action_callback(function(window, pane)
+          local url = window:get_selection_text_for_pane(pane)
+          wezterm.log_info("Opening: " .. url)
+          wezterm.open_with(url)
+        end),
+      }),
+    },
     -- KeyTable
     { key = "c", mods = "LEADER", action = act.ActivateCopyMode },
-    { key = "phys:Space", mods = "LEADER", action = act.QuickSelect },
     -- LEADER-'r': resize-pane mode until we cancel that mode.
     {
       key = "r",
