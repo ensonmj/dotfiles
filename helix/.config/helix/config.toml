@@ -53,3 +53,15 @@ display-inlay-hints = true
 [keys.normal.space]
 o = ":pipe-to wezterm cli split-pane -- helix-live-grep"
 l = ":pipe-to helix-debug-print"
+
+# https://github.com/quantonganh/helix-wezterm/tree/main
+# [keys.normal.";"]
+# b = ":sh helix-wezterm blame"
+# c = ":sh helix-wezterm check"
+# e = ":sh helix-wezterm explorer"
+# f = ":sh helix-wezterm fzf"
+# g = ":sh helix-wezterm lazygit"
+# o = ":sh helix-wezterm open"
+# r = ":sh helix-wezterm run"
+# s = ":sh helix-wezterm test_single"
+# t = ":sh helix-wezterm test_all"
