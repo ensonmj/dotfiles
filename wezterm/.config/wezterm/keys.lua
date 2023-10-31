@@ -136,6 +136,15 @@ function M.setup(config)
       { key = "j", action = act.ActivatePaneDirection("Down") },
     },
   }
+  -- workspace switcher
+  require("workspace_switcher").setup(config, "W", "SHIFT|CTRL", function(label)
+    return wezterm.format({
+      -- { Attribute = { Italic = true} },
+      -- { Foreground = { Color = "green"} },
+      -- { Background = { Color = "black"} },
+      { Text = "󱂬: " .. label },
+    })
+  end)
 end
 
 return M
