@@ -51,8 +51,15 @@ display-messages = true
 display-inlay-hints = true
 
 [keys.normal.space]
+i = ":toggle lsp.display-inlay-hints"
 o = ":pipe-to wezterm cli split-pane -- helix-live-grep"
 l = ":pipe-to helix-debug-print"
+
+
+# https://github.com/helix-editor/helix/discussions/8000#discussioncomment-6821291
+# [keys.normal.space.g]
+# g = ":sh zellij action new-tab -l lg"
+# s = ":sh zellij run -fc -- lazygit"
 
 # https://github.com/quantonganh/helix-wezterm/tree/main
 # [keys.normal.";"]
