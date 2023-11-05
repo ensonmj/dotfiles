@@ -50,6 +50,10 @@ hidden = false
 display-messages = true
 display-inlay-hints = true
 
+# dd -> xd
+#[keys.normal]
+#d = { d = ["extend_line_below", "delete_selection"] }
+
 [keys.normal.space]
 i = ":toggle lsp.display-inlay-hints"
 o = ":pipe-to wezterm cli split-pane -- helix-live-grep"

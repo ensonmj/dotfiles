@@ -72,7 +72,14 @@ case "$1" in
     fi
     ;;
   "open")
-    gh browse $filename:$line_number  
+    #gh browse $filename:$line_number  
+    pane_id=$(wezterm-pane hx)
+    if [ -z "$pane_id" ]; then
+      hx $filename:$line_number
+    else
+      echo ":open $filename:$line_number\r" | wezterm cli send-text --pane-id $pane_id --no-paste
+      wezterm cli activate-pane --pane-id $pane_id
+    fi
     ;;
   "run")
     split_pane_down
