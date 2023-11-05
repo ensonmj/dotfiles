@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+#https://github.com/helix-editor/helix/issues/2177#issuecomment-1661421140
+
+program=$1
+
+tty=$(tty)
+hostname=$(hostname | tr '[:upper:]' '[:lower:]')
+pwd=$(pwd)
+
+wezterm cli list --format json | jq --arg program "$program" --arg tty "$tty" --arg opening_cwd "file://$hostname$pwd" --arg file_path "file://$hostname$file_path" -r '.[] | .cwd as $running_cwd | select((.tty_name != $tty) and (.title | startswith($program)) and (($opening_cwd | contains($running_cwd)) or ($file_path | contains($running_cwd)))) | .pane_id'
