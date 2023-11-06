@@ -20,6 +20,7 @@ enable = true
 [editor.whitespace.render]
 nbsp = "all"
 tab = "all"
+#newline = "all"
 [editor.whitespace.characters]
 nbsp = "⍽"
 #newline = "⏎"
@@ -56,6 +57,9 @@ display-inlay-hints = true
 
 [keys.normal.space]
 i = ":toggle lsp.display-inlay-hints"
+x = ":toggle whitespace.render all none"
+# zen mode
+z = ":toggle gutters.line-numbers.min-width 48 3"
 o = ":pipe-to wezterm cli split-pane -- helix-live-grep"
 l = ":pipe-to helix-debug-print"
 
