@@ -27,6 +27,40 @@ local whichkey = {
   end,
 }
 
+-- workbench
+local workbench = {
+  showCommands = function()
+    vim.fn.VSCodeNotify("workbench.action.showCommands")
+  end,
+  previousEditor = function()
+    vim.fn.VSCodeNotify("workbench.action.previousEditor")
+  end,
+  nextEditor = function()
+    vim.fn.VSCodeNotify("workbench.action.nextEditor")
+  end,
+  naviDown = function()
+    vim.fn.VSCodeNotify("workbench.action.navigateDown")
+  end,
+  naviUp = function()
+    vim.fn.VSCodeNotify("workbench.action.navigateUp")
+  end,
+  naviLeft = function()
+    vim.fn.VSCodeNotify("workbench.action.navigateLeft")
+  end,
+  naviRight = function()
+    vim.fn.VSCodeNotify("workbench.action.navigateRight")
+  end,
+  focusEditor = function()
+    vim.fn.VSCodeNotify("workbench.action.focusActiveEditorGroup")
+  end,
+  moveSideBarRight = function()
+    vim.fn.VSCodeNotify("workbench.action.moveSideBarRight")
+  end,
+  moveSideBarLeft = function()
+    vim.fn.VSCodeNotify("workbench.action.moveSideBarLeft")
+  end,
+}
+
 local comment = {
   selected = function()
     vim.fn.VSCodeNotifyRange("editor.action.commentLine", vim.fn.line("v"), vim.fn.line("."), 1)
@@ -84,18 +118,6 @@ local editor = {
 
   organizeImport = function()
     vim.fn.VSCodeNotify("editor.action.organizeImports")
-  end,
-}
-
-local workbench = {
-  showCommands = function()
-    vim.fn.VSCodeNotify("workbench.action.showCommands")
-  end,
-  previousEditor = function()
-    vim.fn.VSCodeNotify("workbench.action.previousEditor")
-  end,
-  nextEditor = function()
-    vim.fn.VSCodeNotify("workbench.action.nextEditor")
   end,
 }
 
@@ -233,18 +255,6 @@ local fold = {
   end,
 }
 
-local vscode = {
-  focusEditor = function()
-    vim.fn.VSCodeNotify("workbench.action.focusActiveEditorGroup")
-  end,
-  moveSideBarRight = function()
-    vim.fn.VSCodeNotify("workbench.action.moveSideBarRight")
-  end,
-  moveSideBarLeft = function()
-    vim.fn.VSCodeNotify("workbench.action.moveSideBarLeft")
-  end,
-}
-
 local refactor = {
   showMenu = function()
     vim.fn.VSCodeNotify("editor.action.refactor")
@@ -252,10 +262,20 @@ local refactor = {
 }
 
 -- {{{ region keymap
-map({ "n", "v" }, "<leader>", whichkey.show)
+-- whichkey
+-- map({ "n", "v" }, "<leader>", whichkey.show)
+
+-- workbench
 map({ "n", "v" }, "<leader> ", workbench.showCommands)
 map({ "n", "v" }, "H", workbench.previousEditor)
 map({ "n", "v" }, "L", workbench.nextEditor)
+map({ "n", "v" }, "<C-j>", workbench.naviDown)
+map({ "n", "v" }, "<C-k>", workbench.naviUp)
+map({ "n", "v" }, "<C-h>", workbench.naviLeft)
+map({ "n", "v" }, "<C-l>", workbench.naviRight)
+map({ "n" }, "<leader>ve", workbench.focusEditor)
+map({ "n" }, "<leader>vl", workbench.moveSideBarLeft)
+map({ "n" }, "<leader>vr", workbench.moveSideBarRight)
 
 map({ "n" }, "<leader>i", editor.organizeImport)
 
@@ -328,11 +348,6 @@ map({ "n" }, "<leader>sr", search.reference)
 map({ "n" }, "<leader>sR", search.referenceInSideBar)
 map({ "n" }, "<leader>sp", search.project)
 map({ "n" }, "<leader>st", search.text)
-
--- vscode
-map({ "n" }, "<leader>ve", vscode.focusEditor)
-map({ "n" }, "<leader>vl", vscode.moveSideBarLeft)
-map({ "n" }, "<leader>vr", vscode.moveSideBarRight)
 
 --folding
 map({ "n" }, "<leader>zr", fold.openAll)
