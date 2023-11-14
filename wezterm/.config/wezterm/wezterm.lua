@@ -8,6 +8,9 @@ local config = wezterm.config_builder()
 --   PATH = os.getenv('PATH')
 -- }
 
+-- for debug
+-- config.exit_behavior = 'Hold'
+
 -- This is where you actually apply your config choices
 config.color_scheme = "Dracula (Official)"
 config.colors = {
