@@ -1,0 +1,548 @@
+#!/usr/bin/env bash
+#
+# Author: Davide Galassi <davxy@datawok.net>
+# Version: 0.1.8
+#
+# Extensions used by Helix editor
+# https://github.com/davxy/script-nest/blob/main/bin/helix-ext
+#
+# Depedencies:
+# - `zellij`
+# - `ff`: https://github.com/davxy/script-nest/blob/main/bin/ff
+# - `fzf` for the `search` subcommand
+# - `bat` for the `search --buffer` option
+# - `git` for the `git` subcommand
+# - `gh` for the `git` subcommand `--browse` option
+
+# Construct a trampoline editor
+function make_editor() {
+    bin="$EXT_DIR/bin/edit"
+    cat > "$bin" <<EOF
+#!/usr/bin/env bash
+zellij action focus-previous-pane
+zellij action write 27
+zellij action write-chars ":open \$@"
+zellij action write 13
+zellij action focus-next-pane
+#zellij action write-chars ":q"
+#zellij action write 13
+EOF
+    chmod +x "$bin"
+}
+
+# Construct a trampoline xdg_open
+function make_xdg_open() {
+    bin="$EXT_DIR/bin/xdg-open"
+    cat > "$bin" <<EOF
+#!/usr/bin/env bash
+if [[ -f "\$1" ]]; then
+    /tmp/helix-ext/bin/edit "\$1"
+else
+    /usr/bin/xdg-open "\$1"
+fi
+EOF
+    chmod +x "$bin"
+}
+
+function make_ext_dir() {
+    mkdir -p "$EXT_DIR/bin"
+    make_editor
+    make_xdg_open
+}
+
+# Opens a list of files.
+#
+# Input files should be a space separated list of "<name>:<line>"
+function open_files() {
+    local files=$1
+    # Select editor pane
+    zellij action focus-previous-pane
+    # Write down open command
+    # Looks like carriage return is the way to do this (line feed doesn't work)
+    zellij action write 27  # ESC
+    zellij action write-chars ":open $files"
+    zellij action write 13  # CR
+    # Move focus back to working pane
+    zellij action focus-next-pane
+}
+
+# Search some text in helix current buffer
+function search_text() {
+    local text=$1
+    # Select editor pane
+    zellij action focus-previous-pane
+    # Write down search command
+    zellij action write 27  # ESC
+    zellij action write-chars "/$text"
+    zellij action write 13  # CR
+    # Move focus back to working pane
+    zellij action focus-next-pane
+}
+
+# Saturated subtraction
+function saturating_sub() {
+    if (( $2 >= $1 )); then
+        echo 1
+    else
+        echo $(( $1 - $2 ))
+    fi
+}
+
+# Get current file name and line number from the helix status bar.
+# Assumes the following helix configuration:
+#
+# ```toml
+# [editor.statusline]
+# left = ["mode", "spinner"]
+# center = ["file-name"]
+# right = ["diagnostics", "selections", "position-percentage", "position"]
+# ```
+# Doesn't work if the "spinner" is in action...
+function current_file_and_line() {
+    # Select original pane
+    zellij action focus-previous-pane
+    # Capture output of the original pane
+    zellij action dump-screen "$DUMP_FILE"
+    # Back to working pane
+    zellij action focus-next-pane
+
+    # Extract status line
+    status_line=$(cat $DUMP_FILE | grep -E "(NOR|INS|SEL)")
+    rm -f $DUMP_FILE
+    # Manage multiple opened windows
+    status_line=$(echo $status_line | sed -n -E 's/.*(NOR|INS|SEL)[[:space:]]*(.*)/\1 \2/p')
+
+    filename=$(echo $status_line | cut -d' ' -f2)
+    # Try to detect if 'spinner' is present on the line
+    # "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" 
+    if [[ "$filename" =~ [⣾⣽⣻⢿⡿⣟⣯⣷] ]]; then
+        filename=$(echo $status_line | cut -d' ' -f3)
+    fi
+    # Expand eventual "~"
+    filename=$(eval echo $filename)
+    # Fetch line number
+    line=$(echo $status_line | rev | cut -d' ' -f1 | rev | cut -d ':' -f1)
+    echo "$filename:$line"
+}
+
+# Get current file name
+function current_file() {
+    fl=$(current_file_and_line)
+    file=$(echo $fl | cut -d':' -f1)
+    echo "$file"
+}
+
+# Search in current working directory
+# 
+# First argument should be any extra option to pass to `ff` script (like "f")
+function search_cwd() {
+    opts="-x"
+    if [[ $1 = "-f" ]]; then
+        opts="${opts}f"
+        shift
+    fi
+    query=""
+    if [[ $1 == "-q" && ${#2} != 1 ]]; then
+        query="$2"
+    fi
+
+    zellij action toggle-fullscreen
+    file_paths=$(ff "$opts" -q "$query")
+    zellij action toggle-fullscreen
+
+    new_paths=""
+    for file in $file_paths; do
+        new_paths="${new_paths} ${PWD}/${file}"
+    done
+    file_paths=$new_paths
+
+    if [[ $file_paths == "" ]]; then
+        return 1
+    fi
+
+    open_files "$file_paths"
+}
+
+# Search in git workspace
+function search_ws() {
+    wd=$(pwd)
+    ws=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ $? -ne 0 ]; then
+        echo "Not in a git working directory"; sleep 2; return 1
+    fi
+    cd $ws
+    search_cwd $@
+    cd $wd
+}
+
+# Seach in current buffer
+function search_buf() {
+    query=""
+    if [[ $1 == "-q" && ${#2} != 1 ]]; then
+        query="$2"
+    fi
+
+    file=$(current_file)
+    if [[ $file == "[scratch]" ]]; then
+        echo "Can't search in scratch buffer"; sleep 2; return 1
+    fi
+
+    zellij action toggle-fullscreen
+    flq="$(ff -v -q "$query" "$file")"
+    zellij action toggle-fullscreen
+
+    fl=$(echo "$flq" | grep "result" | awk '{ print $2 }')
+    if [[ "$fl" != "" ]]; then
+        open_files "$fl"
+        query=$(echo "$flq" | grep "query" | awk '{ print $2}')
+        if [[ $query != "" ]]; then
+            search_text "$query"
+        fi
+    fi
+}
+
+# Print git status
+function git_status() {
+    zellij action toggle-fullscreen
+    file=$(git status --short | \
+         awk '{ printf("[%s] %s\n", $1, $2) }' | \
+         fzf --preview 'git diff --color {2}' --preview-window 'up,~4,+{2}+4/2' | \
+         awk '{ print $2 }')
+    zellij action toggle-fullscreen
+    if [[ $file == "" ]]; then
+        return 1
+    fi
+
+    open_files "${file}:1"
+}
+
+# Print git blame information
+function git_blame() {
+    fl=$(current_file_and_line)
+    file=$(echo $fl | cut -d':' -f1)
+    line=$(echo $fl | cut -d':' -f2)
+    git ls-files --error-unmatch "$file" 2> /dev/null
+    if [ $? -ne 0 ]; then
+        echo "Not in a git working directory"; sleep 3; return 1
+    fi
+    start=$(saturating_sub $line 10)
+    git blame -L $start,+100 $file --color-by-age --color-lines
+}
+
+# Open current file and line in a browser using `gh` tool
+function git_browse() {   
+    fl=$(current_file_and_line)
+    file=$(echo $fl | cut -d':' -f1) 
+    line=$(echo $fl | cut -d':' -f2)
+    file_path=$(realpath $file)
+
+    git ls-files --error-unmatch "$file_path" >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        # Not versioned file. Open the repo root
+        fl=""
+    else
+        git_root=$(git rev-parse --show-toplevel)
+        fl="${file_path#$git_root/}:$line"
+    fi
+
+    branch=$(git symbolic-ref --short HEAD)
+
+    remote=$(git config --get branch.${branch}.remote)
+    if [[ $remote == "" ]]; then
+        echo "Warning no 'remote' associated to track branch '$branch'."
+        echo "Available remotes:"
+        git remote -v | awk '{ 
+            if ($3 == "(fetch)") {
+                printf("  - \"%s\": %s\n", $1, $2) }
+            }
+        '
+        echo "Fix with: 'git branch --set-upstream-to=origin/main $branch'."
+        read -p "Enter remote to use [origin]: " remote
+        remote=${remote:-origin}
+    fi
+
+    remote_url=$(git remote get-url $remote)
+    if [[ $remote_url == "" ]]; then
+        echo "No remote url for $remote"
+        sleep 3
+        return 1
+    fi
+
+    gh browse "$fl" -b "$branch" -R "$remote_url"
+    # Necessary sleep...
+    sleep 3
+}
+
+# Open markdown file table of contents
+function markdown_toc() {
+    file=$(current_file)
+    zellij action toggle-fullscreen
+    choice=$(cat $file | grep -n "^#" | sed 's/#/  /g' | awk -F':' '{printf("%4s - %s\n", $1, $2)}' | fzf --no-sort --exact --cycle --layout=reverse --header="'$file' TOC")
+    zellij action toggle-fullscreen
+    line=$(echo $choice | cut -d' ' -f1)
+    if [[ "$line" != "" ]]; then
+        open_files "$file:$line"
+    fi
+}
+
+# Diff current buffer with the one in the disk
+function diff_with_saved() {
+    fl=$(current_file_and_line)
+    file=$(echo $fl | cut -d':' -f1)
+    line=$(echo $fl | cut -d':' -f2)
+
+    # Select original pane
+    zellij action focus-previous-pane
+
+    # Save buffer to a temporary file by copying buffer content to a scratch
+    # buffer and saving it to DUMP_FILE (this will left untouched the current
+    # buffer, with its pending changes as well)
+    zellij action write-chars "%y"
+    zellij action write-chars "${line}G"
+    zellij action write-chars ":new"
+    zellij action write 13
+    zellij action write-chars "p"
+    # Remove first empty line
+    zellij action write-chars "ggd"
+    # Write temporary buffer in DUMP_FILE
+    zellij action write-chars ":write! $DUMP_FILE"
+    zellij action write 13
+    # Close temporary file buffer
+    zellij action write-chars ":buffer-close"
+    zellij action write 13
+
+    # Back to working pane
+    zellij action focus-next-pane
+
+    if command -v delta &> /dev/null; then
+        delta --paging always $file $DUMP_FILE
+    else
+        diff -u --color $file $DUMP_FILE | bat --plain --paging always
+    fi
+
+    rm -f $DUMP_FILE
+}
+
+# Resize a pane
+function resize_pane() {
+    counter=1
+    while [ $counter -le 3 ]; do
+        zellij action resize decrease
+        ((counter++))
+    done
+}
+
+# Open gitui pane
+function gitui_pane() {
+    if [ -e $GITUI_FILE ]; then
+        return 1
+    fi
+    zellij action rename-pane "gitui"
+
+    touch $GITUI_FILE
+    GIT_EDITOR="$EXT_DIR/bin/edit" gitui
+    rm -f $GITUI_FILE
+}
+
+# Open broot pane
+function tree_pane() {
+    if [ -e $BROOT_FILE ]; then
+        return 1
+    fi
+    zellij action rename-pane "broot"
+
+    file=$(current_file)
+    if [[ $file == "[scratch]" ]]; then
+        file=
+    fi
+    dir=$(dirname "$file")
+
+    touch $BROOT_FILE
+    EDITOR="$EXT_DIR/bin/edit" broot "$dir"
+    rm -f $BROOT_FILE
+
+    
+}
+
+# Open terminal pane
+function term_pane() {
+    if [ -e $TERM_FILE ]; then
+        return 1
+    fi
+    zellij action rename-pane "term"
+
+    touch $TERM_FILE
+    EDITOR="$EXT_DIR/bin/edit" /bin/bash
+    rm -f $TERM_FILE
+}
+
+# Print help and sleep $1 seconds
+function help() {
+    echo "Usage: helix-ext <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "- 'search'"
+    echo "   -b, --buffer: search in current buffer content"
+    echo "   -c, --current: search in current working directory"
+    echo "   -C, --current-inc-path: search in current working directory (include path)"
+    echo "   -w, --workspace: search in git workspace (requires to be in a git repo)"
+    echo "   -W, --workspace-inc-path: search in git workspace (include path)"
+    echo "- 'git'"
+    echo "   -u, --ui: git-ui"
+    echo "   -s, --status: print working dir status"
+    echo "   -b, --blame: print blame info for current file"
+    echo "   -B, --browse: browse remote repo at current file and line"
+    echo "- 'markdown'"
+    echo "   - t, --toc: table of contents"
+    echo "- 'diff': diff buffer unsaved modifications with backing file"
+    echo "- 'tree': open file tree (broot)"
+    echo "- 'term': open terminal"
+    echo "- 'clean': cleanup helix instance data"
+    sleep $1
+    exit 1
+}
+
+EXT_DIR="/tmp/helix-ext"
+if [ ! -d "$EXT_DIR" ]; then
+    make_ext_dir
+fi
+
+CANARY_FILE="${EXT_DIR}/canary"
+
+if [ ! -e "$CANARY_FILE" ]; then
+    # Be sure the parent process is Helix
+    # Get the parent process ID (PPID) of the current process
+    parent_pid=$PPID
+    # Get the name of the parent process using the PPID
+    parent_name=$(ps -o comm= -p "$parent_pid")
+    if [[ $parent_name != "helix" && $parent_name != "hx" ]]; then 
+        echo "This script should be called from Helix (got $parent_name)"
+        exit
+    fi
+    # Save the helix process instance pid in CANARY_FILE (to get it later)
+    echo $PPID > "$CANARY_FILE"
+
+    direction="down"
+    if [[ $1 == "tree" ]]; then
+        direction="right"
+    fi
+
+    read userinput
+
+    # Re-execute the script in a working pane
+    zellij action rename-pane "helix"
+    exec zellij run -n "helix-ext" -d $direction -- helix-ext $@ "$userinput"
+fi
+
+# TODO: testing if improves reliability
+sleep 0.1
+
+# Remove the canary file
+helix_pid=$(cat $CANARY_FILE)
+rm $CANARY_FILE
+
+INSTANCE_DIR="${EXT_DIR}/${helix_pid}"
+mkdir -p ${INSTANCE_DIR}
+
+DUMP_FILE="${INSTANCE_DIR}/dump" 
+BROOT_FILE="${INSTANCE_DIR}/broot"
+GITUI_FILE="${INSTANCE_DIR}/gitui"
+TERM_FILE="${INSTANCE_DIR}/term"
+
+direction="down"
+if [[ $1 == "tree" ]]; then
+    direction="right"
+fi
+resize_pane $direction
+
+# # Check if this is the first helix-ext program for this helix instance
+# if [ -z "$(ls -A ${INSTANCE_DIR})" ]; then
+#     zellij action toggle-pane-frames
+# fi
+
+# Create a tag file for the program
+touch "${INSTANCE_DIR}/$$"
+
+# Default to custom bins (xdg-open)
+export PATH="$EXT_DIR/bin:$PATH"
+
+case "$1" in
+    "search") 
+        case $2 in
+            "-b"|"--buffer")
+                search_buf -q "$3"
+                ;;
+            "-c"|"--current")
+                search_cwd -q "$3"
+                ;;
+            "-C"|"--current-inc-path")
+                search_cwd -f -q "$3"
+                ;;
+            "-w"|"--workspace")
+                search_ws -q "$3"
+                ;;
+            "-W"|"--workspace-inc-path")
+                search_ws -f -q "$3"
+                ;;
+            "*")
+                help 3
+        esac
+        ;;
+    "git")
+        case $2 in
+            "-u"|"--ui")
+                gitui_pane
+                ;;
+            "-s"|"--status")
+                git_status
+                ;;
+            "-b"|"--blame")
+                git_blame
+                ;;
+            "-B"|"--browse")
+                git_browse
+                ;;
+            "*")
+                help 3
+        esac
+        ;;
+    "markdown")
+        case $2 in
+            "-t"|"--toc")
+                markdown_toc
+                ;;
+            "*")
+                help 3
+        esac
+        ;;
+    "diff")
+        diff_with_saved
+        ;;
+    "tree")
+        tree_pane
+        ;;
+    "term")
+        term_pane
+        ;;
+    "clean")
+        echo "Removing all helix-ext data for current instance ($helix_pid)"
+        sleep 2
+        rm -rf $INSTANCE_DIR
+        ;;
+    *)
+        help 3
+        ;;
+esac
+
+# Remove helix-ext instance file
+rm -f "${INSTANCE_DIR}/$$"
+# # Check if this is the last helix-ext instance program
+# if [ -z "$(ls -A ${INSTANCE_DIR})" ]; then
+#     zellij action toggle-pane-frames
+# fi
+
+# Remove instance folder (if empty)
+rmdir --ignore-fail-on-non-empty "$INSTANCE_DIR"
+
+# Close working pane
+zellij action close-pane
