@@ -39,12 +39,10 @@ alias lla='ls -al'
 alias vimenc='vim -c '\''let $enc=&fileencoding | execute "!echo Encoding: $enc" | q'\'''
 #alias tmux='tmux -2'
 alias zj='zellij'
-command -v hx &> /dev/null || alias hx='helix'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 # }}}
 
 # Environment {{{
@@ -53,15 +51,14 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # SDL_VIDEODRIVER=wayland
 
 #performance acceleration for sort etc.
-#export LC_ALL=C
-#zsh PROMPT can be disrupted by "LC_ALL=C"
+#export LC_ALL=C #zsh PROMPT can be disrupted by "LC_ALL=C"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LESSCHARSET=utf-8
-export EDITOR=vim
 unset SSH_ASKPASS
 # colored GCC warnings and errors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
 # enable public access for X11, this should just set on ssh client side {{{
 # export DISPLAY=$(ip route list default | awk '{print $3}'):0
 # export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
@@ -80,6 +77,31 @@ fi
 [[ -d $HOME/.cabal/bin ]] && export PATH="$PATH:$HOME/.cabal/bin" #pandoc
 export PATH=.:$PATH
 
+#homebrew
+[[ -d $HOME/.linuxbrew ]] && eval "$($HOME/.linuxbrew/bin/brew shellenv)"
+[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if command -v brew &> /dev/null && brew list | grep coreutils > /dev/null ; then
+    PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+    MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"
+fi
+
+#nix
+# [[ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]] && source $HOME/.nix-profile/etc/profile.d/nix.sh
+
+#dotenv
+# https://gist.github.com/mihow/9c7f559807069a03e302605691f85572
+# s/\r//g remove carriage return(\r)
+# "s/'/'\\\''/g" replaces every single quote with '\'', which is a trick sequence in bash to produce a quote :)
+# "s/=\(.*\)/='\1'/g" converts every a=b into a='b'
+[ -f $HOME/.env ] && while read -r LINE; do
+    if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
+        ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
+        eval "export $ENV_VAR"
+    fi
+done < $HOME/.env
+# }}}
+
+# Load scripts, may change enviroments {{{
 #tmux
 if [ -z "$TMUX" ]; then
     #run this outside of tmux!
@@ -92,22 +114,9 @@ else
     #inside tmux!
     export TERM=screen-256color
 fi
-# }}}
 
-# Load scripts {{{
 #tmuxinator
 [[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] && source $HOME/.tmuxinator/scripts/tmuxinator
-
-#nix
-# [[ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]] && source $HOME/.nix-profile/etc/profile.d/nix.sh
-
-#homebrew
-[[ -d $HOME/.linuxbrew ]] && eval "$($HOME/.linuxbrew/bin/brew shellenv)"
-[[ -d /home/linuxbrew/.linuxbrew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-if command -v brew &> /dev/null && brew list | grep coreutils > /dev/null ; then
-    PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
-    MANPATH="$(brew --prefix coreutils)/libexec/gnuman:$MANPATH"
-fi
 
 #rust
 [[ -f $HOME/.cargo/env ]] && source $HOME/.cargo/env
@@ -134,18 +143,11 @@ if [ -d $HOME/.rbenv ]; then
     export PATH="$HOME/.rbenv/bin:$PATH"
     eval "$(rbenv init -)"
 fi
+# }}}
 
-#dotenv
-# https://gist.github.com/mihow/9c7f559807069a03e302605691f85572
-# s/\r//g remove carriage return(\r)
-# "s/'/'\\\''/g" replaces every single quote with '\'', which is a trick sequence in bash to produce a quote :)
-# "s/=\(.*\)/='\1'/g" converts every a=b into a='b'
-[ -f $HOME/.env ] && while read -r LINE; do
-    if [[ $LINE != '#'* ]] && [[ $LINE == *'='* ]]; then
-        ENV_VAR=$(echo $LINE | sed -e 's/\r//g' -e "s/'/'\\\''/g")
-        eval "export $ENV_VAR"
-    fi
-done < $HOME/.env
+# after environments setup {{{
+command -v hx &> /dev/null || alias hx='helix'
+export EDITOR=vim
 # }}}
 
 # self-defined functions {{{
