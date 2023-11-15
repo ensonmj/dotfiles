@@ -2,6 +2,11 @@
 
 echo "Start to install some command line tools, $(date)"
 
+# helix
+HX_VER="23.10"
+wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/helix-${HX_VER}-x86_64-linux.tar.xz"
+tar -xf "helix-${HX_VER}-x86_64-linux.tar.xz" -C ~/.opt
+
 if ! command -v cargo &>/dev/null; then
 	export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 	export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
