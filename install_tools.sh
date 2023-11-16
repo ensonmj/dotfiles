@@ -4,8 +4,15 @@ echo "Start to install some command line tools, $(date)"
 
 # helix
 HX_VER="23.10"
-wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/helix-${HX_VER}-x86_64-linux.tar.xz"
-tar -xf "helix-${HX_VER}-x86_64-linux.tar.xz" -C ~/.opt
+HX_TAR="helix-${HX_VER}-x86_64-linux.tar.xz"
+wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/${HX_TAR}"
+tar -xf "${HX_TAR}" -C ~/.opt
+
+# fzf
+FZF_VER="0.44.0"
+FZF_TAR="fzf-${FZF_VER}-linux_amd64.tar.gz"
+wget "https://github.com/junegunn/fzf/releases/download/${FZF_VER}/${FZF_TAR}"
+tar -xf "${FZF_TAR}" -C ~/.local/bin
 
 if ! command -v cargo &>/dev/null; then
 	export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
