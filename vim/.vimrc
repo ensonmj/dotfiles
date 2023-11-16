@@ -162,6 +162,9 @@ set wildignore+=.git,.hg,.svn
 
 " Can supplement a tag in a command-line.
 set wildoptions=tagfile
+
+" modeline
+set modeline
 "}}}
 " ====================================================
 " Search
