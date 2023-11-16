@@ -61,7 +61,7 @@ declare -a tools=(
 	topgrade
 	tokei
 	xcp    # cp
-	yazi   # ranger
+	yazi-fm   # ranger
 	zellij # tmux, screen
 )
 
