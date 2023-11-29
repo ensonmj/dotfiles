@@ -42,4 +42,57 @@ function M.get_hostname_cwd(pane)
   return hostname, cwd
 end
 
+-- function M.isDir(name)
+--     if type(name)~="string" then return false end
+--     return os.execute('test -d '..name)
+-- end
+
+-- function M.isFile(name)
+--     if type(name)~="string" then return false end
+--     return os.execute('test -f '..name)
+-- end
+
+-- function M.exists(name)
+--     if type(name)~="string" then return false end
+--     return os.execute('test -e '..name)
+-- end
+
+--- Check if a file or directory exists in this path
+function M.exists(file)
+  local ok, err, code = os.rename(file, file)
+  -- code==13: Permission denied, but it exists
+  return (ok or code == 13) and true or false
+end
+
+--- Check if a directory exists in this path
+function M.isdir(path)
+  -- "/" works on both Unix and Windows
+  return M.exists(path .. "/")
+end
+
+-- //somehost/etc/fstab:2:1:3
+-- //localhost/etc/fstab
+-- ///etc/fstab
+-- /etc/fstab:2:1
+-- /etc/fstab:2
+-- //c:/etc/fstab:2:1
+function M.normalize_path(path)
+  -- remove extra "/"
+  if path:match("///") then
+    return M.normalize_path(path:sub(3))
+  elseif path:match("//") then
+    return M.normalize_path(path:sub(2))
+  end
+
+  -- caution: use lua regex pattern
+  -- test without ":row:col"
+  local file = string.gsub(path, ":%d+", "")
+  if not M.exists(file) then
+    -- try to remove "/hostname"
+    path = string.gsub(path, "(/[%w:]+)(/.*)", "%2")
+  end
+  wezterm.log_info("normalized path: " .. path)
+  return path
+end
+
 return M

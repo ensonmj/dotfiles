@@ -223,10 +223,12 @@ wezterm.on("update-status", function(window, pane)
 end)
 
 wezterm.on("open-uri", function(window, pane, uri)
-  wezterm.log_info("open-uri: " .. uri)
-  local start, match_end = uri:find("file://")
+  wezterm.log_info("open uri: " .. uri)
+  local start, match_end = uri:find("file:")
   if start == 1 then
     local file = uri:sub(match_end + 1)
+    file = utils.normalize_path(file)
+    wezterm.log_info("open file: " .. file)
 
     local direction = "Left"
     local editor_pane = pane:tab():get_pane_direction(direction)

@@ -4,11 +4,12 @@ local M = {}
 function M.setup(config)
   -- default rules as base
   config.hyperlink_rules = wezterm.default_hyperlink_rules()
+  -- caution: use rust regex pattern
   for _, rule in ipairs({
     -- local file "/home/ensonmj/.bashrc:2:1"
     {
-      regex = "^/[^/\r\n]+(?:/[^/\r\n]+)*:\\d+:\\d+",
-      format = "$0",
+      regex = "/[^/\r\n ]+(?:/[^/\r\n ]+)*(:\\d+){0,2}\\b",
+      format = "file://$0",
     },
     -- make username/project paths clickable. this implies paths like the following are for github.
     -- ( "nvim-treesitter/nvim-treesitter" | wbthomason/packer.nvim | wez/wezterm | "wez/wezterm.git" )
