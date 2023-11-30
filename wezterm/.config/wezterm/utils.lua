@@ -20,25 +20,25 @@ end
 -- path: "file://HOSTNAME/home/user/xxx"
 -- path: "file:///C:/Users/user/xxx", hostname is empty on x86_64-pc-windows-msvc
 function M.get_hostname_cwd(pane)
-  local path = pane:get_current_working_dir()
-  if not path then
+  local uri = pane:get_current_working_dir()
+  if not uri then
     return nil, nil
   end
+  local path = uri.file_path
 
-  local uri = path:sub(8) -- remove "file://"
-  local slash = uri:find("/")
+  local slash = path:find("/")
   if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-    local cwd = M.shorten_path(uri:sub(slash + 1)) -- remove extra "/"
+    local cwd = M.shorten_path(path:sub(slash + 1)) -- remove extra "/"
     return nil, cwd
   end
 
-  local hostname = uri:sub(1, slash - 1)
+  local hostname = path:sub(1, slash - 1)
   local dot = hostname:find("[.]")
   if dot then
     hostname = hostname:sub(1, dot - 1)
   end
 
-  local cwd = M.shorten_path(uri:sub(slash))
+  local cwd = M.shorten_path(path:sub(slash))
   return hostname, cwd
 end
 
