@@ -11,6 +11,7 @@ HX_TAR="helix-${HX_VER}-x86_64-linux.tar.xz"
 wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/${HX_TAR}"
 tar -xf "${HX_TAR}" -C ~/.opt
 rm -rf "${HX_TAR}"
+python3 -mpip install --user 'python-lsp-server[all]'
 # }}}
 
 # nvim {{{
