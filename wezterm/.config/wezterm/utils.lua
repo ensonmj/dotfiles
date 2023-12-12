@@ -8,38 +8,30 @@ function M.basename(s)
   return string.gsub(s, "(.*[/\\])(.*)", "%2")
 end
 
--- shorten the path by using ~ as $HOME.
-function M.shorten_path(path)
-  local home = os.getenv("HOME")
-  if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-    home = os.getenv("USERPROFILE"):gsub("\\", "/")
+-- get local cwd, can't get ssh remote cwd
+function M.get_cwd(pane)
+  -- path: "file://HOSTNAME/home/user/xxx"
+  -- path: "file:///C:/Users/user/xxx", hostname is empty on x86_64-pc-windows-msvc
+  -- path: "file:///mnt/c/Users/user/xxx", hostname is empty on WSL
+  local cwd = pane:get_current_working_dir()
+  if not cwd then
+    return nil
   end
-  return path:gsub("^" .. home, "~")
-end
+  cwd = cwd.file_path
 
--- path: "file://HOSTNAME/home/user/xxx"
--- path: "file:///C:/Users/user/xxx", hostname is empty on x86_64-pc-windows-msvc
-function M.get_hostname_cwd(pane)
-  local uri = pane:get_current_working_dir()
-  if not uri then
-    return nil, nil
-  end
-  local path = uri.file_path
+  -- local hostname = pane:get_user_vars().WEZTERM_HOST
 
-  local slash = path:find("/")
-  if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-    local cwd = M.shorten_path(path:sub(slash + 1)) -- remove extra "/"
-    return nil, cwd
-  end
+  local home = os.getenv("HOME") or "~"
+  -- if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+  --   home = os.getenv("USERPROFILE"):gsub("\\", "/")
+  -- end
 
-  local hostname = path:sub(1, slash - 1)
-  local dot = hostname:find("[.]")
-  if dot then
-    hostname = hostname:sub(1, dot - 1)
-  end
+  -- local HOME_DIR = string.format("%s/%s/", hostname, home)
+  -- wezterm.log_info("HOME_DIR: " .. HOME_DIR)
 
-  local cwd = M.shorten_path(path:sub(slash))
-  return hostname, cwd
+  -- shorten the path by using ~ as $HOME.
+  -- return cwd == HOME_DIR and " ~" or string.format(" %s", string.gsub(cwd, "(.*/)(.*)/", "%2"))
+  return cwd:gsub(home, "~")
 end
 
 -- function M.isDir(name)
