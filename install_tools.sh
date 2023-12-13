@@ -98,6 +98,21 @@ for bin in "${!status[@]}"; do
 done
 # }}}
 
+# wezterm {{{
+# https://tjex.net/hacks/installing-wezterm-on-a-raspberry-pi-or-linux-server/
+# git clone --depth=1 --branch=main --recursive https://github.com/wez/wezterm.git
+# cd wezterm
+# git submodule update --init --recursive
+# ./get-deps
+# cargo build --release
+# cd target/release
+# sudo mkdir -p /usr/local/bin /etc/profile.d
+# sudo install -Dm755 assets/open-wezterm-here wezterm wezterm-gui wezterm-mux-server strip-ansi-escapes -t /usr/local/bin
+# sudo install -Dm644 assets/shell-integration/* -t /etc/profile.d
+# sudo install -Dm644 assets/shell-completion/zsh /usr/local/share/zsh/site-functions/_wezterm
+# sudo install -Dm644 assets/shell-completion/bash /etc/bash_completion.d/wezterm
+# }}}
+
 # nix {{{
 # https://thiscute.world/posts/nixos-and-flake-basics
 # https://github.com/dustinlyons/nixos-config
