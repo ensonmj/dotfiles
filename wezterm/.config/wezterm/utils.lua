@@ -63,6 +63,7 @@ function M.isdir(path)
 end
 
 -- //somehost/etc/fstab:2:1:3
+-- //somehost/mnt/c/... for WSL
 -- //localhost/etc/fstab
 -- ///etc/fstab
 -- /etc/fstab:2:1
@@ -80,8 +81,9 @@ function M.normalize_path(path)
   -- test without ":row:col"
   local file = string.gsub(path, ":%d+", "")
   if not M.exists(file) then
+    wezterm.log_info("invalid path: " .. path)
     -- try to remove "/hostname"
-    path = string.gsub(path, "(/[%w:]+)(/.*)", "%2")
+    path = path:gsub("^/[^/]+(/.*)", "%1")
   end
   wezterm.log_info("normalized path: " .. path)
   return path

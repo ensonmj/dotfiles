@@ -77,15 +77,15 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     end
 
     local hostname = tab.active_pane.user_vars.WEZTERM_HOST or "X"
-    wezterm.log_info("hostname: " .. hostname)
+    -- wezterm.log_info("hostname: " .. hostname)
 
     local process = tab.active_pane.foreground_process_name
     process = remove_suffix(process)
-    wezterm.log_info("process_name: " .. process)
+    -- wezterm.log_info("process_name: " .. process)
 
     local title = tab.active_pane.title
     -- title = remove_suffix(title)
-    wezterm.log_info("title: " .. title)
+    -- wezterm.log_info("title: " .. title)
 
     return wezterm.format({
       {
@@ -152,7 +152,7 @@ wezterm.on("update-status", function(window, pane)
     table.insert(cells, " " .. cwd)
   end
   local home = os.getenv("HOME") or "~"
-  wezterm.log_info("home: " .. home)
+  -- wezterm.log_info("home: " .. home)
 
   local workspace = window:active_workspace()
   if workspace ~= "default" then
