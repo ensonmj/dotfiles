@@ -18,6 +18,9 @@ function M.get_cwd(pane)
     return nil
   end
   cwd = cwd.file_path
+  if not cwd then
+    return nil
+  end
 
   -- local hostname = pane:get_user_vars().WEZTERM_HOST
 
