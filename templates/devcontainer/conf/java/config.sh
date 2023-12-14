@@ -67,6 +67,11 @@ echo "MAVEN_OPTS=\"$MAVEN_OPTS\"" >> ~/.env
 echo "JAVA_OPTS=\"$JAVA_OPTS\"" >> ~/.env
 echo "SBT_OPTS=\"$SBT_OPTS\"" >> ~/.env
 
+# bloop use profile
+cat << EOF > ./bloop-mvn.sh
+mvn -Pbackends-velox,spark-3.2,spark-ut $@
+EOF
+
 # we can't pass jvm options for tester runner(bloop -> sbt.ForkMain)
 # so we hack java11 bin directly
 sudo mv /usr/lib/jvm/java-11-openjdk-amd64/bin/java{,.bin}

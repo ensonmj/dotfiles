@@ -5,6 +5,7 @@ Checks: >
   -abseil-*,
   -altera-*,
   -android-*,
+  -bugprone-easily-swappable-parameters,
   -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-pro-type-union-access,
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay,

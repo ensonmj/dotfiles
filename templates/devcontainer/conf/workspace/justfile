@@ -7,6 +7,16 @@
 default:
     @just --justfile {{justfile()}} --list
 
+fuzz FUNC TYPE="Debug":
+    just compile-velox
+    _build/{{lowercase(TYPE)}}/velox/expression/tests/spark_expression_fuzzer_test --only {{FUNC}} --seed 0 --duration_sec 60 --logtostderr=1 --minloglevel=0
+
+compile-velox:
+    make debug EXTRA_CMAKE_FLAGS="-DVELOX_ENABLE_PARQUET=ON -DVELOX_BUILD_TESTING=ON -DVELOX_BUILD_TEST_UTILS=ON"
+
+compile-velox-target TARGET="velox_functions_spark_test" TYPE="Debug":
+    cmake --build _build/{{lowercase(TYPE)}} --target {{TARGET}}
+
 gluten-init:
     #!/bin/bash
     echo "SPARK_HOME=/workspaces/gluten/storage/spark322" >> ~/.env
@@ -162,6 +172,9 @@ force-download:
 
 clear-lastupdate:
     fd lastUpdated ~/.m2 -x rm
+
+format-java VERSION="3.2":
+    mvn spotless:apply -Pbackends-velox -Prss -Pspark-{{VERSION}} -Pspark-ut -DskipTests
 
 build-java VERSION="3.2":
     mvn clean install -T 2C -Pspark-{{VERSION}} -Pbackends-velox -Pspark-ut -DskipTests

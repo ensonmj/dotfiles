@@ -1,4 +1,7 @@
 {
+    // https://github.com/clangd/clangd/issues/312#issuecomment-602963106
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
     "editor.detectIndentation": false,
     "editor.formatOnSave": true,
     "editor.lineNumbers": "relative",
