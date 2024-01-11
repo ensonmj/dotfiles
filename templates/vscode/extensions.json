@@ -10,10 +10,13 @@
         "ms-vscode.remote-explorer",
         "ms-vscode-remote.remote-containers",
         "usernamehw.errorlens",
+        "aaron-bond.better-comments",
         // the above extensions must be installed on local
         "shardulm94.trailing-spaces",
+        "ryu1kn.partial-diff",
         "yzhang.markdown-all-in-one",
         // "SimonSiefke.svg-preview",
+        "Gruntfuggly.todo-tree",
         "eamodio.gitlens",
         "mhutchie.git-graph"
     ]

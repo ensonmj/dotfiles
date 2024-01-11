@@ -28,6 +28,8 @@
         "comments": true,
         "strings": true
     },
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs":"active",
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmDelete": false,
     "files.autoSave": "onFocusChange",
