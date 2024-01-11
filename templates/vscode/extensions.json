@@ -8,10 +8,13 @@
         "VSpaceCode.whichkey",
         "ms-vscode-remote.vscode-remote-extensionpack",
         "ms-vscode.remote-explorer",
+        "ms-vscode-remote.remote-containers",
         "usernamehw.errorlens",
         // the above extensions must be installed on local
+        "shardulm94.trailing-spaces",
         "yzhang.markdown-all-in-one",
         // "SimonSiefke.svg-preview",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "mhutchie.git-graph"
     ]
 }
