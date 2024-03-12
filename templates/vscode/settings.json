@@ -16,6 +16,7 @@
     "editor.minimap.enabled": false,
     "editor.fontFamily": "'Sarasa Term SC Nerd Font', 'FiraMono Nerd Font Mono', Consolas, 'Courier New', monospace",
     "editor.fontSize": 16,
+    "editor.renderWhitespace": "trailing",
     "editor.inlayHints.enabled": "on",
     // "editor.formatOnSave": true,
     // "editor.detectIndentation": false,
