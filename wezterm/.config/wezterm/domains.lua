@@ -16,14 +16,14 @@ function M.setup(config)
       name = name,
       -- should install wezterm binary in system path(eg. /usr/bin/wezterm)
       -- sudo ln -s `which wezterm` /usr/bin/wezterm
-      proxy_command = { "ssh", "-T", "-A", name, "wezterm", "cli", "proxy" },
+      proxy_command = { "ssh", "-T", name, "wezterm", "cli", "proxy" },
     })
   end
   config.unix_domains = unix_domains
 
-  if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-    config.default_domain = "WSL:Ubuntu"
-  end
+  -- if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+  --   config.default_domain = "WSL:Ubuntu"
+  -- end
 end
 
 return M
