@@ -1,6 +1,8 @@
 #!/bin/bash
 
 echo "Start to install some command line tools, $(date)"
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+source $SCRIPT_DIR/os_env.sh
 
 mkdir -p $HOME/.opt
 mkdir -p $HOME/.local/bin
@@ -22,8 +24,18 @@ rm -f "${NVIM_TAR}"
 python3 -mpip install --user neovim
 # }}}
 
+# wezterm {{{
+case $OS in
+*Ubuntu*)
+	curl -LO https://github.com/wez/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
+	sudo apt install -y ./wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
+	;;
+*Arch*) ;;
+esac
+# }}}
+
 # fzf {{{
-FZF_VER="0.44.0"
+FZF_VER="0.47.0"
 FZF_TAR="fzf-${FZF_VER}-linux_amd64.tar.gz"
 wget "https://github.com/junegunn/fzf/releases/download/${FZF_VER}/${FZF_TAR}"
 tar -xf "${FZF_TAR}" -C ~/.local/bin
@@ -77,9 +89,9 @@ declare -a tools=(
 	tealdeer # tldr
 	topgrade
 	tokei
-	xcp    # cp
-	yazi-fm   # ranger
-	zellij # tmux, screen
+	xcp     # cp
+	yazi-fm # ranger
+	zellij  # tmux, screen
 )
 
 declare -A status
