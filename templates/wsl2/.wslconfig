@@ -9,7 +9,7 @@ firewall=true
 [experimental]
 # wsl --manage Ubuntu --set-sparse true
 sparseVhd=true
-autoMemoryReclain=gradual
+autoMemoryReclaim=gradual
 hostAddressLoopback=true
 useWindowsDnsCache=true
 bestEffortDnsParsing=true
