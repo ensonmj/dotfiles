@@ -1,3 +1,15 @@
 [wsl2]
-guiApplications=false
-
+guiApplications=true
+# https://zhuanlan.zhihu.com/p/657110386
+# https://learn.microsoft.com/en-us/windows/wsl/wsl-config#wslconfig
+networkingMode=mirrored
+dnsTunneling=true
+autoProxy=true
+firewall=true
+[experimental]
+# wsl --manage Ubuntu --set-sparse true
+sparseVhd=true
+autoMemoryReclain=gradual
+hostAddressLoopback=true
+useWindowsDnsCache=true
+bestEffortDnsParsing=true
