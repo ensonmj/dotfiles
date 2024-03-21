@@ -13,6 +13,26 @@
         "editor.findMatchHighlightBackground": "#ff7b00a1", //Other SEARCH MATCHES
         "numberedBookmarks.lineBackground": "#007700"
     },
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "files.autoSave": "onFocusChange",
+    // exclude pattern no need append '**' in the end of folder.
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+    },
+    // watcherExclude pattern should append '**' in the end of folder.
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/**": true,
+        "**/target/**": true
+    },
+    "search.useIgnoreFiles": false,
+    // Inherits all glob patterns from the `files.exclude` setting.
+    "search.exclude": {
+        "**/target": true
+    },
     "editor.minimap.enabled": false,
     "editor.fontFamily": "'Sarasa Term SC Nerd Font', 'FiraMono Nerd Font Mono', Consolas, 'Courier New', monospace",
     "editor.fontSize": 16,
@@ -31,24 +51,6 @@
     },
     "editor.bracketPairColorization.enabled": true,
     "editor.guides.bracketPairs":"active",
-    "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false,
-    "files.autoSave": "onFocusChange",
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/.DS_Store": true,
-        "**/.cache": true
-    },
-    "files.watcherExclude": {
-        "**/target": true
-    },
-    "search.useIgnoreFiles": true,
-    // Inherits all glob patterns from the `files.exclude` setting.
-    "search.exclude": {
-        "**/target": true
-    },
     "debug.focusEditorOnBreak": true,
     "debug.console.fontSize": 16,
     "terminal.integrated.fontSize": 16,
