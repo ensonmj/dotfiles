@@ -8,7 +8,7 @@ mkdir -p $HOME/.opt
 mkdir -p $HOME/.local/bin
 
 # helix {{{
-HX_VER="23.10"
+HX_VER="24.03"
 HX_TAR="helix-${HX_VER}-x86_64-linux.tar.xz"
 wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/${HX_TAR}"
 tar -xf "${HX_TAR}" -C ~/.opt
