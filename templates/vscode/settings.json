@@ -62,6 +62,24 @@
     "vscode-neovim.useWSL": true,
     "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
     "vscode-neovim.neovimInitVimPaths.linux": "~/.config/nvim/init.lua",
+    "vscode-neovim.compositeKeys": {
+        // "jj" to escape
+        "jj": {
+            "command": "vscode-neovim.escape",
+        },
+        // "jk" to escape and save
+        "jk": {
+            // Use lua to execute any logic
+            "command": "vscode-neovim.lua",
+            "args": [
+                [
+                    "local code = require('vscode-neovim')",
+                    "code.action('vscode-neovim.escape')",
+                    "code.action('workbench.action.files.save')",
+                ],
+            ],
+        },
+    },
     "remote.SSH.path": "C:\\Users\\majian\\ssh.bat",
     "remote.SSH.configFile": "\\\\wsl$\\Ubuntu\\home\\dev\\.ssh\\config",
     "remote.SSH.suppressWindowsSshWarning": true,
