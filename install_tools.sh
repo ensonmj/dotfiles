@@ -29,6 +29,13 @@ case $OS in
 *Ubuntu*)
 	curl -LO https://github.com/wez/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
 	sudo apt install -y ./wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
+	# https://wezfurlong.org/wezterm/faq.html?h=terminfo#how-do-i-enable-undercurl-curly-underlines
+	# terminfo
+	tempfile=$(mktemp) \
+	    && curl -o $tempfile https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo \
+	    && tic -x -o ~/.terminfo $tempfile \
+	    && rm $tempfile
+	# need to set TERM=wezterm, eg. `TERM=wezterm nvim`
 	;;
 *Arch*) ;;
 esac
