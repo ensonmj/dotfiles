@@ -64,6 +64,21 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 # export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 # export DISPLAY=$(host `hostname` | grep -oP '(\s)\d+(\.\d+){3}' | tail -1 | awk '{ print $NF }' | tr -d '\r'):0
 # export LIBGL_ALWAYS_INDIRECT=1
+
+
+# support subdirectory-specific .profile
+# https://superuser.com/questions/915703/is-there-a-folder-specific-bashrc-or-bash-profile
+# https://github.com/bas080/dotlocaldotbashrc
+function source_local_profile() {
+    if [[ "$profile" != "$PWD" && "$PWD" != "$HOME" && -e .profile ]]; then profile="$PWD"; source .profile; fi
+}
+# https://gist.github.com/tsuyoshicho/d7f84c8add154c51247387d57cee4de5#file-starship-bash-L70
+if [[ -z "$PROMPT_COMMAND" ]]; then
+    PROMPT_COMMAND="source_local_profile"
+elif [[ "$PROMPT_COMMAND" != *"source_local_profile" ]]; then
+    # Remove any trailing semicolon before appending
+    PROMPT_COMMAND="${PROMPT_COMMAND%;};source_local_profile"
+fi
 # }}}
 
 # set PATH so it includes user's private bin if it exists
