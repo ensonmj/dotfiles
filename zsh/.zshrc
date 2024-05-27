@@ -4,6 +4,8 @@
 # Environment {{{
 emulate sh -c 'source /etc/profile'
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+# https://superuser.com/a/1749784
+[[ -n "$PROMPT_COMMAND" ]] && precmd() { eval "$PROMPT_COMMAND" }
 
 # ZSH_CACHE_DIR
 [[ -d $HOME/.zsh/cache ]] || mkdir -p "$HOME/.zsh/cache" && export ZSH_CACHE_DIR=$HOME/.zsh/cache
