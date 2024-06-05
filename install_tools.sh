@@ -91,6 +91,7 @@ declare -a tools=(
 	procs # ps
 	# sccache # depends on pkg-config
 	sd   # sed
+	sigrs # stream grep
 	skim # fzf
 	stylua
 	tealdeer # tldr
