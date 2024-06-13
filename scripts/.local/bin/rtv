@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Check for the necessary number of arguments
+if [[ $# -ne 2 ]]; then
+  echo "Remote Trace Viewer Usage: $0 <username@server>:<remote_trace_path> <port_number>"
+  exit 1
+fi
+
+# Parse the arguments into username_and_server and trace_path
+IFS=":" read -r username_and_server remote_trace_path <<< "$1"
+echo
+echo "::RTV:: SSHing to $username_and_server "
+echo
+port=$2
+
+# Establish the SSH connection with the port forwarding using parsed values
+ssh -L ${port}:localhost:${port} ${username_and_server} << EOF
+  # Download and prepare trace_processor on server
+  curl -LO https://get.perfetto.dev/trace_processor &&
+  chmod +x ./trace_processor &&
+  echo  "****************************************************************************************************"
+  echo  "::RTV:: Launch https://ui.perfetto.dev/#!/?rpc_port=${port} in your local browser to view the trace."
+  echo  "****************************************************************************************************"
+
+  # Launch trace_processor with specified path and port
+  ./trace_processor --httpd ${remote_trace_path} --http-port ${port} &
+EOF
+
+echo "::RTV:: Exited Remote Trace Viewer."
