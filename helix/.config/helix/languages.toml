@@ -19,15 +19,49 @@
 #     "--function-arg-placeholders",
 # ] }
 
-# [[language]]
-# name = "python"
-# roots = [
-#     "pyproject.toml",
-#     "setup.py",
-#     "Poetry.lock",
-#     "pyrightconfig.json",
-#     ".git",
-# ]
-# language-server = { command = "pyright-langserver", args = ["--stdio"] }
-# auto-format = true
-# formatter = { command = 'black', args = ["--quiet", "-"] }
+[[language]]
+name = "python"
+# language-servers = [ "pylsp", "ruff" ]
+language-servers = [ "pylsp" ]
+auto-format = true
+
+# pip install black
+[language.formatter]
+command = "black"
+args = ["--line-length=120", "--quiet", "-"]
+
+# https://github.com/helix-editor/helix/wiki/Language-Server-Configurations#python---pylsp
+# python-lsp-ruff is a 3rd party plugin
+# pip install python-lsp-server[rope] python-lsp-ruff
+[language-server.pylsp.config.pylsp.plugins]
+flake8 = {enabled = false}
+pylint = {enabled = false}
+autopep8 = {enabled = false}
+mccabe = {enabled = false}
+pycodestyle = {enabled = false}
+pyflakes = {enabled = false}
+yapf = {enabled = false}
+[language-server.pylsp.config.pylsp.plugins.ruff]
+# ruff will disable pycodestyle, pyflakes, mccabe, autopep8, and yapf by default, unless they are explicitly enabled
+enabled = true
+ignore = ["E402"]
+formatEnabled = true
+lineLength = 88
+
+# pyright need nodejs v12+
+# [language-server.pyright]
+# command = "pyright-langserver"
+# args = ["--stdio"]
+# [language-server.pyright.config]
+# reportMissingTypeStubs = false
+# [language-server.pyright.config.python.analysis]
+# typeCheckingMode = "basic"
+# autoImportCompletions = true
+
+# https://github.com/helix-editor/helix/wiki/Language-Server-Configurations#python---ruff
+# pip install ruff-lsp
+# [language-server.ruff]
+# command = "ruff-lsp"
+# [language-server.ruff.config.settings]
+# args = []
+# # args = ["--ignore", "E501"]
