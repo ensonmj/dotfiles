@@ -23,7 +23,7 @@
 name = "python"
 # language-servers = [ "pylsp", "ruff" ]
 language-servers = [ "pylsp" ]
-auto-format = true
+auto-format = false
 
 # pip install black
 [language.formatter]
@@ -68,3 +68,16 @@ live_mode = true
 # [language-server.ruff.config.settings]
 # args = []
 # # args = ["--ignore", "E501"]
+
+# pip install debugpy
+[language.debugger]
+name = "debugpy"
+transport = "stdio"
+command = "python"
+args = ["-m",  "debugpy.adapter"]
+
+[[language.debugger.templates]]
+name = "source"
+request = "launch"
+completion = [ { name = "entrypoint", completion = "filename", default = "." } ]
+args = { mode = "debug", program = "{0}"}
