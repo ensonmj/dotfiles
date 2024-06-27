@@ -37,6 +37,7 @@ args = [
   "--pch-storage=memory",
   "--background-index",
   # "--compile-commands-dir=${workspaceFolder}",
+  "--clang-tidy",
   "--inlay-hints",
   "--completion-style=detailed",
   # --header-insertion=<value>      - Add #include directives when accepting code completions
