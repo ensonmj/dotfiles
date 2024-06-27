@@ -1,46 +1,65 @@
-# [[language]]
-# name = "cpp"
-# language-server = { command = "clangd", args = [
-#     # for performance
-#     "-j=8",
-#     "--malloc-trim",
-#     "--pch-storage=memory",
-#     "--background-index",
-#     # "--compile-commands-dir=${workspaceFolder}",
-#     "--inlay-hints",
-#     "--completion-style=detailed",
-#     # --header-insertion=<value>      - Add #include directives when accepting code completions
-#     #  =iwyu                          -   Include what you use. Insert the owning header for top-level symbols, unless the header is already directly included or the symbol is forward-declared
-#     #  =never                         -   Never insert #include directives as part of code completion
-#     "--header-insertion=never",
-#     # Prepend a circular dot or space before the completion label, depending on whether an include line will be inserted or not
-#     "--header-insertion-decorators",
-#     # When disabled, completions contain only parentheses for function calls. When enabled, completions also contain placeholders for method parameters
-#     "--function-arg-placeholders",
-# ] }
+[[language]]
+name = "toml"
+# cargo install taplo-cli --locked --features lsp
+formatter = { command = "taplo", args = ["fmt", "-"] }
 
 [[language]]
 name = "python"
 # language-servers = [ "pylsp", "ruff" ]
-language-servers = [ "pylsp" ]
+language-servers = ["pylsp"]
 auto-format = false
 
 # pip install black
 [language.formatter]
 command = "black"
-args = ["--line-length=120", "--quiet", "-"]
+args = ["--line-length=88", "--quiet", "-"]
+
+# pip install debugpy
+[language.debugger]
+name = "debugpy"
+transport = "stdio"
+command = "python"
+args = ["-m", "debugpy.adapter"]
+
+[[language.debugger.templates]]
+name = "source"
+request = "launch"
+completion = [{ name = "entrypoint", completion = "filename", default = "." }]
+args = { mode = "debug", program = "{0}" }
+
+# lsp config
+[language-server.clangd]
+command = "clangd"
+args = [
+  # for performance
+  "-j=8",
+  "--malloc-trim",
+  "--pch-storage=memory",
+  "--background-index",
+  # "--compile-commands-dir=${workspaceFolder}",
+  "--inlay-hints",
+  "--completion-style=detailed",
+  # --header-insertion=<value>      - Add #include directives when accepting code completions
+  #  =iwyu                          -   Include what you use. Insert the owning header for top-level symbols, unless the header is already directly included or the symbol is forward-declared
+  #  =never                         -   Never insert #include directives as part of code completion
+  "--header-insertion=never",
+  # Prepend a circular dot or space before the completion label, depending on whether an include line will be inserted or not
+  "--header-insertion-decorators",
+  # When disabled, completions contain only parentheses for function calls. When enabled, completions also contain placeholders for method parameters
+  "--function-arg-placeholders",
+]
 
 # https://github.com/helix-editor/helix/wiki/Language-Server-Configurations#python---pylsp
 # python-lsp-ruff is a 3rd party plugin
 # pip install python-lsp-server[rope] python-lsp-ruff pylsp-mypy
 [language-server.pylsp.config.pylsp.plugins]
-flake8 = {enabled = false}
-pylint = {enabled = false}
-autopep8 = {enabled = false}
-mccabe = {enabled = false}
-pycodestyle = {enabled = false}
-pyflakes = {enabled = false}
-yapf = {enabled = false}
+flake8 = { enabled = false }
+pylint = { enabled = false }
+autopep8 = { enabled = false }
+mccabe = { enabled = false }
+pycodestyle = { enabled = false }
+pyflakes = { enabled = false }
+yapf = { enabled = false }
 [language-server.pylsp.config.pylsp.plugins.ruff]
 # ruff will disable pycodestyle, pyflakes, mccabe, autopep8, and yapf by default, unless they are explicitly enabled
 enabled = true
@@ -68,16 +87,3 @@ live_mode = true
 # [language-server.ruff.config.settings]
 # args = []
 # # args = ["--ignore", "E501"]
-
-# pip install debugpy
-[language.debugger]
-name = "debugpy"
-transport = "stdio"
-command = "python"
-args = ["-m",  "debugpy.adapter"]
-
-[[language.debugger.templates]]
-name = "source"
-request = "launch"
-completion = [ { name = "entrypoint", completion = "filename", default = "." } ]
-args = { mode = "debug", program = "{0}"}
