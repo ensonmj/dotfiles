@@ -51,8 +51,10 @@ hidden = false
 display-messages = true
 display-inlay-hints = true
 
+[keys.normal]
+# select the whole word under cursor
+"*" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection"]
 # dd -> xd
-#[keys.normal]
 #d = { d = ["extend_line_below", "delete_selection"] }
 
 [keys.normal.space]
