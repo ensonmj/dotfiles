@@ -83,3 +83,37 @@ e = ":sh zellij run -f -x 10% -y 10% --width 80% --height 80% -- helix-yazi"
 # r = ":sh helix-wezterm run"
 # s = ":sh helix-wezterm test_single"
 # t = ":sh helix-wezterm test_all"
+
+# https://github.com/davxy/dotfiles/blob/main/helix/config.toml
+# Add some custom bindings to the space-space menu (custom)
+[keys.normal.'space'.'space']
+# Extensions using custom script
+c = ":pipe-to helix-ext cd --current"
+# Interactive search in current working directory
+s = ":pipe-to helix-ext search --current"
+# Interactive search in current working directory (include path name in the search)
+S = ":pipe-to helix-ext search --current-inc-path"
+# Interactive search in current git directory
+w = ":pipe-to helix-ext search --workspace"
+# Interactive search in current git directory (include path name in the search)
+W = ":pipe-to helix-ext search --workspace-inc-path"
+# Interactive search in current buffer
+b = ":pipe-to helix-ext search --buffer"
+# Git-ui
+g = ":pipe-to helix-ext git --ui"
+# Git status
+m = ":pipe-to helix-ext git --status"
+# Git blame
+B = ":pipe-to helix-ext git --blame"
+# Git browse github repo using default browser
+O = ":pipe-to helix-ext git --browse"
+# Markdown toc
+i = ":pipe-to helix-ext markdown --toc"
+# Diff current buffer with content on disk
+d = ":pipe-to helix-ext diff"
+# Files tree
+t = ":pipe-to helix-ext tree"
+# Terminal
+T = ":pipe-to helix-ext term"
+# Cleanup helix-ext data
+C = ":pipe-to helix-ext clean"

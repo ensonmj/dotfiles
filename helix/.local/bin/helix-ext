@@ -4,7 +4,6 @@
 # Version: 0.1.8
 #
 # Extensions used by Helix editor
-# https://github.com/davxy/script-nest/blob/main/bin/helix-ext
 #
 # Depedencies:
 # - `zellij`
@@ -364,6 +363,23 @@ function tree_pane() {
     
 }
 
+# Change directory
+function change_dir() {
+    file=$(current_file)
+    dir=$(dirname "$file")
+
+    # Select original pane
+    zellij action focus-previous-pane
+
+    # Save buffer to a temporary file by copying buffer content to a scratch
+    # buffer and saving it to DUMP_FILE (this will left untouched the current
+    # buffer, with its pending changes as well)
+    zellij action write-chars ":cd ${dir}"
+    zellij action write 13
+    # Back to working pane
+    zellij action focus-next-pane
+}
+
 # Open terminal pane
 function term_pane() {
     if [ -e $TERM_FILE ]; then
@@ -467,6 +483,15 @@ touch "${INSTANCE_DIR}/$$"
 export PATH="$EXT_DIR/bin:$PATH"
 
 case "$1" in
+    "cd")
+        case $2 in
+            "-c"|"--current")
+                change_dir
+                ;;
+            "*")
+                help 3
+        esac
+        ;;
     "search") 
         case $2 in
             "-b"|"--buffer")
