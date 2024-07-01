@@ -1,0 +1,98 @@
+layout {
+    // pane size=1 borderless=true {
+    //     plugin location="tab-bar"
+    // }
+    // pane size=1 borderless=true {
+    //     plugin location="compact-bar"
+    // }
+    // pane split_direction="vertical" {
+    //     pane
+    //     pane split_direction="horizontal" {
+    //         pane
+    //         pane
+    //     }
+    // }
+    // pane size=2 borderless=true {
+    //     plugin location="status-bar"
+    // }
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {
+            // plugin location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm" {
+                format_left   "{mode} #[fg=#89B4FA,bold]{session}"
+                format_center "{tabs}"
+                format_right  "{command_git_branch} {datetime}"
+                format_space  ""
+
+                // border_enabled  "false"
+                // border_char     "─"
+                // border_format   "#[fg=#6C7086]{char}"
+                // border_position "top"
+
+                // hide_frame_for_single_pane "true"
+
+                // mode_normal        "⚡"
+                // mode_locked        "  ^+g: normal"
+                // mode_resize        "  n: normal h: i  j: i  k: i  l: i  H: d  J: d  K: d  L: d  =: inc. -: dec."
+                // mode_pane          "  n: new d: new  r: new  p: focus w: float e: embed f: full-screen c: rename x: close"
+                // mode_tab           "  n: new r: rename l:   h:   x: close s: sync b: break p. 󰅪: break r. 󰅪: break l.  : toggle"
+                // mode_scroll        " e: edit s: search ^+c: bottom j:  k:   ^+f: pg.  ^+b: pg.  d: half  u: half "
+                // mode_enter_search  "  #[italic]search..."
+                // mode_search        "  j:   k:   ^+f: pg.  ^+b: pg.  d: half  u: half  n: next p: prev c: case w: wrap o: word"
+                // mode_rename_tab    "  (rename) ^+c: normal esc: undo"
+                // mode_rename_pane   "  (rename) ^+c: normal esc: undo"
+                // mode_session       "  ^+o: normal ^+s: scroll d: detach w: manager"
+                // mode_move          "  ^+x: normal (n, ): move p: backwards h:   j:   k:   l: "
+                // mode_prompt        ""
+                // mode_tmux          ""
+
+                // formatting for inactive tabs
+                tab_normal              "#[fg=#6C7086] {index} :: {name} "
+                tab_normal_fullscreen   "#[fg=#6C7086] {index} :: {name} [] "
+                tab_normal_sync         "#[fg=#6C7086] {index} :: {name} <> "
+
+                // formatting for the current active tab
+                tab_active              "#[fg=#9399B2,bold,italic] {name} {floating_indicator}"
+                tab_active_fullscreen   "#[fg=#9399B2,bold,italic] {name} {fullscreen_indicator}"
+                tab_active_sync         "#[fg=#9399B2,bold,italic] {name} {sync_indicator}"
+
+                // separator between the tabs
+                tab_separator           "#[fg=#6C7086,bg=#181825] | "
+
+                // format when renaming a tab
+                tab_rename              "#[fg=#eba0ac,bg=#181825] {index} {name} {floating_indicator} "
+
+                // indicators
+                tab_sync_indicator       "<> "
+                // tab_fullscreen_indicator "[] "
+                // tab_floating_indicator   "⬚ "
+                tab_fullscreen_indicator " "
+                tab_floating_indicator " "
+
+                // limit tab display count
+                tab_display_count         "3"  // limit to showing 3 tabs
+                tab_truncate_start_format "#[fg=red,bg=#181825] < +{count} ..."
+                tab_truncate_end_format   "#[fg=red,bg=#181825] ... +{count} >"
+
+                command_git_branch_command     "git rev-parse --abbrev-ref HEAD"
+                command_git_branch_format      "#[fg=blue] {stdout} "
+                command_git_branch_interval    "10"
+                command_git_branch_rendermode  "static"
+
+                datetime          "#[fg=#6C7086,bold] {format} "
+                datetime_format   "%A, %d %b %Y %H:%M"
+                datetime_timezone "Asia/Shanghai"
+            }
+        }
+        pane split_direction="vertical" {
+            pane
+            pane split_direction="horizontal" {
+                pane
+                pane
+            }
+        }
+        pane size=2 borderless=true {
+            plugin location="status-bar"
+        }
+    }
+}
