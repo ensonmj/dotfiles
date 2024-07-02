@@ -2,11 +2,12 @@
 
 # https://yazi-rs.github.io/docs/tips/#helix-with-zellij
 # https://github.com/zellij-org/zellij/issues/3018#issuecomment-2086166900
-#paths=$(yazi --chooser-file=/dev/stdout | while read -r; do printf "%q " "$REPLY"; done)
-tmpfile=$(mktemp)
-rm -f $tmpfile
-yazi --chooser-file=$tmpfile
-paths=$(cat $tmpfile | while read -r; do printf "%q " "$REPLY"; done)
+paths=$(yazi --chooser-file=/dev/stdout | while read -r; do printf "%q " "$REPLY"; done)
+# tmpfile=$(mktemp)
+# rm -f $tmpfile
+# yazi --chooser-file=$tmpfile
+# paths=$(cat $tmpfile | while read -r; do printf "%q " "$REPLY"; done)
+# rm -f $tmpfile
 
 if [[ -n "$paths" ]]; then
 	zellij action toggle-floating-panes

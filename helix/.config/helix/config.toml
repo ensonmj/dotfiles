@@ -64,7 +64,7 @@ x = ":toggle whitespace.render all none"
 z = ":toggle gutters.line-numbers.min-width 48 3"
 o = ":pipe-to wezterm cli split-pane -- helix-live-grep"
 l = ":pipe-to helix-debug-print"
-e = ":sh zellij run -f -x 10% -y 10% --width 80% --height 80% -- helix-yazi"
+e = ":pipe-to zellij run -f -x 10% -y 10% --width 80% --height 80% -- helix-yazi"
 
 
 # https://github.com/helix-editor/helix/discussions/8000#discussioncomment-6821291
