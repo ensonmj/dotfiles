@@ -20,7 +20,7 @@ vim.o.fencs = "utf-8,ucs-bom,gb18030,gbk,gb2312,cp936"
 -- View {{{
 vim.o.termguicolors = true
 vim.o.number = true
-vim.o.colorcolumn = 120
+vim.o.colorcolumn = "120"
 vim.o.signcolumn = "yes:1"
 vim.o.cursorcolumn = true
 vim.o.cursorline = true
@@ -48,9 +48,6 @@ vim.o.display = "lastline,uhex"
 
 -- Use vertical diff format
 vim.opt.diffopt:append("vertical")
-
--- Maintain a current line at the time of movement as much as possible.
-vim.o.nostartofline = true
 
 -- 在底部显示标尺，显示行号列号和百分比
 vim.o.ruler = true
