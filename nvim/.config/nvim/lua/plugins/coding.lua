@@ -12,6 +12,7 @@ return {
       container_runtime = "docker",
     },
   },
+
   -- customize nvim-cmp configs
   -- Use <tab> for completion and snippets (supertab)
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
@@ -82,31 +83,5 @@ return {
     config = {
       filetype_exclude = { "markdown", "diff" },
     },
-  },
-
-  -- treesitter
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, {
-          "comment",
-          "diff",
-          "dockerfile",
-          "dot",
-          "git_rebase",
-          "gitattributes",
-          "gitcommit",
-          "gitignore",
-          "graphql",
-          "hcl",
-          "http",
-          "jq",
-          "make",
-          "mermaid",
-          "sql",
-        })
-      end
-    end,
   },
 }
