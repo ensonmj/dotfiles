@@ -8,7 +8,7 @@ mkdir -p $HOME/.opt
 mkdir -p $HOME/.local/bin
 
 # helix {{{
-HX_VER="24.03"
+HX_VER="24.07"
 HX_TAR="helix-${HX_VER}-x86_64-linux.tar.xz"
 wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/${HX_TAR}"
 tar -xf "${HX_TAR}" -C ~/.opt
@@ -44,7 +44,7 @@ esac
 # fzf {{{
 FZF_VER="0.47.0"
 FZF_TAR="fzf-${FZF_VER}-linux_amd64.tar.gz"
-wget "https://github.com/junegunn/fzf/releases/download/${FZF_VER}/${FZF_TAR}"
+wget "https://github.com/junegunn/fzf/releases/download/v${FZF_VER}/${FZF_TAR}"
 tar -xf "${FZF_TAR}" -C ~/.local/bin
 rm -rf "${FZF_TAR}"
 # }}}

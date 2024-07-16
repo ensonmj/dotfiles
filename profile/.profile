@@ -414,6 +414,53 @@ function vgdbg() {
         "$@"
 }
 # }}}
+
+# tools {{{
+function update_helix() {
+    HX_VER="24.07"
+    HX_TAR="helix-${HX_VER}-x86_64-linux.tar.xz"
+    wget --no-check-certificate "https://github.com/helix-editor/helix/releases/download/${HX_VER}/${HX_TAR}"
+    rm -rf ~/.opt/helix*
+    tar -xf "${HX_TAR}" -C ~/.opt
+    rm -rf "${HX_TAR}"
+}
+function update_helix_utils() {
+    pip install --user 'python-lsp-server[rope] python-lsp-ruff pylsp-mypy'
+}
+
+function update_nvim() {
+    NVIM_TAR="nvim-linux64.tar.gz"
+    wget --no-check-certificate "https://github.com/neovim/neovim/releases/download/stable/${NVIM_TAR}"
+    rm -rf ~/.opt/nvim
+    tar -xf "${NVIM_TAR}" -C ~/.opt
+    rm -f "${NVIM_TAR}"
+}
+function update_nvim_utils {
+    pip install --user neovim
+}
+
+function update_fzf() {
+    FZF_VER="0.54.0"
+    FZF_TAR="fzf-${FZF_VER}-linux_amd64.tar.gz"
+    wget --no-check-certificate "https://github.com/junegunn/fzf/releases/download/v${FZF_VER}/${FZF_TAR}"
+    rm -f ~/.local/bin/fzf
+    tar -xf "${FZF_TAR}" -C ~/.local/bin
+    rm -rf "${FZF_TAR}"
+}
+
+function update_wezterm_on_ubuntu() {
+    curl -LO https://github.com/wez/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
+    sudo apt install -y ./wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
+    # https://wezfurlong.org/wezterm/faq.html?h=terminfo#how-do-i-enable-undercurl-curly-underlines
+    # terminfo
+    tempfile=$(mktemp) \
+        && curl -o $tempfile https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo \
+        && tic -x -o ~/.terminfo $tempfile \
+        && rm $tempfile
+    # need to set TERM=wezterm, eg. `TERM=wezterm nvim`
+}
+    
+#}}}
 # }}}
 
 # vim: foldmethod=marker
