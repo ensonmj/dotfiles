@@ -191,7 +191,7 @@ function env_load() {
         fi
     done < $1
 }
-#}}}
+# }}}
 
 # path {{{
 function path_add() {
@@ -219,7 +219,7 @@ function path_del() {
         :
     done
 }
-#}}}
+# }}}
 
 # json {{{
 function trim_comment() {
@@ -229,7 +229,7 @@ function trim_comment() {
 function merge_json() {
     jq -s '[.[][]]' <(trim_comment $1) <(trim_comment $2)
 }
-#}}}
+# }}}
 
 # proxy {{{
 # https://gist.github.com/yougg/5d2b3353fc5e197a0917aae0b3287d64
@@ -243,9 +243,9 @@ function proxy() {
     export HTTP_PROXY=$ADDR HTTPS_PROXY=$ADDR FTP_PROXY=$ADDR RSYNC_PROXY=$ADDR ALL_PROXY=$ADDR
 
     no_proxy="127.0.0.1,localhost,.localdomain.com"
-    no_proxy=$no_proxy,`echo 10.{0..255}.{0..255}.{0..255}|tr ' ' ','`
-    no_proxy=$no_proxy,`echo 172.{16..31}.{0..255}.{0..255}|tr ' ' ','`
-    no_proxy=$no_proxy,`echo 192.168.{0..255}.{0..255}|tr ' ' ','`
+    no_proxy=$no_proxy,$(echo 10.{0..255}.{0..255}.{0..255}|tr ' ' ',')
+    no_proxy=$no_proxy,$(echo 172.{16..31}.{0..255}.{0..255}|tr ' ' ',')
+    no_proxy=$no_proxy,$(echo 192.168.{0..255}.{0..255}|tr ' ' ',')
     export no_proxy
     export NO_PROXY="$no_proxy"
 }
@@ -276,7 +276,7 @@ function gitproxy() {
     local ADDR="$PROTO://$HOST:$PORT"
 
     SSH_PROXY_PROTO="-X 5" # socks 5 for default
-    if [ "$PROTO" == "http" -o "$PROTO" == "https" ]; then
+    if [ "$PROTO" == "http" ] || [ "$PROTO" == "https" ]; then
         SSH_PROXY_PROTO="-X connect"
 
         # set git http(s) proxy
@@ -379,7 +379,7 @@ function docker_attach() {
     local WORKDIR="${2:-/workspaces/$CONTAINER}"
     docker exec -itu vscode --privileged -e DISPLAY=$DISPLAY -w $WORKDIR $CONTAINER zsh
 }
-#}}}
+# }}}
 
 # valgrind {{{
 function vgrun() {
@@ -425,7 +425,7 @@ function update_helix() {
     rm -rf "${HX_TAR}"
 }
 function update_helix_utils() {
-    pip install --user 'python-lsp-server[rope] python-lsp-ruff pylsp-mypy'
+    pip install --user 'python-lsp-server[rope]' python-lsp-ruff pylsp-mypy
 }
 
 function update_nvim() {
@@ -435,7 +435,7 @@ function update_nvim() {
     tar -xf "${NVIM_TAR}" -C ~/.opt
     rm -f "${NVIM_TAR}"
 }
-function update_nvim_utils {
+function update_nvim_utils() {
     pip install --user neovim
 }
 
@@ -459,8 +459,8 @@ function update_wezterm_on_ubuntu() {
         && rm $tempfile
     # need to set TERM=wezterm, eg. `TERM=wezterm nvim`
 }
-    
-#}}}
+
+# }}}
 # }}}
 
 # vim: foldmethod=marker
