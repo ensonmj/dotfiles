@@ -87,5 +87,6 @@
     "whichkey.delay": 0,
     "whichkey.sortOrder": "alphabetically",
     "C_Cpp.intelliSenseEngine": "disabled",
+    "git.autoRepositoryDetection": "openEditors", // avoid loading all repositories
     "git.ignoreLimitWarning": true,
 }
