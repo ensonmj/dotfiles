@@ -136,6 +136,22 @@ function M.setup(config)
       { key = "j", action = act.ActivatePaneDirection("Down") },
     },
   }
+  -- fix for wsl
+  if os.getenv("WSL_DISTRO_NAME") ~= nil then
+    table.insert(config.keys, {
+        key = "v",
+        mods = "CTRL|SHIFT",
+        action = wezterm.action_callback(function(window, pane)
+          local success, stdout, stderr = wezterm.run_child_process({"wl-paste", "--no-newline"})
+          if success then
+            pane:paste(stdout)
+          else
+            wezterm.log_error("wl-paste failed with\n" .. stderr .. stdout)
+          end
+        end)
+      },
+    })
+  end
   -- workspace switcher
   require("workspace_switcher").setup(config, "W", "SHIFT|CTRL", function(label)
     return wezterm.format({
