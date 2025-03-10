@@ -26,6 +26,8 @@
     detachedHead = false
 [alias]
     co = checkout
+    # pr = "!f() {git fetch \"${2:-upstream}\" pull/\"$1\"/head && git checkout FETCH_HEAD}; f"
+    pr = "!f() {git fetch \"${2:-upstream}\" pull/\"$1\"/head:pr_\"$1\" && git checkout pr_\"$1\"}; f"
     ci = commit
     st = status
     spr = "!f() { \
