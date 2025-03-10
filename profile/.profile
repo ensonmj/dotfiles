@@ -66,18 +66,18 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 # export LIBGL_ALWAYS_INDIRECT=1
 
 
-# support subdirectory-specific .profile
+# support subdirectory-specific .dir_profile
 # https://superuser.com/questions/915703/is-there-a-folder-specific-bashrc-or-bash-profile
 # https://github.com/bas080/dotlocaldotbashrc
-function source_local_profile() {
-    if [[ "$profile" != "$PWD" && "$PWD" != "$HOME" && -e .profile ]]; then profile="$PWD"; source .profile; fi
+function _source_dir_profile() {
+    if [[ "$profile" != "$PWD" && -e .dir_profile ]]; then profile="$PWD"; source .dir_profile; fi
 }
 # https://gist.github.com/tsuyoshicho/d7f84c8add154c51247387d57cee4de5#file-starship-bash-L70
 if [[ -z "$PROMPT_COMMAND" ]]; then
-    PROMPT_COMMAND="source_local_profile"
-elif [[ "$PROMPT_COMMAND" != *"source_local_profile" ]]; then
+    PROMPT_COMMAND="_source_dir_profile"
+elif [[ "$PROMPT_COMMAND" != *"_source_dir_profile" ]]; then
     # Remove any trailing semicolon before appending
-    PROMPT_COMMAND="${PROMPT_COMMAND%;};source_local_profile"
+    PROMPT_COMMAND="${PROMPT_COMMAND%;};_source_dir_profile"
 fi
 # }}}
 
