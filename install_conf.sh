@@ -30,16 +30,13 @@ pushd $SCRIPT_DIR
 # Just install some configs
 declare -a confs=(
 	stow
-	dircolors
 	starship
-	readline
 	profile
 	bash
 	zsh
 	vim
 	nvim
 	helix
-	wezterm
 	git
 )
 for conf in "${confs[@]}"; do
