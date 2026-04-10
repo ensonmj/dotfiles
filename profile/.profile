@@ -65,7 +65,6 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 # export DISPLAY=$(host `hostname` | grep -oP '(\s)\d+(\.\d+){3}' | tail -1 | awk '{ print $NF }' | tr -d '\r'):0
 # export LIBGL_ALWAYS_INDIRECT=1
 
-
 # support subdirectory-specific .dir_profile
 # https://superuser.com/questions/915703/is-there-a-folder-specific-bashrc-or-bash-profile
 # https://github.com/bas080/dotlocaldotbashrc
@@ -90,6 +89,7 @@ if [ -d $HOME/.opt ]; then
 fi
 [[ -d /snap/bin ]] && export PATH="$PATH:/snap/bin"
 [[ -d $HOME/.cabal/bin ]] && export PATH="$PATH:$HOME/.cabal/bin" #pandoc
+[[ -d $HOME/.npm-global/bin ]] && export PATH="$PATH:$HOME/.npm-global/bin"
 export PATH=.:$PATH
 
 #homebrew

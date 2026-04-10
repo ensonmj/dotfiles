@@ -38,6 +38,7 @@ declare -a confs=(
 	nvim
 	helix
 	git
+	mise
 )
 for conf in "${confs[@]}"; do
 	stow -S "$conf"

@@ -1,0 +1,8 @@
+[tools]
+delta = "latest"
+fd = "latest"
+helix = "latest"
+just = "latest"
+neovim = "latest"
+rg = "latest"
+zellij = "latest"

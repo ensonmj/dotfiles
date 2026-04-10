@@ -7,47 +7,55 @@ source $SCRIPT_DIR/os_env.sh
 mkdir -p $HOME/.opt
 mkdir -p $HOME/.local/bin
 
-# helix {{{
-HX_VER="24.07"
-HX_TAR="helix-${HX_VER}-x86_64-linux.tar.xz"
-wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/${HX_TAR}"
-tar -xf "${HX_TAR}" -C ~/.opt
-rm -rf "${HX_TAR}"
-python3 -mpip install --user 'python-lsp-server[all]'
-# }}}
+# starship: need to config shell and install nerd fonts
+curl -sS https://starship.rs/install.sh | sh
+# zoxide: cd, need to config shell
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+# mise: tools manager, need to config shell
+curl https://mise.run | sh
+mise install
 
-# nvim {{{
-NVIM_TAR="nvim-linux64.tar.gz"
-wget "https://github.com/neovim/neovim/releases/download/stable/${NVIM_TAR}"
-tar -xf "${NVIM_TAR}" -C ~/.opt
-rm -f "${NVIM_TAR}"
-python3 -mpip install --user neovim
-# }}}
+# # helix {{{
+# HX_VER="24.07"
+# HX_TAR="helix-${HX_VER}-x86_64-linux.tar.xz"
+# wget "https://github.com/helix-editor/helix/releases/download/${HX_VER}/${HX_TAR}"
+# tar -xf "${HX_TAR}" -C ~/.opt
+# rm -rf "${HX_TAR}"
+# python3 -mpip install --user 'python-lsp-server[all]'
+# # }}}
 
-# wezterm {{{
-case $OS in
-*Ubuntu*)
-	curl -LO https://github.com/wez/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
-	sudo apt install -y ./wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
-	# https://wezfurlong.org/wezterm/faq.html?h=terminfo#how-do-i-enable-undercurl-curly-underlines
-	# terminfo
-	tempfile=$(mktemp) \
-	    && curl -o $tempfile https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo \
-	    && tic -x -o ~/.terminfo $tempfile \
-	    && rm $tempfile
-	# need to set TERM=wezterm, eg. `TERM=wezterm nvim`
-	;;
-*Arch*) ;;
-esac
-# }}}
+# # nvim {{{
+# NVIM_TAR="nvim-linux64.tar.gz"
+# wget "https://github.com/neovim/neovim/releases/download/stable/${NVIM_TAR}"
+# tar -xf "${NVIM_TAR}" -C ~/.opt
+# rm -f "${NVIM_TAR}"
+# python3 -mpip install --user neovim
+# # }}}
 
-# fzf {{{
-FZF_VER="0.47.0"
-FZF_TAR="fzf-${FZF_VER}-linux_amd64.tar.gz"
-wget "https://github.com/junegunn/fzf/releases/download/v${FZF_VER}/${FZF_TAR}"
-tar -xf "${FZF_TAR}" -C ~/.local/bin
-rm -rf "${FZF_TAR}"
-# }}}
+# # wezterm {{{
+# case $OS in
+# *Ubuntu*)
+# 	curl -LO https://github.com/wez/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
+# 	sudo apt install -y ./wezterm-20240203-110809-5046fc22.Ubuntu22.04.deb
+# 	# https://wezfurlong.org/wezterm/faq.html?h=terminfo#how-do-i-enable-undercurl-curly-underlines
+# 	# terminfo
+# 	tempfile=$(mktemp) \
+# 	    && curl -o $tempfile https://raw.githubusercontent.com/wez/wezterm/master/termwiz/data/wezterm.terminfo \
+# 	    && tic -x -o ~/.terminfo $tempfile \
+# 	    && rm $tempfile
+# 	# need to set TERM=wezterm, eg. `TERM=wezterm nvim`
+# 	;;
+# *Arch*) ;;
+# esac
+# # }}}
+
+# # fzf {{{
+# FZF_VER="0.47.0"
+# FZF_TAR="fzf-${FZF_VER}-linux_amd64.tar.gz"
+# wget "https://github.com/junegunn/fzf/releases/download/v${FZF_VER}/${FZF_TAR}"
+# tar -xf "${FZF_TAR}" -C ~/.local/bin
+# rm -rf "${FZF_TAR}"
+# # }}}
 
 # rust cli {{{
 if ! command -v cargo &>/dev/null; then
@@ -64,59 +72,59 @@ if ! command -v cargo &>/dev/null; then
 fi
 source ~/.cargo/env
 curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-# cargo install cargo-binstall
-# cargo install cargo-quickinstall
-# https://gist.github.com/sts10/daadbc2f403bdffad1b6d33aff016c0a
-declare -a bins=(
-	fd-find   # find
-	git-delta # diff
-	ripgrep   # ag, ack
-	starship  # need to config shell and install nerd fonts
-	zoxide    # cd, need to config shell
-)
-cargo binstall --no-confirm --no-symlinks "${bins[@]}"
+## cargo install cargo-binstall
+## cargo install cargo-quickinstall
+## https://gist.github.com/sts10/daadbc2f403bdffad1b6d33aff016c0a
+#declare -a bins=(
+#	fd-find   # find
+#	git-delta # diff
+#	ripgrep   # ag, ack
+#	starship  # need to config shell and install nerd fonts
+#	zoxide    # cd, need to config shell
+#)
+#cargo binstall --no-confirm --no-symlinks "${bins[@]}"
 
-declare -a tools=(
-	bandwhich
-	bat    # cat
-	bottom # top, htop
-	broot
-	dufs
-	du-dust # du
-	erdtree
-	exa   # ls
-	gitui # git, lazygit
-	hyperfine
-	just  # make
-	procs # ps
-	# sccache # depends on pkg-config
-	sd   # sed
-	sigrs # stream grep
-	skim # fzf
-	stylua
-	tealdeer # tldr
-	topgrade
-	tokei
-	xcp     # cp
-	yazi-fm # ranger
-	zellij  # tmux, screen
-)
+#declare -a tools=(
+#	bandwhich
+#	bat    # cat
+#	bottom # top, htop
+#	broot
+#	dufs
+#	du-dust # du
+#	erdtree
+#	exa   # ls
+#	gitui # git, lazygit
+#	hyperfine
+#	just  # make
+#	procs # ps
+#	# sccache # depends on pkg-config
+#	sd   # sed
+#	sigrs # stream grep
+#	skim # fzf
+#	stylua
+#	tealdeer # tldr
+#	topgrade
+#	tokei
+#	xcp     # cp
+#	yazi-fm # ranger
+#	zellij  # tmux, screen
+#)
 
-declare -A status
-for bin in "${tools[@]}"; do
-	#cargo quickinstall "$bin" &
-	cargo binstall --no-confirm --no-symlinks "$bin" &
-	# pids+=($!)
-	status["$bin"]=$!
-done
-for bin in "${!status[@]}"; do
-	wait "${status[$bin]}"
-	status["$bin"]=$?
-done
-for bin in "${!status[@]}"; do
-	echo "install $bin exited with ${status[$bin]}"
-done
-# }}}
+#declare -A status
+#for bin in "${tools[@]}"; do
+#	#cargo quickinstall "$bin" &
+#	cargo binstall --no-confirm --no-symlinks "$bin" &
+#	# pids+=($!)
+#	status["$bin"]=$!
+#done
+#for bin in "${!status[@]}"; do
+#	wait "${status[$bin]}"
+#	status["$bin"]=$?
+#done
+#for bin in "${!status[@]}"; do
+#	echo "install $bin exited with ${status[$bin]}"
+#done
+## }}}
 
 # wezterm {{{
 # https://tjex.net/hacks/installing-wezterm-on-a-raspberry-pi-or-linux-server/
