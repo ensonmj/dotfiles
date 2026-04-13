@@ -151,7 +151,7 @@ zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le 
 # }}}
 
 # mise
-command -v mise && eval "$(mise activate zsh)"
+command -v mise &> /dev/null && eval "$(mise activate zsh)"
 # PS1 {{{
 command -v starship &> /dev/null && eval "$(starship init zsh)"
 # }}}

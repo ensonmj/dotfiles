@@ -44,7 +44,7 @@ fi
 
 # }}}
 
-command -v mise && eval "$(mise activate bash)"
+command -v mise &> /dev/null && eval "$(mise activate bash)"
 # PS1 {{{
 function git_since_last_commit
 {
