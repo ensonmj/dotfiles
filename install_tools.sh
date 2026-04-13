@@ -4,6 +4,7 @@ echo "Start to install some command line tools, $(date)"
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 source $SCRIPT_DIR/os_env.sh
 
+# some tools will be installed in $HOME/.local/bin
 mkdir -p $HOME/.local/bin
 export PATH="$HOME/.local/bin:$PATH"
 

@@ -27,6 +27,11 @@ pushd $SCRIPT_DIR
 [[ -f ~/.bashrc ]] && mv ~/.bashrc{,.orig}
 [[ -f ~/.bash_profile ]] && mv ~/.bash_profile{,.orig}
 [[ -f ~/.zshrc ]] && mv ~/.zshrc{,.orig}
+
+# helix will put some tools into $HOME/.local/bin
+mkdir -p $HOME/.local/bin
+export PATH="$HOME/.local/bin:$PATH"
+
 # Just install some configs
 declare -a confs=(
 	stow
