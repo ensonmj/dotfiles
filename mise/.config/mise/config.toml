@@ -1,8 +1,17 @@
 [tools]
 delta = "latest"
 fd = "latest"
+fzf = "latest"
 helix = "latest"
 just = "latest"
 neovim = "latest"
 rg = "latest"
 zellij = "latest"
+
+[tasks.helix-init]
+description = "install extra dependecies for helix"
+run = "python3 -mpip install --user 'python-lsp-server[all]'"
+
+[tasks.nvim-init]
+description = "install extra dependecies for neovim"
+run = "python3 -mpip install --user neovim"
