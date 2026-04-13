@@ -1,12 +1,12 @@
 [tools]
-delta = "latest"
-fd = "latest"
-fzf = "latest"
-helix = "latest"
-just = "latest"
-neovim = "latest"
-rg = "latest"
-zellij = "latest"
+delta = "0.19.2"
+fd = "10.4.2"
+fzf = "0.71.0"
+helix = "25.07.1"
+just = "1.49.0"
+neovim = "0.12.1"
+rg = "15.1.0"
+zellij = "0.44.1"
 
 [tasks.helix-init]
 description = "install extra dependecies for helix"
