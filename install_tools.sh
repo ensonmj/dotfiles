@@ -8,7 +8,7 @@ mkdir -p $HOME/.opt
 mkdir -p $HOME/.local/bin
 
 # starship: need to config shell and install nerd fonts
-curl -sS https://starship.rs/install.sh | sh
+sh -c "$(curl -fsSL https://starship.rs/install.sh)" -y -f -b  $HOME/.local/bin
 # zoxide: cd, need to config shell
 curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 # mise: tools manager, need to config shell
