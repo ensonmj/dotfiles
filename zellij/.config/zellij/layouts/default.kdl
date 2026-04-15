@@ -16,20 +16,23 @@ layout {
     //     plugin location="status-bar"
     // }
     default_tab_template {
+        children
         pane size=1 borderless=true {
-            plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {
-            // plugin location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm" {
+            plugin location="zjstatus" {
                 format_left   "{mode} #[fg=#89B4FA,bold]{session}"
                 format_center "{tabs}"
+                // format_right  "{pipe_zjstatus_hints}{command_git_branch} {datetime}"
                 format_right  "{command_git_branch} {datetime}"
                 format_space  ""
 
-                // border_enabled  "false"
-                // border_char     "─"
-                // border_format   "#[fg=#6C7086]{char}"
-                // border_position "top"
+                // pipe_zjstatus_hints_format "{output}"
 
-                // hide_frame_for_single_pane "true"
+                border_enabled  "false"
+                border_char     "─"
+                border_format   "#[fg=#6C7086]{char}"
+                border_position "top"
+
+                hide_frame_for_single_pane "false"
 
                 // mode_normal        "⚡"
                 // mode_locked        "  ^+g: normal"
@@ -45,6 +48,20 @@ layout {
                 // mode_move          "  ^+x: normal (n, ): move p: backwards h:   j:   k:   l: "
                 // mode_prompt        ""
                 // mode_tmux          ""
+
+                mode_locked      "#[bg=#6e5fb7,fg=#ffffff,bold] ❤ "
+                mode_normal      "#[bg=#aa87fe,fg=#3c01cd,bold] ❤ NORMAL "
+                mode_resize      "#[bg=#ff9969,fg=#7f3513,bold] ❤ RESIZE "
+                mode_pane        "#[bg=#9FFBB6,fg=#30563a,bold] ❤ PANE "
+                mode_move        "#[bg=#FFD896,fg=#905b00,bold] ❤ MOVE "
+                mode_tab         "#[bg=#80BDFF,fg=#0051a8,bold] ❤ TAB "
+                mode_scroll      "#[bg=#412da2,fg=#c9c0ff,bold] ❤ SCROLL "
+                mode_search      "#[bg=#e28e00,fg=#ffe9c4,bold] ❤ SEARCH "
+                mode_entersearch "#[bg=#e28e00,fg=#ffe9c4,bold] ❤ ENTER SEARCH "
+                mode_renametab   "#[bg=#0051a8,fg=#80BDFF,bold] ❤ RENAME TAB "
+                mode_renamepane  "#[bg=#30563a,fg=#9FFBB6,bold] ❤ RENAME PANE "
+                mode_session     "#[bg=#FF87A5,fg=#7d001f,bold] ❤ SESSION "
+                mode_tmux        "#[bg=#c9c0ff,fg=#412da2,bold] ❤ TMUX "
 
                 // formatting for inactive tabs
                 tab_normal              "#[fg=#6C7086] {index} :: {name} "
@@ -84,15 +101,9 @@ layout {
                 datetime_timezone "Asia/Shanghai"
             }
         }
-        pane split_direction="vertical" {
-            pane
-            pane split_direction="horizontal" {
-                pane
-                pane
-            }
-        }
-        pane size=2 borderless=true {
-            plugin location="status-bar"
-        }
+        // pane size=2 borderless=true {
+        //     plugin location="status-bar"
+        // }
     }
+    // tab name=""
 }
