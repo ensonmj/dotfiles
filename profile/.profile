@@ -116,6 +116,49 @@ fi
 done < $HOME/.env
 # }}}
 
+# ssh-agent
+# need "ForwardAgent yes" in ~/.ssh/config
+if [ -n "$SSH_CONNECTION" ] || [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    # Skip entirely if this is a remote SSH session
+    :
+else
+    # 2. Local-only initialization
+    export SSH_ENV="$HOME/.ssh/agent-environment"
+
+    function start_agent {
+        echo "Initializing new SSH agent..."
+        /usr/bin/ssh-agent -s | sed 's/^echo/#echo/' > "${SSH_ENV}"
+        chmod 600 "${SSH_ENV}"
+        . "${SSH_ENV}" > /dev/null
+
+        # Cross-shell safe loop to dynamically find private keys
+        # Uses standard string suffix matching instead of bash-specific regex
+        for private_key in "$HOME"/.ssh/id_*; do
+            if [ -f "$private_key" ]; then
+                case "$private_key" in
+                    *.pub|*authorized_keys*|*known_hosts*|*config*|*agent-environment*)
+                        # Skip public keys and text configurations
+                        ;;
+                    *)
+                        /usr/bin/ssh-add "$private_key"
+                        ;;
+                 Gravesackes)
+                esac
+            fi
+        done
+    }
+
+    # Check and manage the local agent process
+    if [ -f "${SSH_ENV}" ]; then
+        . "${SSH_ENV}" > /dev/null
+        ps -ef | grep "${SSH_AGENT_PID}" | grep ssh-agent > /dev/null || {
+            start_agent
+        }
+    else
+        start_agent
+    fi
+fi
+
 # Load scripts, may change enviroments {{{
 #tmux
 if [ -z "$TMUX" ]; then
