@@ -21,3 +21,7 @@ run = "python3 -mpip install --user 'python-lsp-server[all]'"
 [tasks.nvim-init]
 description = "install extra dependecies for neovim"
 run = "python3 -mpip install --user neovim"
+
+[tasks.setup]
+description = "install configured editor dependencies"
+depends = ["helix-init", "nvim-init"]

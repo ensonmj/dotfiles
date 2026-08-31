@@ -128,6 +128,7 @@ run_once install_zoxide
 # mise: tools manager, need to config shell
 run_once install_mise
 run_once mise install
+run_once mise run setup
 
 # wezterm {{{
 case "$OS" in
