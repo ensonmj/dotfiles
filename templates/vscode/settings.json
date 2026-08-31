@@ -86,6 +86,8 @@
     "remote.SSH.path": "C:\\Users\\majian\\ssh.bat",
     "remote.SSH.configFile": "\\\\wsl$\\Ubuntu\\home\\dev\\.ssh\\config",
     "remote.SSH.suppressWindowsSshWarning": true,
+    "remote.SSH.useCurlAndWgetConfigurationFiles": true,
+    "remote.SSH.localServerDownload": "off",
     "remote.restoreForwardedPorts": false,
     "whichkey.delay": 0,
     "whichkey.sortOrder": "alphabetically",
