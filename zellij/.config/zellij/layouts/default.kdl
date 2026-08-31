@@ -92,6 +92,7 @@ layout {
                 tab_truncate_end_format   "#[fg=red,bg=#181825] ... +{count} >"
 
                 command_git_branch_command     "git rev-parse --abbrev-ref HEAD"
+                command_git_branch_cwd         "{focused_pane_cwd}"
                 command_git_branch_format      "#[fg=blue] {stdout} "
                 command_git_branch_interval    "10"
                 command_git_branch_rendermode  "static"
