@@ -18,6 +18,9 @@
         // "SimonSiefke.svg-preview",
         "Gruntfuggly.todo-tree",
         "eamodio.gitlens",
-        "mhutchie.git-graph"
+        "mhutchie.git-graph",
+        // python
+        "ms-python.python",
+        "charliermarsh.ruff"
     ]
 }

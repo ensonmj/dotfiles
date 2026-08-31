@@ -1,7 +1,6 @@
 {
-    "http.proxySupport": "on",
     "security.restrictUNCAccess": false,
-    "workbench.colorTheme": "Gruvbox Material Dark",
+    "workbench.colorTheme": "Dark+",
     "workbench.colorCustomizations": {
         // "editorInlayHint.foreground": "#fff",
         // "editorInlayHint.background": "#535252",
@@ -26,7 +25,8 @@
         "**/.git/objects/**": true,
         "**/.git/subtree-cache/**": true,
         "**/node_modules/**": true,
-        "**/target/**": true
+        "**/target/**": true,
+        "**/.venv/**": true,
     },
     "search.useIgnoreFiles": false,
     // Inherits all glob patterns from the `files.exclude` setting.
@@ -50,12 +50,15 @@
         "strings": true
     },
     "editor.bracketPairColorization.enabled": true,
-    "editor.guides.bracketPairs":"active",
+    "editor.guides.bracketPairs": "active",
     "debug.focusEditorOnBreak": true,
     "debug.console.fontSize": 16,
     "terminal.integrated.fontSize": 16,
     "terminal.integrated.scrollback": 10000,
     "terminal.integrated.shellIntegration.history": 10000,
+    "terminal.integrated.commandsToSkipShell": [
+        "-workbench.action.quickOpenView"
+    ],
     "extensions.experimental.affinity": {
         "asvetliakov.vscode-neovim": 1
     },
@@ -89,4 +92,91 @@
     "C_Cpp.intelliSenseEngine": "disabled",
     "git.autoRepositoryDetection": "openEditors", // avoid loading all repositories
     "git.ignoreLimitWarning": true,
+    "gitlens.autolinks": [
+        {
+            "prefix": "SW-",
+            "url": "https://jira.habana-labs.com/browse/SW-<num>"
+        }
+    ],
+    "remote.SSH.remotePlatform": {
+        "mj.icx": "linux",
+        "habana": "linux",
+        "sr228d": "linux",
+        "gaudi": "linux",
+        "pvc": "linux",
+        "bmg": "linux",
+        "bmg-dev": "linux",
+        "b70": "linux",
+        "pvc1": "linux",
+        "pvc2": "linux",
+        "b70-2": "linux"
+    },
+    "cmake.showOptionsMovedNotification": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "hexeditor.columnWidth": 16,
+    "hexeditor.showDecodedText": true,
+    "hexeditor.defaultEndianness": "little",
+    "hexeditor.inspectorType": "aside",
+    "github.copilot.editor.enableAutoCompletions": true,
+    "gitlens.views.commitDetails.files.layout": "tree",
+    "cmake.configureOnOpen": false,
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "gitlens.codeLens.symbolScopes": [
+            "!Module"
+        ],
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": "off"
+    },
+    "vs-kubernetes": {
+        "vs-kubernetes.kubeconfig": {
+            "nodeType": "context",
+            "nodeCategory": "kubernetes-explorer-node",
+            "contextName": "hldc02",
+            "kubectlContext": {
+                "clusterName": "hldc02",
+                "contextName": "hldc02",
+                "userName": "hldc02",
+                "active": false
+            }
+        },
+        "vscode-kubernetes.helm-path-linux": "/home/jianma/.local/state/vs-kubernetes/tools/helm/linux-amd64/helm"
+    },
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/dcermak/vscode-rke-cluster-config/main/schemas/cluster.yml.json": [
+            "cluster.yml",
+            "cluster.yaml"
+        ]
+    },
+    "git.openRepositoryInParentFolders": "never",
+    "gitlens.advanced.fileHistoryShowMergeCommits": true,
+    "github.copilot.advanced": {
+        "authProvider": "github"
+    },
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": false,
+        "markdown": true,
+        "scminput": false
+    },
+    "remote.autoForwardPortsSource": "hybrid",
+    "notebook.lineNumbers": "on",
+    "chat.mcp.gallery.enabled": true,
+    "chat.viewSessions.orientation": "stacked",
+    "chat.tools.urls.autoApprove": {
+        "https://code.visualstudio.com": true,
+        "https://github.com/microsoft/vscode/wiki/*": true,
+        "https://github.com": {
+            "approveRequest": false,
+            "approveResponse": true
+        },
+        "https://raw.githubusercontent.com": {
+            "approveRequest": false,
+            "approveResponse": true
+        },
+        "https://learn.chatgpt.com": {
+            "approveRequest": true,
+            "approveResponse": false
+        }
+    },
 }
