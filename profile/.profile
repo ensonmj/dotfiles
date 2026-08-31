@@ -132,17 +132,16 @@ else
         . "${SSH_ENV}" > /dev/null
 
         # Cross-shell safe loop to dynamically find private keys
-        # Uses standard string suffix matching instead of bash-specific regex
-        for private_key in "$HOME"/.ssh/id_*; do
-            if [ -f "$private_key" ]; then
+        # A private key is any file in ~/.ssh that has a matching .pub counterpart
+        for private_key in "$HOME"/.ssh/*; do
+            if [ -f "$private_key" ] && [ -f "${private_key}.pub" ]; then
                 case "$private_key" in
-                    *.pub|*authorized_keys*|*known_hosts*|*config*|*agent-environment*)
-                        # Skip public keys and text configurations
+                    *.pub)
+                        # Skip public keys
                         ;;
                     *)
                         /usr/bin/ssh-add "$private_key"
                         ;;
-                 Gravesackes)
                 esac
             fi
         done
