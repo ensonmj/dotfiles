@@ -1,10 +1,32 @@
 #!/bin/bash
+set -Eeuo pipefail
 # https://gist.github.com/matthewjberger/7dd7e079f282f8138a9dc3b045ebefa0
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+# shellcheck source=install_lib.sh
+source "$SCRIPT_DIR/install_lib.sh"
 
 fonts_dir="${HOME}/.local/share/fonts"
 if [[ ! -d "${fonts_dir}" ]]; then
     mkdir -p "${fonts_dir}"
 fi
+require_cmd wget unzip fc-cache
+
+install_sarasa_font() {
+    local font=$1
+    local zip_file="${font}.zip"
+    local zip_path="${fonts_dir}/${zip_file}"
+    local tmp_path="${zip_path}.tmp"
+    local download_url="https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/download/v${sarasa_ver}/${zip_file}"
+
+    if [[ ! -f "${zip_path}" ]]; then
+        echo "Downloading ${download_url}"
+        wget "${download_url}" -O "${tmp_path}"
+        mv "${tmp_path}" "${zip_path}"
+    fi
+
+    unzip -uo "${zip_path}" -d "${fonts_dir}"
+}
 
 #nerd_ver='3.0.0'
 #declare -a nerd_fonts=(
@@ -55,16 +77,7 @@ declare -a sarasa_fonts=(
     # sarasa-fixed-slab-sc-nerd-font
 )
 for font in "${sarasa_fonts[@]}"; do
-    zip_file="${font}.zip"
-    zip_path="${fonts_dir}/${zip_file}"
-    if [ -f ${zip_path} ]; then
-        continue
-    fi
-    download_url="https://github.com/jonz94/Sarasa-Gothic-Nerd-Fonts/releases/download/v${sarasa_ver}/${zip_file}"
-    echo "Downloading ${download_url}"
-    wget "${download_url}" -O "${zip_path}"
-    unzip -uo "${zip_path}" -d "${fonts_dir}"
-    # rm "$zip_file"
+    run_once install_sarasa_font "${font}"
 done
 
-fc-cache -fv # need fontconfig
+run_once fc-cache -fv # need fontconfig
