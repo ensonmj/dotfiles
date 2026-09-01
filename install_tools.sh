@@ -131,11 +131,11 @@ run_once mise install
 run_once mise run setup
 
 # wezterm {{{
-case "$OS" in
-*Ubuntu*)
-	run_once install_wezterm
-	;;
-esac
+# case "$OS" in
+# *Ubuntu*)
+# 	run_once install_wezterm
+# 	;;
+# esac
 # }}}
 
 run_once install_rustup
