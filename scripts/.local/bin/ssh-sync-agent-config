@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: ssh-sync-agent-config [--config FILE] [--dry-run] REMOTE
+
+Copies an SSH config to REMOTE while replacing each IdentityFile private-key
+path with the corresponding public-key path. The referenced public keys are
+also copied to REMOTE:~/.ssh/. Existing destination files are timestamped
+backed up before replacement.
+
+Options:
+  --config FILE  Source config (default: ~/.ssh/config)
+  --dry-run      Generate and display the result without connecting
+  -h, --help     Show this help
+EOF
+}
+
+source_config="$HOME/.ssh/config"
+dry_run=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --config)
+      [[ $# -ge 2 ]] || { echo "error: --config needs a file path" >&2; exit 2; }
+      source_config=$2
+      shift 2
+      ;;
+    --dry-run)
+      dry_run=true
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -*)
+      echo "error: unknown option: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+[[ $# -eq 1 ]] || { usage >&2; exit 2; }
+remote=$1
+[[ -f "$source_config" ]] || { echo "error: config not found: $source_config" >&2; exit 1; }
+
+work_dir=$(mktemp -d)
+trap 'rm -rf "$work_dir"' EXIT
+generated_config="$work_dir/config"
+public_keys_dir="$work_dir/public-keys"
+mkdir -p "$public_keys_dir"
+
+declare -A copied_names=()
+declare -a public_keys=()
+
+expand_home() {
+  if [[ $1 == "~" ]]; then
+    printf '%s\n' "$HOME"
+  elif [[ $1 == "~/"* ]]; then
+    printf '%s/%s\n' "$HOME" "${1:2}"
+  else
+    printf '%s\n' "$1"
+  fi
+}
+
+remote_public_path() {
+  local identity_path=$1
+  local key_name
+  key_name=$(basename "$identity_path")
+  printf '~/.ssh/%s.pub\n' "$key_name"
+}
+
+while IFS= read -r line || [[ -n "$line" ]]; do
+  if [[ $line =~ ^([[:space:]]*[Ii][Dd][Ee][Nn][Tt][Ii][Tt][Yy][Ff][Ii][Ll][Ee][[:space:]]+)([^[:space:]#]+)(.*)$ ]]; then
+    prefix=${BASH_REMATCH[1]}
+    identity_file=${BASH_REMATCH[2]}
+    suffix=${BASH_REMATCH[3]}
+
+    if [[ $identity_file == \"* || $identity_file == \'* ]]; then
+      echo "error: quoted IdentityFile paths are not supported: $line" >&2
+      exit 1
+    fi
+
+    local_identity_file=$(expand_home "$identity_file")
+    local_public_key="${local_identity_file}.pub"
+    if [[ ! -f "$local_public_key" ]]; then
+      [[ -f "$local_identity_file" ]] || {
+        echo "error: neither key nor public key exists for IdentityFile: $identity_file" >&2
+        exit 1
+      }
+      local_public_key="$work_dir/derived-public-key-${#public_keys[@]}"
+      ssh-keygen -y -f "$local_identity_file" > "$local_public_key" || {
+        echo "error: could not derive a public key from: $identity_file" >&2
+        exit 1
+      }
+    fi
+
+    remote_public_key=$(remote_public_path "$local_identity_file")
+    public_key_name=${remote_public_key##*/}
+    existing_source=${copied_names[$public_key_name]-}
+    if [[ -n $existing_source && $existing_source != "$local_public_key" ]] && ! cmp -s "$existing_source" "$local_public_key"; then
+      echo "error: public-key name collision for $public_key_name" >&2
+      echo "       $existing_source and $local_public_key differ" >&2
+      exit 1
+    fi
+
+    if [[ -z $existing_source ]]; then
+      copied_names[$public_key_name]=$local_public_key
+      cp "$local_public_key" "$public_keys_dir/$public_key_name"
+      public_keys+=("$public_key_name")
+    fi
+
+    printf '%s%s%s\n' "$prefix" "$remote_public_key" "$suffix" >> "$generated_config"
+  else
+    printf '%s\n' "$line" >> "$generated_config"
+  fi
+done < "$source_config"
+
+if $dry_run; then
+  printf '%s\n' 'Generated remote config:'
+  cat "$generated_config"
+  printf '%s\n' 'Public keys to copy:'
+  printf '%s\n' "${public_keys[@]:-<none>}"
+  exit 0
+fi
+
+timestamp=$(date -u +%Y%m%dT%H%M%SZ)
+remote_stage=".ssh/.ssh-sync-agent-config-${timestamp}-$$"
+
+ssh "$remote" "umask 077 && mkdir -p ~/.ssh && chmod 700 ~/.ssh && rm -rf ~/$remote_stage && mkdir -p ~/$remote_stage"
+scp "$generated_config" "$remote:~/$remote_stage/config"
+if [[ ${#public_keys[@]} -gt 0 ]]; then
+  scp "$public_keys_dir"/* "$remote:~/$remote_stage/"
+fi
+
+ssh "$remote" "sh -s -- '$remote_stage' '$timestamp'" <<'EOF'
+set -eu
+stage=$1
+timestamp=$2
+destination=$HOME/.ssh
+
+backup_file() {
+  if [ -e "$1" ]; then
+    mv "$1" "$1.bak.$timestamp"
+    printf '%s\n' "Backed up $1 to $1.bak.$timestamp"
+  fi
+}
+
+backup_file "$destination/config"
+mv "$HOME/$stage/config" "$destination/config"
+chmod 600 "$destination/config"
+
+for public_key in "$HOME/$stage"/*.pub; do
+  [ -e "$public_key" ] || continue
+  filename=${public_key##*/}
+  backup_file "$destination/$filename"
+  mv "$public_key" "$destination/$filename"
+  chmod 644 "$destination/$filename"
+done
+
+rmdir "$HOME/$stage"
+EOF
+
+printf 'Synced %s and %d public key(s) to %s:~/.ssh/\n' "$source_config" "${#public_keys[@]}" "$remote"

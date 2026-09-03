@@ -48,7 +48,7 @@ backup_file "$HOME/.bashrc"
 backup_file "$HOME/.bash_profile"
 backup_file "$HOME/.zshrc"
 
-# helix will put some tools into $HOME/.local/bin
+# will link some tools from scripts into $HOME/.local/bin
 mkdir -p "$HOME/.local/bin"
 export PATH="$HOME/.local/bin:$PATH"
 
