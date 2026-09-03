@@ -4,12 +4,13 @@ set -euo pipefail
 
 usage() {
   cat <<'EOF'
-Usage: ssh-sync-agent-config [--config FILE] [--dry-run] REMOTE
+Usage: ssh-sync [--config FILE] [--dry-run] REMOTE
 
 Copies an SSH config to REMOTE while replacing each IdentityFile private-key
 path with the corresponding public-key path. The referenced public keys are
-also copied to REMOTE:~/.ssh/. Existing destination files are timestamped
-backed up before replacement.
+copied to REMOTE:~/.ssh/. ssh-copy-id installs the default local SSH identity
+on REMOTE. Existing destination files are timestamped backed up before
+replacement.
 
 Options:
   --config FILE  Source config (default: ~/.ssh/config)
@@ -131,8 +132,10 @@ if $dry_run; then
   exit 0
 fi
 
+ssh-copy-id "$remote"
+
 timestamp=$(date -u +%Y%m%dT%H%M%SZ)
-remote_stage=".ssh/.ssh-sync-agent-config-${timestamp}-$$"
+remote_stage=".ssh/.ssh-sync-${timestamp}-$$"
 
 ssh "$remote" "umask 077 && mkdir -p ~/.ssh && chmod 700 ~/.ssh && rm -rf ~/$remote_stage && mkdir -p ~/$remote_stage"
 scp "$generated_config" "$remote:~/$remote_stage/config"
@@ -168,4 +171,4 @@ done
 rmdir "$HOME/$stage"
 EOF
 
-printf 'Synced %s and %d public key(s) to %s:~/.ssh/\n' "$source_config" "${#public_keys[@]}" "$remote"
+printf 'Installed and synced %s with %d public key(s) to %s:~/.ssh/\n' "$source_config" "${#public_keys[@]}" "$remote"
