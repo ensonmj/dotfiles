@@ -125,10 +125,6 @@ require_cmd curl mktemp
 run_once install_starship
 # zoxide: cd, need to config shell
 run_once install_zoxide
-# mise: tools manager, need to config shell
-run_once install_mise
-run_once mise install
-run_once mise run setup
 
 # wezterm {{{
 # case "$OS" in
@@ -139,6 +135,12 @@ run_once mise run setup
 # }}}
 
 run_once install_rustup
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# mise: tools manager, need to config shell
+run_once install_mise
+run_once mise install
+run_once mise run setup
 
 # nix {{{
 # https://thiscute.world/posts/nixos-and-flake-basics
