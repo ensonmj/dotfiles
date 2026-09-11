@@ -122,14 +122,13 @@ if [ -n "$SSH_CONNECTION" ] || [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
     # Skip entirely if this is a remote SSH session
     :
 else
-    # 2. Local-only initialization
-    export SSH_ENV="$HOME/.ssh/agent-environment"
+    # 2. Local-only initialization (Portable: using fixed socket location)
+    export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 
     function start_agent {
         echo "Initializing new SSH agent..."
-        /usr/bin/ssh-agent -s | sed 's/^echo/#echo/' > "${SSH_ENV}"
-        chmod 600 "${SSH_ENV}"
-        . "${SSH_ENV}" > /dev/null
+        rm -f "${SSH_AUTH_SOCK}"
+        eval "$(/usr/bin/ssh-agent -a "${SSH_AUTH_SOCK}")" > /dev/null
 
         # Cross-shell safe loop to dynamically find private keys
         # A private key is any file in ~/.ssh that has a matching .pub counterpart
@@ -140,20 +139,16 @@ else
                         # Skip public keys
                         ;;
                     *)
-                        /usr/bin/ssh-add "$private_key"
+                        /usr/bin/ssh-add "$private_key" 2>/dev/null
                         ;;
                 esac
             fi
         done
     }
 
-    # Check and manage the local agent process
-    if [ -f "${SSH_ENV}" ]; then
-        . "${SSH_ENV}" > /dev/null
-        ps -ef | grep "${SSH_AGENT_PID}" | grep ssh-agent > /dev/null || {
-            start_agent
-        }
-    else
+    # Check connection with agent (exit code 2 means connection failed)
+    /usr/bin/ssh-add -l >/dev/null 2>&1
+    if [ $? -eq 2 ]; then
         start_agent
     fi
 fi
