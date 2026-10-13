@@ -61,6 +61,7 @@ declare -a confs=(
 	nvim
 	profile
 	scripts
+	ssh
 	starship
 	stow
 	vim

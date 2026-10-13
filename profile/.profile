@@ -119,8 +119,10 @@ done < $HOME/.env
 # ssh-agent
 # need "ForwardAgent yes" in ~/.ssh/config
 if [ -n "$SSH_CONNECTION" ] || [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    # Skip entirely if this is a remote SSH session
-    :
+    # ~/.ssh/rc refreshes this symlink for every forwarded-agent connection.
+    if [ -n "$SSH_AUTH_SOCK" ]; then
+        export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+    fi
 else
     # 2. Local-only initialization (Portable: using fixed socket location)
     export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
