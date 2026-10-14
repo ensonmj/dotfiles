@@ -1,8 +1,0 @@
-{
-    "recommendations": [
-        "ms-vscode.cpptools",
-        "rust-lang.rust-analyzer",
-        "serayuzgur.crates",
-        "swellaby.vscode-rust-test-adapter"
-    ]
-}

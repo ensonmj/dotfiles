@@ -4,7 +4,7 @@ set -Eeuo pipefail
 TARGET_PATH=${1:-"$HOME/.config/Code/User"}
 
 CUR_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
-REPO_DIR=$(cd "$CUR_DIR/../.." && pwd)
+REPO_DIR=$(cd "$CUR_DIR/.." && pwd)
 # shellcheck disable=SC1091
 source "$REPO_DIR/install_lib.sh"
 require_cmd code jq sed

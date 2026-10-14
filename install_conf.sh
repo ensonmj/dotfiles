@@ -71,7 +71,7 @@ if [[ -z ${SSH_CONNECTION:-} && -z ${SSH_CLIENT:-} && -z ${SSH_TTY:-} ]]; then
 	confs+=(ssh)
 fi
 for conf in "${confs[@]}"; do
-	run_once stow -S "$conf"
+	stow -R "$conf"
 done
 popd
 # }}}

@@ -1,8 +1,0 @@
-{
-    "recommendations": [
-        "vscjava.vscode-java-pack",
-        "redhat.vscode-xml",
-        "scala-lang.scala",
-        "scalameta.metals"
-    ]
-}

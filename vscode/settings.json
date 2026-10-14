@@ -111,7 +111,12 @@
         "b70": "linux",
         "pvc1": "linux",
         "pvc2": "linux",
-        "b70-2": "linux"
+        "b70-2": "linux",
+        "cri": "linux",
+        "d93-d": "linux",
+        "d93-a": "linux",
+        "aifw01": "linux",
+        "aifw02": "linux"
     },
     "cmake.showOptionsMovedNotification": false,
     "security.workspace.trust.untrustedFiles": "open",
