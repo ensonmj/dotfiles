@@ -61,13 +61,15 @@ declare -a confs=(
 	nvim
 	profile
 	scripts
-	ssh
 	starship
 	stow
 	vim
 	zellij
 	zsh
 )
+if [[ -z ${SSH_CONNECTION:-} && -z ${SSH_CLIENT:-} && -z ${SSH_TTY:-} ]]; then
+	confs+=(ssh)
+fi
 for conf in "${confs[@]}"; do
 	run_once stow -S "$conf"
 done
